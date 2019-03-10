@@ -1,15 +1,15 @@
 Utils.onPageLoad(function(){
-	const WIDTH = 640;
-	const HEIGHT = 480;
-	const POS_X = 0;
-	const POS_Y = 0;
-	const ZOOM = 1;
-	const ITERATIONS = 250;
+	const WIDTH = 960;
+	const HEIGHT = 720;
+	const POS_X = 0.75;
+	const POS_Y = -1.15;
+	const ZOOM = 4;
+	const ITERATIONS = 5000;
 	const MIN_X = -2.1;
 	const MIN_Y = -2.1;
 	const MAX_X = 2.1;
 	const MAX_Y = 2.1;
-	const STEPSIZE = 0.001;
+	const STEPSIZE = 0.00025;
 	const LINES_PER_FRAME = 10;
 	
 	var canvas = document.getElementById("canvas");
@@ -18,7 +18,18 @@ Utils.onPageLoad(function(){
 	Utils.setSize(canvas,WIDTH,HEIGHT);
 	Utils.setSize(canvas.parentElement,WIDTH,HEIGHT);
 	
-	var grid = new Uint32Array(WIDTH*HEIGHT);
+	var tracer = new FractalPathtracer();
+	tracer.setSize(WIDTH,HEIGHT);
+	tracer.setProgressCallback(onProgress);
+	tracer.render();
+	
+	function onProgress(progress){
+		ctx.putImageData(tracer.drawToImageData(),0,0);
+		ctx.fillStyle = "#ffaf00";
+		ctx.fillRect(0,0,(1-progress)*WIDTH,5);
+	}
+	
+	/*var grid = new Uint32Array(WIDTH*HEIGHT);
 	var imageData = ctx.createImageData(WIDTH,HEIGHT);
 	
 	renderFrame(MIN_X);
@@ -64,7 +75,7 @@ Utils.onPageLoad(function(){
 		var temp;
 		for (var i=0;i<ITERATIONS&&x*x+y*y<10;i++){
 			temp = x*x-y*y+xPos;
-			y = 2*x*y+yPos;
+			y = Math.abs(2*x*y)+yPos;
 			x = temp;
 		}
 		if (i<ITERATIONS){
@@ -73,7 +84,7 @@ Utils.onPageLoad(function(){
 			var x2,y2,i2;
 			for (var i=0;i<ITERATIONS&&x*x+y*y<10;i++){
 				temp = x*x-y*y+xPos;
-				y = 2*x*y+yPos;
+				y = Math.abs(2*x*y)+yPos;
 				x = temp;
 				var x2 = Math.round((x-POS_X)*ZOOM*(WIDTH/4)+WIDTH/2);
 				var y2 = Math.round((y-POS_Y)*ZOOM*(WIDTH/4)+HEIGHT/2);
@@ -83,5 +94,5 @@ Utils.onPageLoad(function(){
 				}
 			}
 		}
-	}
+	}*/
 });
