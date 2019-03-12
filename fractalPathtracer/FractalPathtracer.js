@@ -5,14 +5,14 @@ const FractalPathtracer = function(){
 	var height = 360;
 	var posX = 0;
 	var posY = 0;
-	var zoom = 1;
-	var iterations = 1000;
+	var zoom = 0.8;
+	var iterations = 25000;
 	var minX = -2.1;
 	var minY = -2.1;
 	var maxX = 2.1;
 	var maxY = 2.1;
 	var stepSize = 0.0005;
-	var totalFrames = 100;
+	var totalFrames = 500;
 	var progressCallback;
 	
 	var grid;
@@ -75,20 +75,24 @@ const FractalPathtracer = function(){
 		var x = xPos;
 		var y = yPos;
 		var temp;
+		var a = 1;
 		for (var i=0;i<iterations&&x*x+y*y<10;i++){
+			a *= -1;
 			temp = x*x-y*y+xPos;
 			//y = Math.abs(2*x*y)+yPos;
-			y = 2*x*y+yPos;
+			y = 2*x*y*a+yPos;
 			x = temp;
 		}
 		if (i<iterations){
 			x = xPos;
 			y = yPos;
+			a = 1;
 			var x2,y2,i2;
 			for (var i=0;i<iterations&&x*x+y*y<10;i++){
+				a *= -1;
 				temp = x*x-y*y+xPos;
 				//y = Math.abs(2*x*y)+yPos;
-				y = 2*x*y+yPos;
+				y = 2*x*y*a+yPos;
 				x = temp;
 				var x2 = Math.round((x-posY)*zoom*(width/4)+width/2);
 				var y2 = Math.round((y-posX)*zoom*(width/4)+height/2);
