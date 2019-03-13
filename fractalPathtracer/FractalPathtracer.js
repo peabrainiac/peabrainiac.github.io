@@ -6,14 +6,19 @@ const FractalPathtracer = function(){
 	var posX = 0;
 	var posY = 0;
 	var zoom = 0.8;
-	var iterations = 25000;
-	var minX = -2.1;
-	var minY = -2.1;
-	var maxX = 2.1;
-	var maxY = 2.1;
-	var stepSize = 0.0005;
+	var iterations = 500;
+	var minX = -2.25;
+	var minY = -2.25;
+	var maxX = 2.25;
+	var maxY = 2.25;
+	var stepSize = 0.001;
 	var totalFrames = 500;
 	var progressCallback;
+	var fractalFilterFunction = standardFilter;
+	var fractalTracerFunction = standardTracer;
+	var colorR = 255;
+	var colorG = 192;
+	var colorB = 0;
 	
 	var grid;
 	var imageData;
@@ -22,6 +27,41 @@ const FractalPathtracer = function(){
 	exports.setSize = function(w,h){
 		width = w;
 		height = h;
+	};
+	
+	exports.setPosition = function(x,y){
+		posX = x;
+		posY = y;
+	};
+	
+	exports.setZoom = function(z){
+		zoom = z;
+	};
+	
+	exports.setIterationCount = function(n){
+		iterations = n;
+	};
+	
+	exports.setStepSize = function(s){
+		stepSize = s;
+	};
+	
+	exports.setFrameCount = function(n){
+		totalFrames = n;
+	};
+	
+	exports.setColor = function(r,g,b){
+		colorR = r;
+		colorG = g;
+		colorB = b;
+	};
+	
+	exports.setFilterFunction = function(f){
+		fractalFilterFunction = f;
+	};
+	
+	exports.setTracerFunction = function(f){
+		fractalTracerFunction = f;
 	};
 	
 	exports.render = function(){
@@ -45,9 +85,9 @@ const FractalPathtracer = function(){
 		var c;
 		for (let i=0,l=grid.length;i<l;i++){
 			c = Math.sqrt(grid[i]/(max+1));
-			imageData.data[i*4] = Math.floor(256*c);
-			imageData.data[i*4+1] = Math.floor(192*c);
-			imageData.data[i*4+2] = 0;
+			imageData.data[i*4] = Math.floor(colorR*c);
+			imageData.data[i*4+1] = Math.floor(colorG*c);
+			imageData.data[i*4+2] = Math.floor(colorB*c);
 			imageData.data[i*4+3] = 255;
 		}
 		return imageData;
@@ -72,37 +112,42 @@ const FractalPathtracer = function(){
 	}
 
 	function tracePath(xPos,yPos){
-		var x = xPos;
-		var y = yPos;
-		var temp;
-		var a = 1;
-		for (var i=0;i<iterations&&x*x+y*y<10;i++){
-			a *= -1;
-			temp = x*x-y*y+xPos;
-			//y = Math.abs(2*x*y)+yPos;
-			y = 2*x*y*a+yPos;
-			x = temp;
-		}
-		if (i<iterations){
-			x = xPos;
-			y = yPos;
-			a = 1;
-			var x2,y2,i2;
-			for (var i=0;i<iterations&&x*x+y*y<10;i++){
-				a *= -1;
-				temp = x*x-y*y+xPos;
-				//y = Math.abs(2*x*y)+yPos;
-				y = 2*x*y*a+yPos;
-				x = temp;
-				var x2 = Math.round((x-posY)*zoom*(width/4)+width/2);
-				var y2 = Math.round((y-posX)*zoom*(width/4)+height/2);
-				if (x2>=0&&y2>=0&&x2<width&&y2<height){
-					i2 = x2+y2*width;
-					grid[i2]++;
-				}
-			}
+		if (fractalFilterFunction(xPos,yPos,iterations)){
+			fractalTracerFunction(xPos,yPos,iterations,emitPoint);
 		}
 	}
+	
+	function emitPoint(x,y){
+		let x2 = Math.round((x-posY)*zoom*(width/4)+width/2);
+		let y2 = Math.round((y-posX)*zoom*(width/4)+height/2);
+		if (x2>=0&&y2>=0&&x2<width&&y2<height){
+			i2 = x2+y2*width;
+			grid[i2]++;
+		}
+	}
+	
+	function standardFilter(cx,cy,iter){
+		let x = cx;
+		let y = cy;
+		for (var i=0;i<iter&&x*x+y*y<10;i++){
+			temp = x*x-y*y+cx;
+			y = 2*x*y+cy;
+			x = temp;
+		}
+		return i<iter;
+	}
+	
+	function standardTracer(cx,cy,iter,emit){
+		var x = cx;
+		var y = cy;
+		var temp;
+		for (var i=0;i<iter&&x*x+y*y<10;i++){
+			temp = x*x-y*y+cx;
+			y = 2*x*y+cy;
+			x = temp;
+			emit(x,y);
+		}
+	};
 	
 	return exports;
 };

@@ -44,13 +44,13 @@ Utils.onPageLoad(function(){
 		var y = 0;
 		var temp;
 		for (var i=0;i<ITERATIONS&&(x*x+y*y<16);i++){
-			/*temp = x*x-y*y+cx;
+			temp = x*x-y*y+cx;
 			y = 2*x*y+cy;
-			x = temp;*/
-			temp = (x*x*x-3*y*y*x)+cx;
-			y = (3*x*x*y-y*y*y)+cy;
 			x = temp;
-			cx *= -1;
+			//temp = (x*x*x-3*y*y*x)+cx;
+			//y = (3*x*x*y-y*y*y)+cy;
+			//x = temp;
+			cy *= -1;
 		}
 		var c = Math.sqrt((i/ITERATIONS)%1);
 		var pixelI = pixelX+pixelY*WIDTH;
