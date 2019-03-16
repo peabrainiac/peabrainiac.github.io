@@ -2,9 +2,10 @@ const Sandbox = function(){
 	var exports = {};
 	
 	exports.test = function(){
-		var code = "{asd:  1, assd: [0.1,2 ],fgf: {a: 12334,b :12.3}}"
+		var code = " {a :1 ,b : 3.14, c:{d:'e'} }"
 		console.log("code: ",code);
-		console.log("lexer output: ",lex(code));
+		console.log("lexer output: ",lex_old(code));
+		console.log("new lexer output: ",lex(code));
 	};
 	
 	exports.parse = function(code){
@@ -12,13 +13,36 @@ const Sandbox = function(){
 	};
 	
 	function lex(str){
+		var tokenRegexes = [/^\s+/,/^[{}[\]:,.]/,/^(?:0x[\da-fA-F]+|0b\d+|0o\d+|\d+(?:\.\d)?)/,/^\w+/,/^(?:"[^\\"]*(?:\\.[^\\"]*)*"|'[^\\']*(?:\\.[^\\']*)*'|`[^\\`]*(?:\\.[^\\`]*)*`)/];
+		var tokenTypes = ["empty","special","number","identifier","string"];
+		var code = str;
+		var tokensList = [];
+		var matches;
+		var regexId = 0;
+		while (code){
+			var matches = code.match(tokenRegexes[regexId]);
+			if (matches){
+				tokensList.push({token:matches[0],type:tokenTypes[regexId]});
+				code = code.replace(tokenRegexes[regexId],"");
+				regexId = 0;
+			}else{
+				regexId++;
+				if (regexId>=tokenRegexes.length){
+					throw new Error("Could not parse token: \""+(code.length<15?code:(code.substring(0,10)+"..."))+"\"");
+				}
+			}
+		}
+		return tokensList;
+	};
+	
+	function lex_old(str){
 		var letters_ignore = /\s/;
 		var letters_special = /[{}[\]:,.]/;
 		var letters_digits_strict = /\d/;
 		var letters_digits_all = /[0-9.a-fx]/;
 		var letters_identifiers_chars = /\w/;
 		var keywords = /^((function)|(var)|(let)|(for)|(while)|(if)|(else))$/;
-		var tokensList = [""];
+		var tokensList = [];
 		var i = 0;
 		while (i<str.length){
 			var char = str.charAt(i);
@@ -48,7 +72,6 @@ const Sandbox = function(){
 					tokensList.push({type:"identifier",token:identifier});
 				}
 			}else{
-				tokensList[0] += char;
 				i++;
 			}
 		}
