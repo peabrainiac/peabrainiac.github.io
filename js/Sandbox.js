@@ -2,7 +2,7 @@ const Sandbox = function(){
 	var exports = {};
 	
 	exports.test = function(){
-		var code = " {a :1 ,b : 3.14, c:{d:'e'} }"
+		var code = " {a:/'/,	b : 3.14-1+3, c:/'/}"
 		console.log("code: ",code);
 		console.log("lexer output: ",lex_old(code));
 		console.log("new lexer output: ",lex(code));
@@ -13,8 +13,8 @@ const Sandbox = function(){
 	};
 	
 	function lex(str){
-		var tokenRegexes = [/^\s+/,/^[{}[\]:,.]/,/^(?:0x[\da-fA-F]+|0b\d+|0o\d+|\d+(?:\.\d)?)/,/^\w+/,/^(?:"[^\\"]*(?:\\.[^\\"]*)*"|'[^\\']*(?:\\.[^\\']*)*'|`[^\\`]*(?:\\.[^\\`]*)*`)/];
-		var tokenTypes = ["empty","special","number","identifier","string"];
+		var tokenRegexes = [/^\s+/,/^[{}[\]:,.]/,/^[/]/,/^(?:0x[\da-fA-F]+|0b\d+|0o\d+|\d+(?:\.\d)?)/,/^\w+/,/^(?:"[^\\"]*(?:\\.[^\\"]*)*"|'[^\\']*(?:\\.[^\\']*)*'|`[^\\`]*(?:\\.[^\\`]*)*`)/];
+		var tokenTypes = ["empty","special","operator","number","identifier","string"];
 		var code = str;
 		var tokensList = [];
 		var matches;
