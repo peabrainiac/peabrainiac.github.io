@@ -40,17 +40,23 @@ Utils.onPageLoad(function(){
 	function fillPixel(pixelX,pixelY){
 		var cx = POS_X+(pixelX-WIDTH/2)*ZOOM*(MAX_X-MIN_X)/WIDTH;
 		var cy = POS_Y+(pixelY-HEIGHT/2)*ZOOM*(MAX_X-MIN_X)/WIDTH;
-		var x = 0;
-		var y = 0;
+		var x = cx;
+		var y = cy;
 		var temp;
 		for (var i=0;i<ITERATIONS&&(x*x+y*y<16);i++){
-			temp = x*x-y*y+cx;
-			y = 2*x*y+cy;
-			x = temp;
+			if (i%2==0){
+				temp = x*x-y*y+cx/2;//+cx;
+				y = 2*x*y+cy/2;//+cy;
+				x = temp;
+			}else{
+				temp = x*x-y*y+cx;
+				y = 2*x*y+cy;
+				x = temp;
+			}
 			//temp = (x*x*x-3*y*y*x)+cx;
 			//y = (3*x*x*y-y*y*y)+cy;
 			//x = temp;
-			cy *= -1;
+			//cy *= -1;
 		}
 		var c = Math.sqrt((i/ITERATIONS)%1);
 		var pixelI = pixelX+pixelY*WIDTH;

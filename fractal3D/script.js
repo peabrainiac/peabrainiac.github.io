@@ -55,22 +55,22 @@ Utils.onPageLoad(function(){
 	}
 	
 	function isInFractal(cx,cy,cz,cw=0){
-		var x = 0;
-		var y = 0;
-		var z = 0;
-		var w = 0;
+		var x = cx;
+		var y = cy;
+		var z = cz;
+		var w = cw;
 		var tx,ty,tz,tw;
-		for (var i=0;i<ITERATIONS;i++){
+		for (var i=0;(i<ITERATIONS)&&(x*x+y*y+z*z+w*w<4);i++){
 			tx = x*x-y*y-z*z-w*w+cx;
-			ty = 2*(x*y+z*w)+cy;
-			tz = 2*(x*z+w*y)+cz;
-			tw = 2*(x*w+y*z)+cw;
+			ty = 2*(x*y/*+z*w*/)+cy;
+			tz = -2*(x*z/*+w*y*/)+cz;
+			tw = 2*(x*w/*+y*z*/)+cw;
 			x = tx;
 			y = ty;
 			z = tz;
 			w = tw;
 		}
-		return (x*x+y*y+z*z+w*w<2);
+		return (x*x+y*y+z*z+w*w<4);
 	}
 	
 	function drawCube(x,y,z){
