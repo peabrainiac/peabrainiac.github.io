@@ -23,6 +23,9 @@ const FractalPathtracer = function(){
 	var grid;
 	var imageData;
 	var frame = 0;
+	var interval;
+	var currentX;
+	var running = false;
 	
 	exports.setSize = function(w,h){
 		width = w;
@@ -68,7 +71,12 @@ const FractalPathtracer = function(){
 		frame = 0;
 		grid = new Uint32Array(width*height);
 		imageData = new ImageData(width,height);
-		renderFrame(minX);
+		if (running){
+			clearInterval(interval);
+		}
+		interval = setInterval(renderFrame,0);
+		currentX = minX;
+		running = true;
 	};
 	
 	exports.setProgressCallback = function(callback){
@@ -93,21 +101,22 @@ const FractalPathtracer = function(){
 		return imageData;
 	};
 	
-	function renderFrame(startX){
+	function renderFrame(){
 		frame++;
+		var startX = currentX;
 		var endX = Math.min(minX+(frame/totalFrames)*(maxX-minX),maxX);
 		for (var x=startX;x<endX;x+=stepSize){
 			for (let y=minY;y<maxY;y+=stepSize){
 				tracePath(x,y);
 			}
 		}
+		currentX = x;
 		if (progressCallback){
 			progressCallback(frame/totalFrames);
 		}
-		if (x<maxX){
-			setTimeout(function(){
-				renderFrame(x);
-			},0);
+		if (!(x<maxX)){
+			clearInterval(interval);
+			running = false;
 		}
 	}
 

@@ -27,7 +27,7 @@ body {
 	height: 360px;
 }
 .sidebar-left {
-	width: 300px;
+	width: 250px;
 	height: 100%;
 	position: relative;
 	background: #181818;
@@ -56,6 +56,29 @@ body {
 	border-color: #ffaf00;
 	box-shadow: 0 0 3px #ffaf00;
 }
+.h3 {
+	font-size: 1.17em;
+	font-weight: bold;
+}
+.iframe {
+	border: none;
+}
+.button {
+	color: #ffffff;
+	background: #ff8000;
+	box-shadow: 0 0 2px #ff8000;
+	transition: background 0.25s ease, box-shadow 0.25s ease;
+	border: none;
+	font-size: 1.1em;
+	padding: 4px 12px;
+}
+.button:hover {
+	background: #ffaf00;
+	box-shadow: 0 0 5px #ffaf00;
+}
+.resize {
+	resize: both;
+}
 .resize-h {
 	resize: horizontal;
 	overflow: hidden;
@@ -64,6 +87,18 @@ body {
 	resize: vertical;
 	overflow: hidden;
 }
-.padding {
+.float-l {
+	float: left
+}
+.float-r {
+	float: right;
+}
+.padding-10 {
 	padding: 10px;
+}
+.padding-20 {
+	padding: 20px;
+}
+.margin-v-10 {
+	margin: 10px 0;
 }

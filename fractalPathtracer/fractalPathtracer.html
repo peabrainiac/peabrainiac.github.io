@@ -5,19 +5,22 @@
 		<link rel="stylesheet" type="text/css" href="../css/styles.css">
 		<script src="../js/Utils.js"></script>
 		<script src="../js/Sandbox.js"></script>
-		<script src="./FractalPathtracer.js"></script>
 		<script src="./script.js"></script>
 		<title>fractal path tracer</title>
 	</head>
 	<body>
-		<div class="sidebar-left resize-h">
-			<div class="padding">
-				<textarea class="textarea resize-v">Edit me</textarea>
+		<div class="sidebar-left resize-h" style="width:550px">
+			<div class="padding-20">
+				<span class="h3">Filter Function</span>
+				<span id="button" class="button float-r">Run &#9654</span>
+				<textarea id="filterFunctionInput" class="textarea resize-v margin-v-10" style="height:300px">Edit me</textarea>
+				<span class="h3">Tracer Function</span>
+				<textarea id="tracerFunctionInput" class="textarea resize-v margin-v-10" style="height:300px">Edit me</textarea>
 			</div>
 		</div>
 		<div class="panel">
-			<div class="centered project">
-				<canvas id="canvas"></canvas>
+			<div class="centered project resize">
+				<iframe src="./sandbox.html" id="sandbox" class="iframe" style="width:100%;height:100%"></iframe>
 			</div>
 		</div>
 	</body>
