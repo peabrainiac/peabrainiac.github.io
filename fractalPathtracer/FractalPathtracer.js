@@ -26,6 +26,7 @@ const FractalPathtracer = function(){
 	var interval;
 	var currentX;
 	var running = false;
+	var start;
 	
 	exports.setSize = function(w,h){
 		width = w;
@@ -48,6 +49,10 @@ const FractalPathtracer = function(){
 	exports.setStepSize = function(s){
 		stepSize = s;
 	};
+	
+	exports.setSamples = function(samples){
+		stepSize = Math.sqrt((maxX-minX)*(maxY-minY)/samples);
+	}
 	
 	exports.setFrameCount = function(n){
 		totalFrames = n;
@@ -77,6 +82,7 @@ const FractalPathtracer = function(){
 		interval = setInterval(renderFrame,0);
 		currentX = minX;
 		running = true;
+		start = Date.now();
 	};
 	
 	exports.setProgressCallback = function(callback){
@@ -117,6 +123,8 @@ const FractalPathtracer = function(){
 		if (!(x<maxX)){
 			clearInterval(interval);
 			running = false;
+			console.log("finished in ",(Date.now()-start)/1000,"!");
+			console.log("width: ",width,", height: ",height);
 		}
 	}
 
@@ -127,8 +135,8 @@ const FractalPathtracer = function(){
 	}
 	
 	function emitPoint(x,y){
-		let x2 = Math.round((x-posY)*zoom*(width/4)+width/2);
-		let y2 = Math.round((y-posX)*zoom*(width/4)+height/2);
+		let x2 = Math.round((x-posX)*zoom*(width/4)+width/2);
+		let y2 = Math.round((posY-y)*zoom*(width/4)+height/2);
 		if (x2>=0&&y2>=0&&x2<width&&y2<height){
 			i2 = x2+y2*width;
 			grid[i2]++;

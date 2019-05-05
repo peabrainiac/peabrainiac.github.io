@@ -9,6 +9,7 @@ html, body {
 }
 body {
 	display: flex;
+	overflow: hidden;
 }
 .centered {
 	position: absolute;
@@ -32,6 +33,7 @@ body {
 	position: relative;
 	background: #181818;
 	box-shadow: 1px 0 7px #000000;
+	z-index: 1;
 }
 .panel {
 	width: 100%;
@@ -46,19 +48,33 @@ body {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 5px;
+}
+.input-number {
+	margin: 2px;
+	width: 50px;
+	-moz-appearance: textfield;
+}
+.input-number::-webkit-inner-spin-button,
+.input-number::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.textarea, .input-number {
 	border: 1px solid #303030;
 	background: #101010;
 	color: #808080;
 	transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
-.textarea:focus {
+.textarea:focus,.input-number:focus {
 	color: #dfdfdf;
 	border-color: #ffaf00;
 	box-shadow: 0 0 3px #ffaf00;
+	outline: none;
 }
 .h3 {
 	font-size: 1.17em;
 	font-weight: bold;
+	color: #ffaf00;
 }
 .iframe {
 	border: none;
@@ -71,6 +87,7 @@ body {
 	border: none;
 	font-size: 1.1em;
 	padding: 4px 12px;
+	cursor: pointer;
 }
 .button:hover {
 	background: #ffaf00;

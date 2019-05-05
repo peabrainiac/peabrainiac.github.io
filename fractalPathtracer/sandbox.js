@@ -1,9 +1,6 @@
 Utils.onPageLoad(function(){
-	const WIDTH = 1280;
-	const HEIGHT = 960;
-	const POS_X = 0;
-	const POS_Y = 0;
-	const ZOOM = 0.8;
+	var WIDTH = 1280;
+	var HEIGHT = 960;
 	const ITERATIONS = 500;
 	const STEPSIZE = 0.001;
 	
@@ -15,10 +12,10 @@ Utils.onPageLoad(function(){
 	
 	var tracer = new FractalPathtracer();
 	tracer.setSize(WIDTH,HEIGHT);
-	tracer.setPosition(POS_X,POS_Y);
-	tracer.setZoom(ZOOM);
-	tracer.setIterationCount(ITERATIONS);
-	tracer.setStepSize(STEPSIZE);
+	tracer.setPosition(0,0);
+	tracer.setZoom(0.8);
+	tracer.setIterationCount(500);
+	tracer.setSamples(25000000);
 	tracer.setFrameCount(500);
 	tracer.setColor(255,192,0);
 	tracer.setProgressCallback(onProgress);
@@ -36,7 +33,6 @@ Utils.onPageLoad(function(){
 				if (filterFunction.constructor==Function||tracerFunction.constructor==Function){
 					tracer.setFilterFunction(filterFunction);
 					tracer.setTracerFunction(tracerFunction);
-					tracer.render();
 				}else{
 					console.log("error, eval result is no function:");
 					console.log(filterFunction,tracerFunction);
@@ -44,6 +40,21 @@ Utils.onPageLoad(function(){
 			}catch (error){
 				console.log("eval error!");
 			}
+		}else if (message.message=="setSize"){
+			WIDTH = Math.round(message.width);
+			HEIGHT = Math.round(message.height);
+			canvas.width = WIDTH;
+			canvas.height = HEIGHT;
+			tracer.setSize(WIDTH,HEIGHT);
+		}else if(message.message=="setPosition"){
+			tracer.setPosition(1*message.posX,1*message.posY);
+			tracer.setZoom(1*message.zoom);
+		}else if (message.message=="setIterations"){
+			tracer.setIterationCount(Math.round(message.iterations));
+		}else if (message.message=="setSamples"){
+			tracer.setSamples(message.samples);
+		}else if (message.message=="render"){
+			tracer.render();
 		}
 	});
 	
