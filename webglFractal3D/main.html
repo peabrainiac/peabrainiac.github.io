@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<link rel="stylesheet" type="text/css" href="../css/styles.css">
+		<script src="../js/Utils.js"></script>
+		<script src="../js/gl/ShaderProgram.js"></script>
+		<script src="../js/gl/Vao.js"></script>
+		<script src="./Shaders.js"></script>
+		<script src="./Raymarcher.js"></script>
+		<script src="./script.js"></script>
+		<title>fractal path tracer</title>
+	</head>
+	<body>
+		<div class="sidebar-left resize-h" style="width:200px">
+			<div class="padding-20" style="max-height:100%;overflow:auto">
+				<span class="h3">Sidebar</span>
+			</div>
+		</div>
+		<div class="panel">
+			<div class="centered project resize" style="width:720px;height:720px;z-index:0">
+				<canvas id="canvas" style="width:100%;height:100%;z-index:-1;position:relative;"></canvas>
+			</div>
+		</div>
+	</body>
+</html>
