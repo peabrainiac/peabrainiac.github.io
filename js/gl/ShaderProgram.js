@@ -25,11 +25,29 @@ const ShaderProgram = function(gl, vertexSource, fragmentSource){
 		gl.useProgram(shaderProgram);
 	};
 	
-	exports.attribLocations = {};
-	exports.uniformLocations = {};
+	var uniformLocations = {};
 	
 	exports.bindAttribLocation = function(location,name){
 		gl.bindAttribLocation(shaderProgram,location,name);
+	};
+	exports.getUniformLocation = function(name){
+		if (!uniformLocations.hasOwnProperty(name)){
+			if(name in uniformLocations){
+				throw new Error("Invalid uniform name:  \""+name+"\"!");
+			}else{
+				uniformLocations[name] = gl.getUniformLocation(shaderProgram,name);
+			}
+		}
+		return uniformLocations[name];
+	};
+	exports.loadFloat = function(name,value){
+		gl.uniform1f(exports.getUniformLocation(name),value);
+	};
+	exports.loadVector3f = function(name,vector){
+		gl.uniform3f(exports.getUniformLocation(name),vector.x,vector.y,vector.z);
+	};
+	exports.loadMatrix3f = function(name,matrix){
+		gl.uniformMatrix3fv(exports.getUniformLocation(name),false,matrix.toArray());
 	};
 	
 	Object.freeze(exports);
