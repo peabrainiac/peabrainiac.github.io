@@ -9,6 +9,11 @@ const Vector3f = (function(){
 		this.y += vector.y;
 		this.z += vector.z;
 	};
+	constructor.prototype.subtract = function(vector){
+		this.x -= vector.x;
+		this.y -= vector.y;
+		this.z -= vector.z;
+	};
 	constructor.prototype.scale = function(scale){
 		this.x *= scale;
 		this.y *= scale;
@@ -20,6 +25,12 @@ const Vector3f = (function(){
 		vector.y = this.y;
 		vector.z = this.z;
 		return vector;
+	};
+	constructor.prototype.abs = function(){
+		return new Vector3f(Math.abs(this.x),Math.abs(this.y),Math.abs(this.z));
+	};
+	constructor.prototype.length = function(){
+		return Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
 	};
 	return constructor;
 })();

@@ -1,9 +1,10 @@
 const Camera = function(canvasElement){
 	var exports = {};
 	
-	var position = new Vector3f(0);
+	var position = new Vector3f(0,0,-2);
 	var velocity = new Vector3f(0);
 	var viewMatrix = new Matrix3f();
+	var maxAcceleration = 0.0005;
 	
 	var keyDown = {};
 	canvasElement.addEventListener("keydown",function(e){
@@ -47,22 +48,26 @@ const Camera = function(canvasElement){
 	exports.update = function(){
 		var acceleration = new Vector3f(0,0,0);
 		if (keyDown.a){
-			acceleration.x -= 0.01;
+			acceleration.x -= maxAcceleration;
 		}
 		if (keyDown.d){
-			acceleration.x += 0.01;
+			acceleration.x += maxAcceleration;
 		}
 		if (keyDown.s){
-			acceleration.z -= 0.01;
+			acceleration.z -= maxAcceleration;
 		}
 		if (keyDown.w){
-			acceleration.z += 0.01;
+			acceleration.z += maxAcceleration;
 		}
 		viewMatrix.apply(acceleration);
 		velocity.scale(0.95);
 		velocity.add(acceleration);
 		position.add(velocity);
 		viewMatrix.rotate(0.03,0.05,0.07);
+	};
+	exports.setSpeed = function(speed){
+		velocity.scale((speed/200)/maxAcceleration);
+		maxAcceleration = speed/200;
 	};
 	exports.getPosition = function(){
 		return position;

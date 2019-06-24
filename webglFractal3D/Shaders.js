@@ -18,15 +18,18 @@ const Shaders = (function(){
 	};
 	exports.getFragmentShaderSource = function(){
 		return `#version 300 es
-			precision mediump float;
+			precision highp float;
 			
 			in vec3 pass_direction;
 			out vec4 color;
 			
 			uniform vec3 cameraPosition;
 			
+			uniform mat3 fractalTransformation1;
+			uniform vec3 fractalOffset1;
+			
 			const int maxSteps = 128;
-			const float minDistance = 0.01;
+			const float minDistance = 0.00125;
 			
 			float trace(vec3 position, vec3 direction);
 			float dst_scene(vec3 pos);
@@ -50,20 +53,32 @@ const Shaders = (function(){
 					prevDistance = distance;
 					distance = dst_scene(p);
 					totalDistance += distance;
-					if (distance<minDistance){
+					if (distance<totalDistance*minDistance){
+						break;
+					}
+					if (totalDistance>10.0){
+						steps = maxSteps;
 						break;
 					}
 				}
 				if (steps==maxSteps){
 					return 0.0;
 				}else{
-					return 1.0-(float(steps)-(minDistance-distance)/(prevDistance-distance))/float(maxSteps);
+					return 1.0-(float(steps)-(totalDistance*minDistance-distance)/(prevDistance-distance))/float(maxSteps);
 				}
 			}
 			
 			float dst_scene(vec3 pos){
-				//return min(dst_sphere(pos,vec3(0),1.0),min(dst_sphere(pos,vec3(-1.4,0,-1.4),1.0),dst_sphere(pos,vec3(1.4,0,1.4),1.0)));
-				return dst_sphere(mod(pos,4.0),vec3(2.0),0.1);
+				float det = pow(determinant(fractalTransformation1),0.33333);
+				float factor = 1.0;
+				vec3 p = pos;
+				for (int i=0;i<20;i++){
+					p.xyz = abs(p.xyz);
+					p -= fractalOffset1;
+					p = fractalTransformation1*p;
+					factor *= det;
+				}
+				return (length(p)-1.0)/factor;
 			}
 			
 			float dst_sphere(vec3 pos, vec3 spherePos, float radius){

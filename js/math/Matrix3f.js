@@ -58,6 +58,9 @@ const Matrix3f = (function(){
 	constructor.prototype.toArray = function(){
 		return [this.m00,this.m01,this.m02,this.m10,this.m11,this.m12,this.m20,this.m21,this.m22];
 	};
+	constructor.prototype.getDeterminant = function(){
+		return this.m00*(this.m11*this.m22-this.m21*this.m12)-this.m10*(this.m01*this.m22-this.m21*this.m02)+this.m20*(this.m01*this.m12-this.m11*this.m02);
+	};
 	constructor.prototype.rotate = function(rx,ry,rz){
 		this.rotateX(rx);
 		this.rotateY(ry);

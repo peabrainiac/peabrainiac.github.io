@@ -11,6 +11,7 @@ Utils.onPageLoad(function(){
 		canvas.width = width;
 		canvas.height = height;
 		
+		camera.setSpeed(rayMarcher.getDistanceToFractal(camera.getPosition()));
 		camera.update();
 		rayMarcher.render(width,height,camera);
 		
