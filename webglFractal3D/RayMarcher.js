@@ -4,7 +4,6 @@ const RayMarcher = function(canvas){
 	var gl = canvas.getContext("webgl2");
 	
 	var transformation1 = new Matrix3f();
-	transformation1.rotate(0,45,90);
 	transformation1.scale(2);
 	var offset1 = new Vector3f(0.5,0.5,0.5)
 	
@@ -31,7 +30,7 @@ const RayMarcher = function(canvas){
 		var det = Math.pow(transformation1.getDeterminant(),0.33333);
 		var factor = 1;
 		var p = pos;
-		for (var i=0;i<16;i++){
+		for (var i=0;i<22;i++){
 			p = p.abs();
 			p.subtract(offset1);
 			transformation1.apply(p);
@@ -39,6 +38,19 @@ const RayMarcher = function(canvas){
 		}
 		return (p.length()-1)/factor;
 	};
+	exports.setTransformation1 = function(rotation1,rotation2,rotation3,scale){
+		transformation1 = new Matrix3f();
+		transformation1.rotate(rotation1,rotation2,rotation3);
+		transformation1.scale(scale);
+		shaderProgram.use();
+		shaderProgram.loadMatrix3f("fractalTransformation1",transformation1);
+	};
+	exports.setOffset1 = function(x,y,z){
+		offset1 = new Vector3f(x,y,z);
+		shaderProgram.use();
+		shaderProgram.loadVector3f("fractalOffset1",offset1);
+	};
+	
 	
 	return exports;
 };

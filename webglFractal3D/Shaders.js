@@ -30,6 +30,7 @@ const Shaders = (function(){
 			
 			const int maxSteps = 128;
 			const float minDistance = 0.00125;
+			const float maxDistance = 25.0;
 			
 			float trace(vec3 position, vec3 direction);
 			float dst_scene(vec3 pos);
@@ -56,7 +57,7 @@ const Shaders = (function(){
 					if (distance<totalDistance*minDistance){
 						break;
 					}
-					if (totalDistance>10.0){
+					if (totalDistance>maxDistance){
 						steps = maxSteps;
 						break;
 					}
@@ -72,13 +73,16 @@ const Shaders = (function(){
 				float det = pow(determinant(fractalTransformation1),0.33333);
 				float factor = 1.0;
 				vec3 p = pos;
-				for (int i=0;i<20;i++){
+				for (int i=0;i<22;i++){
 					p.xyz = abs(p.xyz);
 					p -= fractalOffset1;
 					p = fractalTransformation1*p;
 					factor *= det;
+					if (length(p)>maxDistance){
+						break;
+					}
 				}
-				return (length(p)-1.0)/factor;
+				return (length(p)-2.0)/factor;
 			}
 			
 			float dst_sphere(vec3 pos, vec3 spherePos, float radius){

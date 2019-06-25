@@ -8,6 +8,7 @@
 		<script src="../js/gl/Vao.js"></script>
 		<script src="../js/math/Vector3f.js"></script>
 		<script src="../js/math/Matrix3f.js"></script>
+		<script src="./InputManager.js"></script>
 		<script src="./Shaders.js"></script>
 		<script src="./RayMarcher.js"></script>
 		<script src="./Camera.js"></script>
@@ -15,15 +16,20 @@
 		<title>fractal path tracer</title>
 	</head>
 	<body>
-		<div class="sidebar-left resize-h" style="width:300px">
+		<div class="sidebar-left resize-h" style="width:400px">
 			<div class="padding-20" style="max-height:100%;overflow:auto">
-				<span class="h3">WebGL Fractal test</span>
-				<br>A work-in-progress webgl fractal renderer. This uses webgl2, so it may not work on all browsers (chrome and firefox should work fine though).<br>
-				Click the canvas element and then move your mouse to rotate the camera and move using wasd. Right click to exit  the pointer lock again.
+				<span class="h3">WebGL Fractal test</span><br>
+				A work-in-progress webgl fractal renderer. This uses webgl2, so it may not work on all browsers (chrome and firefox should work fine though).<br>
+				Click the canvas element and then move your mouse to rotate the camera and move using wasd. Right click to exit  the pointer lock again.<br>
+				<br><span class="h3">Formula</span><br>
+				Rotation 1: <input id="input-rotation-1" class="input-slider" type="range" min="0" max="360" step="1" value="0"><span id="input-rotation-1-span"></span><br>
+				Rotation 2: <input id="input-rotation-2" class="input-slider" type="range" min="0" max="360" step="1" value="15"><span id="input-rotation-2-span"></span><br>
+				Rotation 3: <input id="input-rotation-3" class="input-slider" type="range" min="0" max="360" step="1" value="30"><span id="input-rotation-3-span"></span><br>
+				Scale: <input id="input-scale" class="input-slider" type="range" min="1" max="4" step="0.02" value="2"><span id="input-scale-span"></span><br>
 			</div>
 		</div>
 		<div class="panel">
-			<div class="centered project resize" style="width:360px;height:360px;z-index:0">
+			<div class="centered project resize" style="width:480px;height:480px;z-index:0">
 				<canvas id="canvas" style="width:100%;height:100%;z-index:-1;position:relative;" tabindex="0"></canvas>
 			</div>
 		</div>
