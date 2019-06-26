@@ -40,6 +40,9 @@ const ShaderProgram = function(gl, vertexSource, fragmentSource){
 		}
 		return uniformLocations[name];
 	};
+	exports.bindTextureLocation = function(location,name){
+		gl.uniform1i(exports.getUniformLocation(name),location);
+	};
 	exports.loadFloat = function(name,value){
 		gl.uniform1f(exports.getUniformLocation(name),value);
 	};

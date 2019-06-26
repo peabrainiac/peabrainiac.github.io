@@ -90,8 +90,38 @@ const Shaders = (function(){
 			}
 		`;
 	};
+	exports.getSimpleVertexSource = function(){
+		return `#version 300 es
+			
+			in vec2 position;
+			out vec2 textureCoords;
+			
+			void main(){
+				textureCoords = position*0.5+vec2(0.5);
+				gl_Position = vec4(position,0,1);
+			}
+		`;
+	};
+	exports.getSimpleFragmentSource = function(){
+		return `#version 300 es
+			precision highp float;
+			
+			in vec2 textureCoords;
+			out vec4 color;
+			uniform sampler2D sampler;
+			
+			void main(){
+				color = texture(sampler,textureCoords);
+			}
+		`;
+	};
 	exports.createShaderProgram = function(gl){
 		var shaderProgram = new ShaderProgram(gl,exports.getVertexShaderSource(),exports.getFragmentShaderSource());
+		shaderProgram.bindAttribLocation(0,"position");
+		return shaderProgram;
+	};
+	exports.createSimpleShaderProgram = function(gl){
+		var shaderProgram = new ShaderProgram(gl,exports.getSimpleVertexSource(),exports.getSimpleFragmentSource());
 		shaderProgram.bindAttribLocation(0,"position");
 		return shaderProgram;
 	};

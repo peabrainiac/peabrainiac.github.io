@@ -7,6 +7,9 @@ Utils.onPageLoad(function(){
 	inputManager.onTransformationChange1(function(rotation1,rotation2,rotation3,scale){
 		rayMarcher.setTransformation1(rotation1,rotation2,rotation3,scale);
 	});
+	inputManager.onPixelSizeChange(function(pixelSize){
+		rayMarcher.setPixelSize(pixelSize);
+	});
 	
 	requestAnimationFrame(render);
 	

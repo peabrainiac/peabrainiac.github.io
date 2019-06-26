@@ -12,13 +12,21 @@ const InputManager = function(){
 	inputs.spans.rotation3 = document.getElementById("input-rotation-3-span");
 	inputs.spans.scale = document.getElementById("input-scale-span");
 	
+	inputs.settings = {};
+	inputs.settings.pixelSize = document.getElementById("input-pixelsize");
+	inputs.settings.spans = {};
+	inputs.settings.spans.pixelSize = document.getElementById("input-pixelsize-span");
+	
 	inputs.rotation1.addEventListener("input",updateTransformation1);
 	inputs.rotation2.addEventListener("input",updateTransformation1);
 	inputs.rotation3.addEventListener("input",updateTransformation1);
 	inputs.scale.addEventListener("input",updateTransformation1);
 	
+	inputs.settings.pixelSize.addEventListener("input",updatePixelSize);
+	
 	var callbacks = {};
 	callbacks.transformation1 = function(){};
+	callbacks.pixelSize = function(){};
 	
 	function updateTransformation1(){
 		var rotation1 = inputs.rotation1.value*1;
@@ -32,10 +40,20 @@ const InputManager = function(){
 		callbacks.transformation1(rotation1,rotation2,rotation3,scale);
 	}
 	
+	function updatePixelSize(){
+		var pixelSize = Math.pow(2,inputs.settings.pixelSize.value-1);
+		inputs.settings.spans.pixelSize.innerHTML = ":"+pixelSize;
+		callbacks.pixelSize(pixelSize);
+	}
+	
 	exports.onTransformationChange1 = function(callback){
 		callbacks.transformation1 = callback;
 		updateTransformation1();
 	};
+	exports.onPixelSizeChange = function(callback){
+		callbacks.pixelSize = callback;
+		updatePixelSize();
+	}
 	
 	return exports;
 };
