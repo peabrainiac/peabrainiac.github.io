@@ -15,7 +15,7 @@
 		<script src="./RayMarcher.js"></script>
 		<script src="./Camera.js"></script>
 		<script src="./script.js"></script>
-		<title>fractal path tracer</title>
+		<title>WebGL RayMarcher</title>
 	</head>
 	<body>
 		<div class="sidebar-left resize-h" style="width:400px">
@@ -24,12 +24,19 @@
 				A work-in-progress webgl fractal renderer. This uses webgl2, so it may not work on all browsers (chrome and firefox should work fine though).<br>
 				Click the canvas element and then move your mouse to rotate the camera and move using wasd. Right click to exit  the pointer lock again.<br>
 				<br><span class="h3">Formula</span><br>
-				Rotation 1: <input id="input-rotation-1" class="input-slider" type="range" min="0" max="360" step="1" value="0"><span id="input-rotation-1-span"></span><br>
+				Rotation 1: <input id="input-rotation-1" class="input-slider" type="range" min="0" max="360" step="1" value="45"><span id="input-rotation-1-span"></span><br>
 				Rotation 2: <input id="input-rotation-2" class="input-slider" type="range" min="0" max="360" step="1" value="15"><span id="input-rotation-2-span"></span><br>
 				Rotation 3: <input id="input-rotation-3" class="input-slider" type="range" min="0" max="360" step="1" value="30"><span id="input-rotation-3-span"></span><br>
-				Downscale: <input id="input-scale" class="input-slider" type="range" min="1" max="4" step="0.02" value="2"><span id="input-scale-span"></span><br>
+				Downscale: <input id="input-scale" class="input-slider" type="range" min="1" max="4" step="0.02" value="1.41"><span id="input-scale-span"></span><br>
 				<br><span class="h3">Settings</span><br>
 				Pixel size: <input id="input-pixelsize" class="input-slider" type="range" min="1" max="4" step="1" value="2"><span id="input-pixelsize-span"></span><br>
+				Shadows:
+				<select id="input-shadowmode" class="input-select">
+					<option value="1">Ambient Occlusion</option>
+					<option value="2">Normal Shadows</option>
+					<option value="3" selected="">Both</option>
+				</select><br>
+				Smoothing: <input id="input-smoothing" class="input-slider" type="range" min="1" max="5" step="1" value="3"><span id="input-smoothing-span"></span><br>
 			</div>
 		</div>
 		<div class="panel">

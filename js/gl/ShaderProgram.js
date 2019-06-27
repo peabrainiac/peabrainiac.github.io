@@ -52,6 +52,9 @@ const ShaderProgram = function(gl, vertexSource, fragmentSource){
 	exports.loadMatrix3f = function(name,matrix){
 		gl.uniformMatrix3fv(exports.getUniformLocation(name),false,matrix.toArray());
 	};
+	exports.loadInt = function(name,value){
+		gl.uniform1i(exports.getUniformLocation(name),value);
+	};
 	
 	Object.freeze(exports);
 	return exports;

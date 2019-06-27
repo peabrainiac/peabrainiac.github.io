@@ -1,7 +1,7 @@
 const Camera = function(canvasElement){
 	var exports = {};
 	
-	var position = new Vector3f(0,0,-2);
+	var position = new Vector3f(0,0,-4);
 	var velocity = new Vector3f(0);
 	var viewMatrix = new Matrix3f();
 	var maxAcceleration = 0.0005;
@@ -63,9 +63,6 @@ const Camera = function(canvasElement){
 		velocity.scale(0.95);
 		velocity.add(acceleration);
 		position.add(velocity);
-		if (!locked){
-			viewMatrix.rotate(0.03,0.05,0.07);
-		}
 	};
 	exports.setSpeed = function(speed){
 		velocity.scale((speed/200)/maxAcceleration);

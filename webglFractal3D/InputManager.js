@@ -14,8 +14,11 @@ const InputManager = function(){
 	
 	inputs.settings = {};
 	inputs.settings.pixelSize = document.getElementById("input-pixelsize");
+	inputs.settings.shadowMode = document.getElementById("input-shadowmode");
+	inputs.settings.smoothing = document.getElementById("input-smoothing");
 	inputs.settings.spans = {};
 	inputs.settings.spans.pixelSize = document.getElementById("input-pixelsize-span");
+	inputs.settings.spans.smoothing = document.getElementById("input-smoothing-span");
 	
 	inputs.rotation1.addEventListener("input",updateTransformation1);
 	inputs.rotation2.addEventListener("input",updateTransformation1);
@@ -23,6 +26,8 @@ const InputManager = function(){
 	inputs.scale.addEventListener("input",updateTransformation1);
 	
 	inputs.settings.pixelSize.addEventListener("input",updatePixelSize);
+	inputs.settings.shadowMode.addEventListener("change",updateShadowMode);
+	inputs.settings.smoothing.addEventListener("input",updateSmoothingRadius);
 	
 	var callbacks = {};
 	callbacks.transformation1 = function(){};
@@ -45,6 +50,14 @@ const InputManager = function(){
 		inputs.settings.spans.pixelSize.innerHTML = ":"+pixelSize;
 		callbacks.pixelSize(pixelSize);
 	}
+	function updateShadowMode(){
+		callbacks.shadowMode(inputs.settings.shadowMode.value);
+	}
+	function updateSmoothingRadius(){
+		var smoothingRadius = Math.pow(2,inputs.settings.smoothing.value-1);
+		inputs.settings.spans.smoothing.innerHTML = ":"+smoothingRadius+"px";
+		callbacks.smoothing(smoothingRadius);
+	}
 	
 	exports.onTransformationChange1 = function(callback){
 		callbacks.transformation1 = callback;
@@ -53,6 +66,14 @@ const InputManager = function(){
 	exports.onPixelSizeChange = function(callback){
 		callbacks.pixelSize = callback;
 		updatePixelSize();
+	};
+	exports.onShadowModeChange = function(callback){
+		callbacks.shadowMode = callback;
+		updateShadowMode();
+	};
+	exports.onSmoothingRadiusChange = function(callback){
+		callbacks.smoothing = callback;
+		updateSmoothingRadius();
 	}
 	
 	return exports;

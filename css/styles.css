@@ -74,6 +74,11 @@ body {
 	box-shadow: 0 0 3px #ffaf00;
 	outline: none;
 }
+.input-select {
+	background: #202020;
+	color: inherit;
+	border: 2px solid #303030;
+}
 .h3 {
 	font-size: 1.17em;
 	font-weight: bold;

@@ -27,23 +27,35 @@ const Shaders = (function(){
 			
 			uniform mat3 fractalTransformation1;
 			uniform vec3 fractalOffset1;
+			uniform int iterations;
+			uniform int shadowMode;
+			uniform float minDistance;
 			
 			const int maxSteps = 128;
-			const float minDistance = 0.00125;
 			const float maxDistance = 25.0;
 			
-			float trace(vec3 position, vec3 direction);
+			float trace(inout vec3 position, vec3 direction);
 			float dst_scene(vec3 pos);
 			float dst_sphere(vec3 pos, vec3 spherePos, float radius);
+			float surfaceAngle(vec3 pos, vec3 direction);
 			
 			void main(){
 				vec3 direction = normalize(pass_direction);
-				float result = trace(cameraPosition,direction);
+				vec3 position = cameraPosition;
+				float steps = trace(position,direction);
+				float angle = 0.5+0.5*surfaceAngle(position,direction);
+				float result = 1.0;
+				if (shadowMode%2==1){
+					result *= steps*steps;
+				}
+				if (shadowMode%4>=2){
+					result *= angle;
+				}
 				
 				color = vec4(result,result,result,1);
 			}
 			
-			float trace(vec3 position, vec3 direction){
+			float trace(inout vec3 position, vec3 direction){
 				float totalDistance = 0.0;
 				int steps;
 				vec3 p;
@@ -62,6 +74,7 @@ const Shaders = (function(){
 						break;
 					}
 				}
+				position += totalDistance*(1.0-minDistance)*direction;
 				if (steps==maxSteps){
 					return 0.0;
 				}else{
@@ -73,16 +86,43 @@ const Shaders = (function(){
 				float det = pow(determinant(fractalTransformation1),0.33333);
 				float factor = 1.0;
 				vec3 p = pos;
-				for (int i=0;i<22;i++){
+				float sphereRad = 1.0;
+				for (int i=0;i<iterations;i++){
 					p.xyz = abs(p.xyz);
 					p -= fractalOffset1;
 					p = fractalTransformation1*p;
 					factor *= det;
 					if (length(p)>maxDistance){
+						sphereRad *= det/(det-1.0);
 						break;
 					}
 				}
-				return (length(p)-2.0)/factor;
+				return (length(p)-sphereRad)/factor;
+			}
+			
+			float surfaceAngle(vec3 pos, vec3 direction){
+				float det = pow(determinant(fractalTransformation1),0.33333);
+				vec3 p = pos;
+				vec3 d = direction;
+				for (int i=0;i<iterations;i++){
+					if (p.x<0.0){
+						d.x *= -1.0;
+					}
+					if (p.y<0.0){
+						d.y *= -1.0;
+					}
+					if (p.z<0.0){
+						d.z *= -1.0;
+					}
+					p.xyz = abs(p.xyz);
+					p -= fractalOffset1;
+					p = fractalTransformation1*p;
+					d = fractalTransformation1*d;
+					if (length(p)>maxDistance){
+						break;
+					}
+				}
+				return -dot(normalize(d),normalize(p));
 			}
 			
 			float dst_sphere(vec3 pos, vec3 spherePos, float radius){

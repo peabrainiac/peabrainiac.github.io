@@ -10,6 +10,12 @@ Utils.onPageLoad(function(){
 	inputManager.onPixelSizeChange(function(pixelSize){
 		rayMarcher.setPixelSize(pixelSize);
 	});
+	inputManager.onShadowModeChange(function(mode){
+		rayMarcher.setShadowMode(mode);
+	});
+	inputManager.onSmoothingRadiusChange(function(smoothingRadius){
+		rayMarcher.setSmoothingRadius(smoothingRadius);
+	});
 	
 	requestAnimationFrame(render);
 	
@@ -20,7 +26,6 @@ Utils.onPageLoad(function(){
 		canvas.height = height;
 		
 		camera.setSpeed(rayMarcher.getDistanceToFractal(camera.getPosition()));
-		console.log("Distance to Fractal: "+rayMarcher.getDistanceToFractal(camera.getPosition()));
 		camera.update();
 		rayMarcher.render(width,height,camera);
 		
