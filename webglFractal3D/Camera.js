@@ -1,7 +1,7 @@
 const Camera = function(canvasElement){
 	var exports = {};
 	
-	var position = new Vector3f(0,0,-4);
+	var position = new Vector3f(0,0,-5);
 	var velocity = new Vector3f(0);
 	var viewMatrix = new Matrix3f();
 	var maxAcceleration = 0.0005;
