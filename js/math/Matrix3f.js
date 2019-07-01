@@ -37,6 +37,17 @@ const Matrix3f = (function(){
 		matrix.m22 = this.m22;
 		return matrix;
 	};
+    constructor.prototype.setTo = function(matrix){
+        this.m00 = matrix.m00;
+        this.m01 = matrix.m01;
+        this.m2 = matrix.m2;
+        this.m10 = matrix.m10;
+        this.m11 = matrix.m11;
+        this.m12 = matrix.m12;
+        this.m20 = matrix.m20;
+        this.m21 = matrix.m21;
+        this.m22 = matrix.m22;
+    };
 	constructor.prototype.apply = function(vector){
 		var v = vector.copy();
 		vector.x = this.m00*v.x+this.m10*v.y+this.m20*v.z;
@@ -55,6 +66,31 @@ const Matrix3f = (function(){
 		this.m12 = a.m02*b.m10+a.m12*b.m11+a.m22*b.m12;
 		this.m22 = a.m02*b.m20+a.m12*b.m21+a.m22*b.m22;
 	};
+    constructor.prototype.getInverse = function(){
+        var inv = this.copy();
+        var det = this.getDeterminant();
+        inv.m00 = (this.m11*this.m22-this.m21*this.m12)/det;
+        inv.m10 = (this.m12*this.m20-this.m22*this.m10)/det;
+        inv.m20 = (this.m10*this.m21-this.m20*this.m11)/det;
+        inv.m01 = (this.m21*this.m02-this.m01*this.m22)/det;
+        inv.m11 = (this.m22*this.m00-this.m02*this.m20)/det;
+        inv.m21 = (this.m20*this.m01-this.m00*this.m21)/det;
+        inv.m02 = (this.m01*this.m12-this.m11*this.m02)/det;
+        inv.m12 = (this.m02*this.m10-this.m12*this.m00)/det;
+        inv.m22 = (this.m00*this.m11-this.m10*this.m01)/det;
+        return inv;
+    };
+    constructor.prototype.scaleColumns = function(v){
+        this.m00 *= v.x;
+        this.m01 *= v.x;
+        this.m02 *= v.x;
+        this.m10 *= v.y;
+        this.m11 *= v.y;
+        this.m12 *= v.y;
+        this.m20 *= v.z;
+        this.m21 *= v.z;
+        this.m22 *= v.z;
+    };
 	constructor.prototype.toArray = function(){
 		return [this.m00,this.m01,this.m02,this.m10,this.m11,this.m12,this.m20,this.m21,this.m22];
 	};
@@ -114,5 +150,8 @@ const Matrix3f = (function(){
 		this.m01 = sin;
 		this.m11 = cos;
 	};
+    constructor.prototype.normalize = function(){
+        this.scale(1/Math.cbrt(this.getDeterminant()));
+    };
 	return constructor;
 })();

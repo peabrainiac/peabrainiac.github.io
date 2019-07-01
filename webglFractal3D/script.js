@@ -5,6 +5,12 @@ Utils.onPageLoad(function(){
 	
 	var inputManager = new InputManager();
 	inputManager.onTransformationChange1(function(rotation1,rotation2,rotation3,scale){
+        var pos = camera.getPosition();
+        var dir = camera.getViewMatrix();
+        var newTransform = rayMarcher.genTransformationMatrix(rotation1,rotation2,rotation3,scale);
+        rayMarcher.changePointWithFormula(pos,dir,rayMarcher.getTransformation1(),rayMarcher.getOffset1(),newTransform,rayMarcher.getOffset1());
+        camera.setPosition(pos);
+        camera.setViewMatrix(dir);
 		rayMarcher.setTransformation1(rotation1,rotation2,rotation3,scale);
 	});
 	inputManager.onPixelSizeChange(function(pixelSize){
@@ -16,6 +22,8 @@ Utils.onPageLoad(function(){
 	inputManager.onSmoothingRadiusChange(function(smoothingRadius){
 		rayMarcher.setSmoothingRadius(smoothingRadius);
 	});
+    camera.setPosition(new Vector3f(0,0,-5));
+    camera.setViewMatrix(new Matrix3f());
 	
 	requestAnimationFrame(render);
 	

@@ -68,9 +68,15 @@ const Camera = function(canvasElement){
 		velocity.scale((speed/200)/maxAcceleration);
 		maxAcceleration = speed/200;
 	};
+    exports.setPosition = function(pos){
+        position = pos;
+    };
 	exports.getPosition = function(){
 		return position;
 	};
+    exports.setViewMatrix = function(matrix){
+        viewMatrix = matrix;
+    };
 	exports.getViewMatrix = function(){
 		return viewMatrix;
 	};

@@ -26,11 +26,21 @@ const Vector3f = (function(){
 		vector.z = this.z;
 		return vector;
 	};
+    constructor.prototype.setTo = function(v){
+        this.x = v.x;
+        this.y = v.y;
+        this.z = v.z;
+    };
 	constructor.prototype.abs = function(){
 		return new Vector3f(Math.abs(this.x),Math.abs(this.y),Math.abs(this.z));
 	};
 	constructor.prototype.length = function(){
 		return Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
 	};
+    constructor.prototype.multiplyComponents = function(v){
+        this.x *= v.x;
+        this.y *= v.y;
+        this.z *= v.z;
+    };
 	return constructor;
 })();

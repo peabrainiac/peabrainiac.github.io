@@ -63,9 +63,7 @@ const RayMarcher = function(canvas){
 		return (p.length()-1)/factor;
 	};
 	exports.setTransformation1 = function (rotation1,rotation2,rotation3,scale){
-		transformation1 = new Matrix3f();
-		transformation1.rotate(rotation1,rotation2,rotation3);
-		transformation1.scale(scale);
+		transformation1 = exports.genTransformationMatrix(rotation1,rotation2,rotation3,scale);
 		shaderProgram.use();
 		shaderProgram.loadMatrix3f("fractalTransformation1",transformation1);
 		iterations = Math.min(Math.floor(7/Math.log10(scale)),200);
@@ -76,12 +74,57 @@ const RayMarcher = function(canvas){
 		shaderProgram.use();
 		shaderProgram.loadVector3f("fractalOffset1",offset1);
 	};
+    exports.getTransformation1 = function(){
+        return transformation1;
+    };
+    exports.getOffset1 = function(){
+        return offset1;
+    };
 	exports.setPixelSize = function(ps){
 		pixelSize = ps;
 	};
 	exports.setSmoothingRadius = function(rad){
 		smoothingRadius = rad;
 	};
+    exports.genTransformationMatrix = function(rotation1,rotation2,rotation3,scale){
+        var matrix = new Matrix3f();
+        matrix.rotate(rotation1,rotation2,rotation3);
+        matrix.scale(scale);
+        return matrix;
+    };
+    exports.changePointWithFormula = function(position,direction,oldTransform,oldOffset,newTransform,newOffset){
+        var iter = 0;
+        var p = position.copy();
+        var d = direction.copy();
+        var oldTransformNormalized = oldTransform.copy();
+        oldTransformNormalized.normalize();
+        var signs = [];
+        while(p.length()<5&&iter<100){
+            signs.push(new Vector3f(p.x>0?1:-1,p.y>0?1:-1,p.z>0?1:-1));
+            p = p.abs();
+            d.scaleColumns(signs[iter]);
+            p.subtract(oldOffset);
+            oldTransform.apply(p);
+            oldTransformNormalized.apply(d);
+            iter++;
+        }
+        var newTransformInverse = newTransform.getInverse();
+        var newTransformInverseNormalized = newTransformInverse.copy();
+        newTransformInverseNormalized.normalize();
+        while(iter>0){
+            iter--;
+            newTransformInverseNormalized.apply(d);
+            newTransformInverse.apply(p);
+            p.add(newOffset);
+            d.scaleColumns(signs[iter]);
+            p.x = Math.max(p.x,0);
+            p.y = Math.max(p.y,0);
+            p.z = Math.max(p.z,0);
+            p.multiplyComponents(signs[iter]);
+        }
+        position.setTo(p);
+        direction.setTo(d);
+    };
 	
 	exports.AMBIENT_OCCLUSION = 1;
 	exports.NORMAL_SHADOWS = 2;
