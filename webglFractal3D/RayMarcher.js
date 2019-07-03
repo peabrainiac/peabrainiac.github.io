@@ -2,28 +2,41 @@ const RayMarcher = function(canvas){
 	var exports = {};
 	
 	var gl = canvas.getContext("webgl2",{preserveDrawingBuffer:true});
+    var ext = gl.getExtension("EXT_COLOR_BUFFER_FLOAT");
+    console.log(ext);
 	
 	var shaderProgram = Shaders.createShaderProgram(gl);
 	shaderProgram.use();
+    shaderProgram.bindTextureLocation(0),"startValuesSampler";
+    
+	var simpleShader = Shaders.createSimpleShaderProgram(gl);
+    simpleShader.use();
+	simpleShader.bindTextureLocation(0,"sampler");
+    
+    var bundleShader = Shaders.createBundleShaderProgram(gl);
+    bundleShader.use();
 
 	var transformation1, offset1,  iterations;
 	
+    var bundling = true;
+    var bundleSize = 8;
+	var smoothingRadius = 5;
+	var pixelSize = 4;
+	
 	function init(){
 		exports.setTransformation1(0,0,0,2);
-		offset1 = new Vector3f(0.5,0.5,0.5);
-		shaderProgram.loadVector3f("fractalOffset1",offset1);
+        exports.setOffset1(0.5,0.5,0.5);
 		exports.setShadowMode(exports.AMBIENT_OCCLUSION+exports.NORMAL_SHADOWS);
 	}
 	
-	var simpleShader = Shaders.createSimpleShaderProgram(gl);
-	simpleShader.bindTextureLocation(0,"sampler");
-	
-	var pixelSize = 4;
-	var smoothingRadius = 5;
-	
-	var texture = new Texture(gl);
-	var framebuffer = new Framebuffer(gl);
-	framebuffer.attachTexture(texture,gl.COLOR_ATTACHMENT0);
+    var texture = new Texture(gl);
+    texture.setFormat(gl.RGBA32F,gl.RGBA,0,0,gl.FLOAT);
+    var framebuffer = new Framebuffer(gl);
+    framebuffer.attachTexture(texture,gl.COLOR_ATTACHMENT0)
+    
+	var texture2 = new Texture(gl);
+	var framebuffer2 = new Framebuffer(gl);
+	framebuffer2.attachTexture(texture2,gl.COLOR_ATTACHMENT0);
 	var defaultBuffer = new Framebuffer(gl,null);
 	defaultBuffer.bind();
 	
@@ -31,14 +44,28 @@ const RayMarcher = function(canvas){
 	vao.addVbo(0,2,[-1,1,-1,-1,1,-1,1,-1,1,1,-1,1]);
 	
 	exports.render = function(width,height,camera){
-		framebuffer.setSize(width/pixelSize,height/pixelSize);
-		framebuffer.bind();
-		framebuffer.clear(0,0,0,1);
+        framebuffer.setSize(width/(pixelSize*bundleSize),height/(pixelSize*bundleSize));
+        framebuffer.bind();
+        framebuffer.clear(0,0,0,0);
+        if (bundling){
+            bundleShader.use();
+            bundleShader.loadFloat("screenRatio",width/height);
+            bundleShader.loadFloat("bundleSize",smoothingRadius*bundleSize*pixelSize/Math.sqrt(width*height));
+            bundleShader.loadVector3f("cameraPosition",camera.getPosition());
+            bundleShader.loadMatrix3f("viewMatrix",camera.getViewMatrix());
+            gl.drawArrays(gl.TRIANGLES,0,6);
+        }
+        
+		framebuffer2.setSize(width/pixelSize,height/pixelSize);
+		framebuffer2.bind();
+		framebuffer2.clear(0,0,0,1);
 		shaderProgram.use();
 		shaderProgram.loadFloat("minDistance",smoothingRadius*pixelSize/Math.sqrt(width*height));
 		shaderProgram.loadFloat("screenRatio",width/height);
 		shaderProgram.loadVector3f("cameraPosition",camera.getPosition());
 		shaderProgram.loadMatrix3f("viewMatrix",camera.getViewMatrix());
+		gl.activeTexture(gl.TEXTURE0);
+		gl.bindTexture(gl.TEXTURE_2D,texture.texture);
 		gl.drawArrays(gl.TRIANGLES,0,6);
 		
 		defaultBuffer.setSize(width,height);
@@ -46,7 +73,7 @@ const RayMarcher = function(canvas){
 		defaultBuffer.clear(0,0,0,1);
 		simpleShader.use();
 		gl.activeTexture(gl.TEXTURE0);
-		gl.bindTexture(gl.TEXTURE_2D,texture.texture);
+		gl.bindTexture(gl.TEXTURE_2D,texture2.texture);
 		gl.drawArrays(gl.TRIANGLES,0,6);
 	};
 	
@@ -64,15 +91,20 @@ const RayMarcher = function(canvas){
 	};
 	exports.setTransformation1 = function (rotation1,rotation2,rotation3,scale){
 		transformation1 = exports.genTransformationMatrix(rotation1,rotation2,rotation3,scale);
+		iterations = Math.min(Math.floor(7/Math.log10(scale)),200);
 		shaderProgram.use();
 		shaderProgram.loadMatrix3f("fractalTransformation1",transformation1);
-		iterations = Math.min(Math.floor(7/Math.log10(scale)),200);
 		shaderProgram.loadInt("iterations",iterations);
+		bundleShader.use();
+		bundleShader.loadMatrix3f("fractalTransformation1",transformation1);
+		bundleShader.loadInt("iterations",iterations);
 	};
 	exports.setOffset1 = function(x,y,z){
 		offset1 = new Vector3f(x,y,z);
 		shaderProgram.use();
 		shaderProgram.loadVector3f("fractalOffset1",offset1);
+        bundleShader.use();
+        bundleShader.loadVector3f("fractalOffset1",offset1);
 	};
     exports.getTransformation1 = function(){
         return transformation1;
@@ -86,6 +118,12 @@ const RayMarcher = function(canvas){
 	exports.setSmoothingRadius = function(rad){
 		smoothingRadius = rad;
 	};
+    exports.setBundling = function(b){
+        bundling = b;
+    };
+    exports.setBundleSize = function(bs){
+        bundleSize = bs;
+    };
     exports.genTransformationMatrix = function(rotation1,rotation2,rotation3,scale){
         var matrix = new Matrix3f();
         matrix.rotate(rotation1,rotation2,rotation3);

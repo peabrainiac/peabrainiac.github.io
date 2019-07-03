@@ -23,15 +23,15 @@
 		<title>WebGL RayMarcher</title>
 	</head>
 	<body>
-		<div class="sidebar-left resize-h" style="width:400px">
+		<div class="sidebar-left resize-h" style="width:430px">
 			<div class="padding-20" style="max-height:100%;overflow:auto">
 				<span class="h3">WebGL Fractal test</span><br>
 				A work-in-progress webgl fractal renderer. This uses webgl2, so it may not work on all browsers (chrome and firefox should work fine though).<br>
 				Click the canvas element and then move your mouse to rotate the camera and move using wasd. Right click to exit  the pointer lock again.<br>
 				<br><span class="h3">Formula</span><br>
-				Rotation 1: <input id="input-rotation-1" class="input-slider" type="range" min="0" max="360" step="1" value="45"><span id="input-rotation-1-span"></span><br>
+				Rotation 1: <input id="input-rotation-1" class="input-slider" type="range" min="0" max="360" step="1" value="170"><span id="input-rotation-1-span"></span><br>
 				Rotation 2: <input id="input-rotation-2" class="input-slider" type="range" min="0" max="360" step="1" value="15"><span id="input-rotation-2-span"></span><br>
-				Rotation 3: <input id="input-rotation-3" class="input-slider" type="range" min="0" max="360" step="1" value="30"><span id="input-rotation-3-span"></span><br>
+				Rotation 3: <input id="input-rotation-3" class="input-slider" type="range" min="0" max="360" step="1" value="50"><span id="input-rotation-3-span"></span><br>
 				Downscale: <input id="input-scale" class="input-slider" type="range" min="1" max="4" step="0.02" value="1.41"><span id="input-scale-span"></span><br>
 				<br><span class="h3">Settings</span><br>
 				Pixel size: <input id="input-pixelsize" class="input-slider" type="range" min="1" max="4" step="1" value="2"><span id="input-pixelsize-span"></span><br>
@@ -41,7 +41,14 @@
 					<option value="2">Normal Shadows</option>
 					<option value="3" selected="">Both</option>
 				</select><br>
-				Smoothing: <input id="input-smoothing" class="input-slider" type="range" min="1" max="5" step="1" value="3"><span id="input-smoothing-span"></span><br>
+				Smoothing: <input id="input-smoothing" class="input-slider" type="range" min="1" max="5" step="1" value="2"><span id="input-smoothing-span"></span>
+                <br><br>
+				Speed: <input id="input-speed" class="input-slider" type="range" min="0" max="200" step="5" value="100"><span id="input-speed-span"></span>
+                <br><br>
+                Use ray bundling:<input id="input-bundling-checkbox" class="input-checkbox" type="checkbox"><br>
+				Bundle size: <input id="input-bundlesize" class="input-slider" type="range" min="1" max="16" step="1" value="8"><span id="input-bundlesize-span"></span>
+                <br><br><br>
+                <span id="span-fps"></span>
 			</div>
 		</div>
 		<div class="panel">

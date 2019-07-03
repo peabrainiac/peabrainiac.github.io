@@ -79,6 +79,9 @@ body {
 	color: inherit;
 	border: 2px solid #303030;
 }
+.input-checkbox{
+	vertical-align: middle;
+}
 .h3 {
 	font-size: 1.17em;
 	font-weight: bold;

@@ -16,9 +16,14 @@ const InputManager = function(){
 	inputs.settings.pixelSize = document.getElementById("input-pixelsize");
 	inputs.settings.shadowMode = document.getElementById("input-shadowmode");
 	inputs.settings.smoothing = document.getElementById("input-smoothing");
+    inputs.settings.speed = document.getElementById("input-speed");
+    inputs.settings.bundling = document.getElementById("input-bundling-checkbox");
+    inputs.settings.bundleSize = document.getElementById("input-bundlesize");
 	inputs.settings.spans = {};
 	inputs.settings.spans.pixelSize = document.getElementById("input-pixelsize-span");
 	inputs.settings.spans.smoothing = document.getElementById("input-smoothing-span");
+    inputs.settings.spans.speed = document.getElementById("input-speed-span");
+    inputs.settings.spans.bundleSize = document.getElementById("input-bundlesize-span");
 	
 	inputs.rotation1.addEventListener("input",updateTransformation1);
 	inputs.rotation2.addEventListener("input",updateTransformation1);
@@ -28,10 +33,11 @@ const InputManager = function(){
 	inputs.settings.pixelSize.addEventListener("input",updatePixelSize);
 	inputs.settings.shadowMode.addEventListener("change",updateShadowMode);
 	inputs.settings.smoothing.addEventListener("input",updateSmoothingRadius);
+    inputs.settings.speed.addEventListener("input",updateSpeedModifier);
+    inputs.settings.bundling.addEventListener("input",updateBundling);
+    inputs.settings.bundleSize.addEventListener("input",updateBundleSize);
 	
 	var callbacks = {};
-	callbacks.transformation1 = function(){};
-	callbacks.pixelSize = function(){};
 	
 	function updateTransformation1(){
 		var rotation1 = inputs.rotation1.value*1;
@@ -58,6 +64,20 @@ const InputManager = function(){
 		inputs.settings.spans.smoothing.innerHTML = ":"+smoothingRadius+"px";
 		callbacks.smoothing(smoothingRadius);
 	}
+    function updateSpeedModifier(){
+        var speedPercentage = inputs.settings.speed.value;
+        inputs.settings.spans.speed.innerHTML = ":"+speedPercentage+"%";
+        callbacks.speed(speedPercentage/100);
+    }
+    function updateBundling(){
+        var bundling = inputs.settings.bundling.checked;
+        callbacks.bundling(bundling);
+    }
+    function updateBundleSize(){
+        var bundleSize = inputs.settings.bundleSize.value;
+        inputs.settings.spans.bundleSize.innerHTML = ":"+bundleSize+"px";
+        callbacks.bundleSize(bundleSize);
+    }
 	
 	exports.onTransformationChange1 = function(callback){
 		callbacks.transformation1 = callback;
@@ -75,6 +95,18 @@ const InputManager = function(){
 		callbacks.smoothing = callback;
 		updateSmoothingRadius();
 	}
+    exports.onSpeedModifierChange = function(callback){
+        callbacks.speed = callback;
+        updateSpeedModifier();
+    };
+    exports.onBundlingChange = function(callback){
+        callbacks.bundling = callback;
+        updateBundling();
+    };
+    exports.onBundleSizeChange = function(callback){
+        callbacks.bundleSize = callback;
+        updateBundleSize();
+    };
 	
 	return exports;
 };

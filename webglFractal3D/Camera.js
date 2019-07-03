@@ -5,6 +5,7 @@ const Camera = function(canvasElement){
 	var velocity = new Vector3f(0);
 	var viewMatrix = new Matrix3f();
 	var maxAcceleration = 0.0005;
+    var speedModifier = 1;
 	
 	var keyDown = {};
 	canvasElement.addEventListener("keydown",function(e){
@@ -48,26 +49,29 @@ const Camera = function(canvasElement){
 	exports.update = function(){
 		var acceleration = new Vector3f(0,0,0);
 		if (keyDown.a){
-			acceleration.x -= maxAcceleration;
+			acceleration.x -= maxAcceleration*speedModifier;
 		}
 		if (keyDown.d){
-			acceleration.x += maxAcceleration;
+			acceleration.x += maxAcceleration*speedModifier;
 		}
 		if (keyDown.s){
-			acceleration.z -= maxAcceleration;
+			acceleration.z -= maxAcceleration*speedModifier;
 		}
 		if (keyDown.w){
-			acceleration.z += maxAcceleration;
+			acceleration.z += maxAcceleration*speedModifier;
 		}
 		viewMatrix.apply(acceleration);
 		velocity.scale(0.95);
 		velocity.add(acceleration);
 		position.add(velocity);
 	};
-	exports.setSpeed = function(speed){
-		velocity.scale((speed/200)/maxAcceleration);
-		maxAcceleration = speed/200;
+	exports.setDistanceToFractal = function(d){
+		velocity.scale((d/200)/maxAcceleration);
+		maxAcceleration = d/200;
 	};
+    exports.setSpeedModifier = function(speedMod){
+        speedModifier = speedMod;
+    };
     exports.setPosition = function(pos){
         position = pos;
     };

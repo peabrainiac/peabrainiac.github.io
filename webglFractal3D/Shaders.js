@@ -1,17 +1,96 @@
 const Shaders = (function(){
 	var exports = {};
 	
+    exports.getBundleVertexSource = function(){
+        return `#version 300 es
+            
+            in vec2 position;
+            out vec3 pass_direction;
+
+			uniform float screenRatio;
+			uniform mat3 viewMatrix;
+
+			void main(){
+				pass_direction = viewMatrix*vec3(position.x*0.5*sqrt(screenRatio),position.y*0.5/sqrt(screenRatio),1);
+				gl_Position = vec4(position,0,1);
+			}
+        `;
+    };
+    
+    exports.getBundleFragmentSource = function(){
+        return `#version 300 es
+            precision highp float;
+            
+            in vec3 pass_direction;
+            out vec4 out_values;
+            
+            uniform vec3 cameraPosition;
+            uniform float bundleSize;
+
+            uniform mat3 fractalTransformation1;
+            uniform vec3 fractalOffset1;
+            uniform int iterations;
+
+            const float maxDistance = 25.0;
+            
+            float dst_scene(vec3 pos);
+            
+            void main(){
+                vec3 direction = normalize(pass_direction);
+				float totalDistance = 0.0;
+				int steps;
+				vec3 p;
+				float distance;
+				float prevDistance;
+				for (steps=0;steps<10;steps++){
+					p = cameraPosition+totalDistance*direction;
+					prevDistance = distance;
+					distance = dst_scene(p);
+					totalDistance += distance;
+					if (distance<totalDistance*bundleSize*0.5){
+						break;
+					}
+                    if (distance>maxDistance){
+                        break;
+                    }
+				}
+                
+				out_values = vec4(totalDistance-distance-prevDistance,0,0,steps-1);
+            }
+			
+			float dst_scene(vec3 pos){
+				float det = pow(determinant(fractalTransformation1),0.33333);
+				float factor = 1.0;
+				vec3 p = pos;
+				float sphereRad = 1.0;
+				for (int i=0;i<iterations;i++){
+					p.xyz = abs(p.xyz);
+					p -= fractalOffset1;
+					p = fractalTransformation1*p;
+					factor *= det;
+					if (length(p)>maxDistance){
+						sphereRad *= det/(det-1.0);
+						break;
+					}
+				}
+				return (length(p)-sphereRad)/factor;
+			}
+        `;
+    };
+    
 	exports.getVertexShaderSource = function(){
 		return `#version 300 es
 			
 			in vec2 position;
 			out vec3 pass_direction;
+            out vec2 pass_textureCoords;
 			
 			uniform float screenRatio;
 			uniform mat3 viewMatrix;
 			
 			void main(){
 				pass_direction = viewMatrix*vec3(position.x*0.5*sqrt(screenRatio),position.y*0.5/sqrt(screenRatio),1);
+				pass_textureCoords = position*0.5+vec2(0.5);
 				gl_Position = vec4(position,0,1);
 			}
 		`;
@@ -21,8 +100,11 @@ const Shaders = (function(){
 			precision highp float;
 			
 			in vec3 pass_direction;
+            in vec2 pass_textureCoords;
 			out vec4 color;
-			
+            
+            uniform sampler2D startValuesSampler;
+            
 			uniform vec3 cameraPosition;
 			
 			uniform mat3 fractalTransformation1;
@@ -34,7 +116,7 @@ const Shaders = (function(){
 			const int maxSteps = 128;
 			const float maxDistance = 25.0;
 			
-			float trace(inout vec3 position, vec3 direction);
+			float trace(inout vec3 position, vec3 direction, float startDistance, int startSteps);
 			float dst_scene(vec3 pos);
 			float dst_sphere(vec3 pos, vec3 spherePos, float radius);
 			float surfaceAngle(vec3 pos, vec3 direction);
@@ -42,7 +124,8 @@ const Shaders = (function(){
 			void main(){
 				vec3 direction = normalize(pass_direction);
 				vec3 position = cameraPosition;
-				float steps = trace(position,direction);
+                vec4 startValues = texture(startValuesSampler,pass_textureCoords);
+				float steps = trace(position,direction,startValues.r,int(startValues.a));
 				float angle = 0.5+0.5*surfaceAngle(position,direction);
 				float result = 1.0;
 				if (shadowMode%2==1){
@@ -52,16 +135,17 @@ const Shaders = (function(){
 					result *= angle;
 				}
 				
+				//color = vec4(startValues.rra,1.0)*0.5+0.5*vec4(result,result,result,1);
 				color = vec4(result,result,result,1);
 			}
 			
-			float trace(inout vec3 position, vec3 direction){
-				float totalDistance = 0.0;
+			float trace(inout vec3 position, vec3 direction, float startDistance, int startSteps){
+				float totalDistance = startDistance;
 				int steps;
 				vec3 p;
 				float distance;
 				float prevDistance;
-				for (steps=0;steps<maxSteps;steps++){
+				for (steps=startSteps;steps<maxSteps;steps++){
 					p = position+totalDistance*direction;
 					prevDistance = distance;
 					distance = dst_scene(p);
@@ -160,6 +244,12 @@ const Shaders = (function(){
 		shaderProgram.bindAttribLocation(0,"position");
 		return shaderProgram;
 	};
+	exports.createBundleShaderProgram = function(gl){
+		var shaderProgram = new ShaderProgram(gl,exports.getBundleVertexSource(),exports.getBundleFragmentSource());
+		shaderProgram.bindAttribLocation(0,"position");
+		return shaderProgram;
+	};
+    
 	exports.createSimpleShaderProgram = function(gl){
 		var shaderProgram = new ShaderProgram(gl,exports.getSimpleVertexSource(),exports.getSimpleFragmentSource());
 		shaderProgram.bindAttribLocation(0,"position");
