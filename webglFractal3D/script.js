@@ -31,6 +31,13 @@ Utils.onPageLoad(function(){
     inputManager.onBundleSizeChange(function(bundleSize){
         rayMarcher.setBundleSize(bundleSize);
     });
+    inputManager.onBundlePrecisionChange(function(precision){
+        rayMarcher.setBundlePrecision(precision);
+    });
+    inputManager.onSizeChange(function(width,height){
+        canvas.parentElement.style.width = width+"px";
+        canvas.parentElement.style.height = height+"px";
+    });
     camera.setPosition(new Vector3f(0,0,-5));
     camera.setViewMatrix(new Matrix3f());
 	
@@ -38,19 +45,25 @@ Utils.onPageLoad(function(){
     
     var prevTime = performance.now();
     var deltaTime = 0;
+    
+    var width = 0;
+    var height = 0;
 	
 	function render(time){
-		var width = canvas.offsetWidth;
-		var height = canvas.offsetHeight;
-		canvas.width = width;
-		canvas.height = height;
+        if (width!=canvas.offsetWidth||height!=canvas.offsetHeight){
+            width = canvas.offsetWidth;
+            height = canvas.offsetHeight;
+            canvas.width = width;
+            canvas.height = height;
+            inputManager.setSizeDisplay(width,height);
+        }
 		
 		camera.setDistanceToFractal(rayMarcher.getDistanceToFractal(camera.getPosition()));
 		camera.update();
 		rayMarcher.render(width,height,camera);
         
-        deltaTime *= 0.9;
-        deltaTime += 0.1*(time-prevTime);
+        deltaTime *= 0.98;
+        deltaTime += 0.02*(time-prevTime);
         document.getElementById("span-fps").innerHTML = "FPS: "+Math.round(1000/deltaTime);
         prevTime = time;
 		

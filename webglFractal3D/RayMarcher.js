@@ -20,12 +20,13 @@ const RayMarcher = function(canvas){
 	
     var bundling = true;
     var bundleSize = 8;
+    var bundlePrecision = 0.2;
 	var smoothingRadius = 5;
 	var pixelSize = 4;
 	
 	function init(){
 		exports.setTransformation1(0,0,0,2);
-        exports.setOffset1(0.5,0.5,0.5);
+        exports.setOffset1(0,0,1);
 		exports.setShadowMode(exports.AMBIENT_OCCLUSION+exports.NORMAL_SHADOWS);
 	}
 	
@@ -50,7 +51,7 @@ const RayMarcher = function(canvas){
         if (bundling){
             bundleShader.use();
             bundleShader.loadFloat("screenRatio",width/height);
-            bundleShader.loadFloat("bundleSize",smoothingRadius*bundleSize*pixelSize/Math.sqrt(width*height));
+            bundleShader.loadFloat("bundleSize",bundlePrecision*(smoothingRadius+bundleSize)*pixelSize/Math.sqrt(width*height));
             bundleShader.loadVector3f("cameraPosition",camera.getPosition());
             bundleShader.loadMatrix3f("viewMatrix",camera.getViewMatrix());
             gl.drawArrays(gl.TRIANGLES,0,6);
@@ -123,6 +124,9 @@ const RayMarcher = function(canvas){
     };
     exports.setBundleSize = function(bs){
         bundleSize = bs;
+    };
+    exports.setBundlePrecision = function(p){
+        bundlePrecision = p;
     };
     exports.genTransformationMatrix = function(rotation1,rotation2,rotation3,scale){
         var matrix = new Matrix3f();

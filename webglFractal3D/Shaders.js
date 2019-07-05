@@ -47,12 +47,9 @@ const Shaders = (function(){
 					prevDistance = distance;
 					distance = dst_scene(p);
 					totalDistance += distance;
-					if (distance<totalDistance*bundleSize*0.5){
+					if (distance<totalDistance*bundleSize||distance>maxDistance){
 						break;
 					}
-                    if (distance>maxDistance){
-                        break;
-                    }
 				}
                 
 				out_values = vec4(totalDistance-distance-prevDistance,0,0,steps-1);
@@ -75,6 +72,17 @@ const Shaders = (function(){
 				}
 				return (length(p)-sphereRad)/factor;
 			}
+
+            vec3 nearestPoint(vec3 pos){
+                vec3 p = pos;
+                mat3 transformationInverse = inverse(fractalTransformation1);
+                float sphereRad = 1.0;
+                int i;
+                for (i=0;i<iterations;i++){
+                    p.xyz = abs(p.xyz);
+                }
+                return p;
+            }
         `;
     };
     
@@ -119,6 +127,7 @@ const Shaders = (function(){
 			float trace(inout vec3 position, vec3 direction, float startDistance, int startSteps);
 			float dst_scene(vec3 pos);
 			float dst_sphere(vec3 pos, vec3 spherePos, float radius);
+            vec3 fractalColor(vec3 pos);
 			float surfaceAngle(vec3 pos, vec3 direction);
 			
 			void main(){
@@ -135,8 +144,7 @@ const Shaders = (function(){
 					result *= angle;
 				}
 				
-				//color = vec4(startValues.rra,1.0)*0.5+0.5*vec4(result,result,result,1);
-				color = vec4(result,result,result,1);
+				color = vec4(result*fractalColor(position),1);
 			}
 			
 			float trace(inout vec3 position, vec3 direction, float startDistance, int startSteps){
@@ -183,6 +191,26 @@ const Shaders = (function(){
 				}
 				return (length(p)-sphereRad)/factor;
 			}
+
+            vec3 fractalColor(vec3 pos){
+				float det = pow(determinant(fractalTransformation1),0.33333);
+				float factor = 1.0;
+				vec3 p = pos;
+				float sphereRad = 1.0;
+                vec3 color = vec3(0.0);
+				for (int i=0;i<iterations;i++){
+					p.xyz = abs(p.xyz);
+					p -= fractalOffset1;
+					p = fractalTransformation1*p;
+					factor *= det;
+                    color = max(color,p);
+					if (length(p)>maxDistance){
+						break;
+					}
+				}
+                color = min(color,vec3(1.0));
+                return color;
+            }
 			
 			float surfaceAngle(vec3 pos, vec3 direction){
 				float det = pow(determinant(fractalTransformation1),0.33333);

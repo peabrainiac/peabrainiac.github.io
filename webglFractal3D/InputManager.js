@@ -19,11 +19,16 @@ const InputManager = function(){
     inputs.settings.speed = document.getElementById("input-speed");
     inputs.settings.bundling = document.getElementById("input-bundling-checkbox");
     inputs.settings.bundleSize = document.getElementById("input-bundlesize");
+    inputs.settings.bundlePrecision = document.getElementById("input-bundleprecision");
 	inputs.settings.spans = {};
 	inputs.settings.spans.pixelSize = document.getElementById("input-pixelsize-span");
 	inputs.settings.spans.smoothing = document.getElementById("input-smoothing-span");
     inputs.settings.spans.speed = document.getElementById("input-speed-span");
     inputs.settings.spans.bundleSize = document.getElementById("input-bundlesize-span");
+    inputs.settings.spans.bundlePrecision = document.getElementById("input-bundleprecision-span");
+    
+    inputs.width = document.getElementById("input-width");
+    inputs.height = document.getElementById("input-height");
 	
 	inputs.rotation1.addEventListener("input",updateTransformation1);
 	inputs.rotation2.addEventListener("input",updateTransformation1);
@@ -36,6 +41,10 @@ const InputManager = function(){
     inputs.settings.speed.addEventListener("input",updateSpeedModifier);
     inputs.settings.bundling.addEventListener("input",updateBundling);
     inputs.settings.bundleSize.addEventListener("input",updateBundleSize);
+    inputs.settings.bundlePrecision.addEventListener("input",updateBundlePrecision);
+    
+    inputs.width.addEventListener("input",updateSize);
+    inputs.height.addEventListener("input",updateSize);
 	
 	var callbacks = {};
 	
@@ -78,6 +87,16 @@ const InputManager = function(){
         inputs.settings.spans.bundleSize.innerHTML = ":"+bundleSize+"px";
         callbacks.bundleSize(bundleSize);
     }
+    function updateBundlePrecision(){
+        var precision = inputs.settings.bundlePrecision.value*1;
+        inputs.settings.spans.bundlePrecision.innerHTML = ":"+precision;
+        callbacks.bundlePrecision(precision);
+    }
+    function updateSize(){
+        var width = inputs.width.value;
+        var height = inputs.height.value;
+        callbacks.size(width,height);
+    }
 	
 	exports.onTransformationChange1 = function(callback){
 		callbacks.transformation1 = callback;
@@ -106,6 +125,19 @@ const InputManager = function(){
     exports.onBundleSizeChange = function(callback){
         callbacks.bundleSize = callback;
         updateBundleSize();
+    };
+    exports.onBundlePrecisionChange = function(callback){
+        callbacks.bundlePrecision = callback;
+        updateBundlePrecision();
+    };
+    exports.onSizeChange = function(callback){
+        callbacks.size = callback;
+        updateSize();
+    };
+    
+    exports.setSizeDisplay = function(width,height){
+        inputs.width.value = width;
+        inputs.height.value = height;
     };
 	
 	return exports;
