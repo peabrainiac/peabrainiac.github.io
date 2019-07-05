@@ -6,11 +6,17 @@ const InputManager = function(){
 	inputs.rotation2 = document.getElementById("input-rotation-2");
 	inputs.rotation3 = document.getElementById("input-rotation-3");
 	inputs.scale = document.getElementById("input-scale");
+    inputs.offsetX = document.getElementById("input-offset-x");
+    inputs.offsetY = document.getElementById("input-offset-y");
+    inputs.offsetZ = document.getElementById("input-offset-z");
 	inputs.spans = {};
 	inputs.spans.rotation1 = document.getElementById("input-rotation-1-span");
 	inputs.spans.rotation2 = document.getElementById("input-rotation-2-span");
 	inputs.spans.rotation3 = document.getElementById("input-rotation-3-span");
 	inputs.spans.scale = document.getElementById("input-scale-span");
+    inputs.spans.offsetX = document.getElementById("input-offset-x-span");
+    inputs.spans.offsetY = document.getElementById("input-offset-y-span");
+    inputs.spans.offsetZ = document.getElementById("input-offset-z-span");
 	
 	inputs.settings = {};
 	inputs.settings.pixelSize = document.getElementById("input-pixelsize");
@@ -34,6 +40,9 @@ const InputManager = function(){
 	inputs.rotation2.addEventListener("input",updateTransformation1);
 	inputs.rotation3.addEventListener("input",updateTransformation1);
 	inputs.scale.addEventListener("input",updateTransformation1);
+    inputs.offsetX.addEventListener("input",updateOffset1);
+    inputs.offsetY.addEventListener("input",updateOffset1);
+    inputs.offsetZ.addEventListener("input",updateOffset1);
 	
 	inputs.settings.pixelSize.addEventListener("input",updatePixelSize);
 	inputs.settings.shadowMode.addEventListener("change",updateShadowMode);
@@ -59,7 +68,15 @@ const InputManager = function(){
 		inputs.spans.scale.innerHTML = ":"+scale;
 		callbacks.transformation1(rotation1,rotation2,rotation3,scale);
 	}
-	
+	function updateOffset1(){
+        var offsetX = inputs.offsetX.value*1;
+        var offsetY = inputs.offsetY.value*1;
+        var offsetZ = inputs.offsetZ.value*1;
+        inputs.spans.offsetX.innerHTML = ":"+offsetX;
+        inputs.spans.offsetY.innerHTML = ":"+offsetY;
+        inputs.spans.offsetZ.innerHTML = ":"+offsetZ;
+        callbacks.offset1(offsetX,offsetY,offsetZ)
+    };
 	function updatePixelSize(){
 		var pixelSize = Math.pow(2,inputs.settings.pixelSize.value-1);
 		inputs.settings.spans.pixelSize.innerHTML = ":"+pixelSize;
@@ -102,6 +119,10 @@ const InputManager = function(){
 		callbacks.transformation1 = callback;
 		updateTransformation1();
 	};
+    exports.onOffsetChange1 = function(callback){
+        callbacks.offset1 = callback;
+        updateOffset1();
+    }
 	exports.onPixelSizeChange = function(callback){
 		callbacks.pixelSize = callback;
 		updatePixelSize();
@@ -135,6 +156,24 @@ const InputManager = function(){
         updateSize();
     };
     
+    exports.setTransformation1 = function(rotation1,rotation2,rotation3,scale){
+        inputs.rotation1.value = rotation1;
+        inputs.rotation2.value = rotation2;
+        inputs.rotation3.value = rotation3;
+        inputs.scale.value = scale;
+		inputs.spans.rotation1.innerHTML = ":"+inputs.rotation1.value;
+		inputs.spans.rotation2.innerHTML = ":"+inputs.rotation2.value;
+		inputs.spans.rotation3.innerHTML = ":"+inputs.rotation3.value;
+		inputs.spans.scale.innerHTML = ":"+inputs.scale.value;
+    };
+    exports.setOffset1 = function(offsetX,offsetY,offsetZ){
+        inputs.offsetX.value = offsetX;
+        inputs.offsetY.value = offsetY;
+        inputs.offsetZ.value = offsetZ;
+        inputs.spans.offsetX.innerHTML = ":"+inputs.offsetX.value;
+        inputs.spans.offsetY.innerHTML = ":"+inputs.offsetY.value;
+        inputs.spans.offsetZ.innerHTML = ":"+inputs.offsetZ.value;
+    };
     exports.setSizeDisplay = function(width,height){
         inputs.width.value = width;
         inputs.height.value = height;

@@ -37,6 +37,9 @@ const Vector3f = (function(){
 	constructor.prototype.length = function(){
 		return Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
 	};
+    constructor.prototype.normalize = function(){
+        this.scale(1/this.length());
+    };
     constructor.prototype.multiplyComponents = function(v){
         this.x *= v.x;
         this.y *= v.y;

@@ -3,16 +3,14 @@ Utils.onPageLoad(function(){
 	var rayMarcher = new RayMarcher(canvas);
 	var camera = new Camera(canvas);
 	
+    var formula = {};
+    formula.copy = function(){
+      return {rotation:this.rotation.copy(),scale:this.scale,offset:this.offset.copy(),copy:this.copy};  
+    };
+    
 	var inputManager = new InputManager();
-	inputManager.onTransformationChange1(function(rotation1,rotation2,rotation3,scale){
-        var pos = camera.getPosition();
-        var dir = camera.getViewMatrix();
-        var newTransform = rayMarcher.genTransformationMatrix(rotation1,rotation2,rotation3,scale);
-        rayMarcher.changePointWithFormula(pos,dir,rayMarcher.getTransformation1(),rayMarcher.getOffset1(),newTransform,rayMarcher.getOffset1());
-        camera.setPosition(pos);
-        camera.setViewMatrix(dir);
-		rayMarcher.setTransformation1(rotation1,rotation2,rotation3,scale);
-	});
+	inputManager.onTransformationChange1(setTransformation);
+    inputManager.onOffsetChange1(setOffset);
 	inputManager.onPixelSizeChange(function(pixelSize){
 		rayMarcher.setPixelSize(pixelSize);
 	});
@@ -46,6 +44,33 @@ Utils.onPageLoad(function(){
     var prevTime = performance.now();
     var deltaTime = 0;
     
+    var animating = false;
+    var repeatAnimation = false;
+    var animationLength = document.getElementById("input-animation-length").value;
+    var animationProgress = 0;
+    
+    var prevFormula, nextFormula;
+    
+    document.getElementById("input-animation-length").addEventListener("input",function(){
+        animationLength = document.getElementById("input-animation-length").value;
+    });
+    
+    document.getElementById("input-button-animate").addEventListener("click",function(){
+        prevFormula = formula.copy();
+        nextFormula = formula.copy();
+        nextFormula.rotation.x = Math.floor(Math.random()*360);
+        nextFormula.rotation.y = Math.floor(Math.random()*360);
+        nextFormula.rotation.z = Math.floor(Math.random()*360);
+        nextFormula.scale = 1.2+Math.random();
+        nextFormula.offset.x = 2-2*Math.random()*Math.random();
+        nextFormula.offset.y = 2-2*Math.random()*Math.random();
+        nextFormula.offset.z = 2-2*Math.random()*Math.random();
+        nextFormula.offset.normalize();
+        nextFormula.offset.scale(1-0.75*Math.random()*Math.random());
+        animating = true;
+        animationProgress = 0;
+    });
+    
     var width = 0;
     var height = 0;
 	
@@ -56,6 +81,24 @@ Utils.onPageLoad(function(){
             canvas.width = width;
             canvas.height = height;
             inputManager.setSizeDisplay(width,height);
+        }
+        
+        if (animating){
+            animationProgress += (time-prevTime)/(animationLength*1000);
+            if (animationProgress>=1){
+                animationProgress = 1;
+                animating = false;
+            }
+            if (repeatAnimation&&animationProgress>0.5){
+                document.getElementById("input-button-animate").click();
+            }
+            formula.rotation = animationBlend3f(prevFormula.rotation,nextFormula.rotation);
+            formula.scale = animationBlend(prevFormula.scale,nextFormula.scale);
+            formula.offset = animationBlend3f(prevFormula.offset,nextFormula.offset);
+            inputManager.setTransformation1(formula.rotation.x,formula.rotation.y,formula.rotation.z,formula.scale);
+            inputManager.setOffset1(formula.offset.x,formula.offset.y,formula.offset.z);
+            setTransformation(formula.rotation.x,formula.rotation.y,formula.rotation.z,formula.scale);
+            setOffset(formula.offset.x,formula.offset.y,formula.offset.z);
         }
 		
 		camera.setDistanceToFractal(rayMarcher.getDistanceToFractal(camera.getPosition()));
@@ -69,4 +112,35 @@ Utils.onPageLoad(function(){
 		
 		requestAnimationFrame(render);
 	}
+    
+    function animationBlend(v1,v2){
+        return v1+(v2-v1)*(1-(1-animationProgress)*(1-animationProgress));
+    }
+    
+    function animationBlend3f(v1,v2){
+        return new Vector3f(animationBlend(v1.x,v2.x),animationBlend(v1.y,v2.y),animationBlend(v1.z,v2.z));
+    }
+    
+    function setTransformation(rotation1,rotation2,rotation3,scale){
+        formula.rotation = new Vector3f(rotation1,rotation2,rotation3);
+        formula.scale = scale;
+        var pos = camera.getPosition();
+        var dir = camera.getViewMatrix();
+        var newTransform = rayMarcher.genTransformationMatrix(rotation1,rotation2,rotation3,scale);
+        rayMarcher.changePointWithFormula(pos,dir,rayMarcher.getTransformation1(),rayMarcher.getOffset1(),newTransform,rayMarcher.getOffset1());
+        camera.setPosition(pos);
+        camera.setViewMatrix(dir);
+		rayMarcher.setTransformation1(rotation1,rotation2,rotation3,scale);
+	}
+    
+    function setOffset(offsetX,offsetY,offsetZ){
+        formula.offset = new Vector3f(offsetX,offsetY,offsetZ);
+        var pos = camera.getPosition();
+        var dir = camera.getViewMatrix();
+        var newOffset = new Vector3f(offsetX,offsetY,offsetZ);
+        rayMarcher.changePointWithFormula(pos,dir,rayMarcher.getTransformation1(),rayMarcher.getOffset1(),rayMarcher.getTransformation1(),newOffset);
+        camera.setPosition(pos);
+        camera.setViewMatrix(dir);
+        rayMarcher.setOffset1(offsetX,offsetY,offsetZ);
+    }
 });
