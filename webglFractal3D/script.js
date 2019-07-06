@@ -55,6 +55,10 @@ Utils.onPageLoad(function(){
         animationLength = document.getElementById("input-animation-length").value;
     });
     
+    document.getElementById("input-animation-repeat").addEventListener("change",function(){
+        repeatAnimation = document.getElementById("input-animation-repeat").checked;
+    });
+    
     document.getElementById("input-button-animate").addEventListener("click",function(){
         prevFormula = formula.copy();
         nextFormula = formula.copy();
