@@ -66,9 +66,9 @@ Utils.onPageLoad(function(){
         nextFormula.rotation.y = Math.floor(Math.random()*360);
         nextFormula.rotation.z = Math.floor(Math.random()*360);
         nextFormula.scale = 1.2+Math.random();
-        nextFormula.offset.x = 2-2*Math.random()*Math.random();
-        nextFormula.offset.y = 2-2*Math.random()*Math.random();
-        nextFormula.offset.z = 2-2*Math.random()*Math.random();
+        nextFormula.offset.x = 2-3*Math.random()*Math.random();
+        nextFormula.offset.y = 2-3*Math.random()*Math.random();
+        nextFormula.offset.z = 2-3*Math.random()*Math.random();
         nextFormula.offset.normalize();
         nextFormula.offset.scale(1-0.75*Math.random()*Math.random());
         animating = true;
