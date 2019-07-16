@@ -40,6 +40,18 @@ const Popup = function(parentElement,titleText,width,height){
         body.appendChild(line);
         button.addEventListener("click",callback);
     };
+    exports.addCloseButton = function(){
+    	exports.addButton("Close",exports.close);
+    };
+    exports.addCanvas = function(canvas){
+    	var container = document.createElement("div");
+    	container.style.margin = "20px";
+    	container.style.textAlign = "center";
+    	canvas.style.width = "100%";
+    	canvas.style.boxShadow = "2px 2px 8px #000000";
+    	container.appendChild(canvas);
+    	body.appendChild(container);
+    };
     exports.resize = function(width=Math.max(head.offsetWidth,body.offsetWidth),height=head.offsetHeight+body.offsetHeight){
         box.style.width = width+"px";
         box.style.height = height+"px";

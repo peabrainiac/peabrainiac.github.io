@@ -114,6 +114,11 @@ const InputManager = function(){
         var height = inputs.height.value;
         callbacks.size(width,height);
     }
+    document.getElementById("input-button-screenshot").addEventListener("click",function(){
+    	var width = document.getElementById("input-screenshot-width").value;
+    	var height = document.getElementById("input-screenshot-height").value;
+    	callbacks.screenshot(width,height);
+    });
 	
 	exports.onTransformationChange1 = function(callback){
 		callbacks.transformation1 = callback;
@@ -154,6 +159,9 @@ const InputManager = function(){
     exports.onSizeChange = function(callback){
         callbacks.size = callback;
         updateSize();
+    };
+    exports.onScreenshotTake = function(callback){
+    	callbacks.screenshot = callback;
     };
     
     exports.setTransformation1 = function(rotation1,rotation2,rotation3,scale){

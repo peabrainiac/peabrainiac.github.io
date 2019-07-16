@@ -21,7 +21,10 @@ const Scrollbar = function(parent){
 	
 	update();
 	parent.addEventListener("scroll",update);
+	parent.addEventListener("mouseup",update);
+	parent.addEventListener("mousedown",update);
+	parent.addEventListener("mousemove",update);
 	window.addEventListener("resize",update);
 	
-	setInterval(update,10000);
+	setInterval(update,2000);
 };

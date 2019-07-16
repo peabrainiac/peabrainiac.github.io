@@ -41,6 +41,20 @@ Utils.onPageLoad(function(){
         canvas.parentElement.style.width = width+"px";
         canvas.parentElement.style.height = height+"px";
     });
+    inputManager.onScreenshotTake(function(screenshotWidth,screenshotHeight){
+        canvas.width = screenshotWidth;
+        canvas.height = screenshotHeight;
+        rayMarcher.render(screenshotWidth,screenshotHeight,camera);
+        var canvas2 = document.createElement("canvas");
+        canvas2.width = screenshotWidth;
+        canvas2.height = screenshotHeight;
+        canvas2.getContext("2d").drawImage(canvas,0,0);
+        var popup = new Popup(document.getElementById("popup-overlay"),"Screenshot",480,360);
+        popup.addCanvas(canvas2);
+        popup.addCloseButton();
+        canvas.width = width;
+        canvas.height = height;
+    });
     camera.setPosition(new Vector3f(0,0,-5));
     camera.setViewMatrix(new Matrix3f());
 	
