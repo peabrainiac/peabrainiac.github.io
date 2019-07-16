@@ -1,11 +1,15 @@
 Utils.onPageLoad(function(){
-	var canvas = document.getElementById("canvas");
-	var rayMarcher = new RayMarcher(canvas);
-	var camera = new Camera(canvas);
+    try {
+        var canvas = document.getElementById("canvas");
+        var rayMarcher = new RayMarcher(canvas);
+        var camera = new Camera(canvas);
+    }catch (e){
+        Errors.showError(e);
+    }
 	
     var formula = {};
     formula.copy = function(){
-      return {rotation:this.rotation.copy(),scale:this.scale,offset:this.offset.copy(),copy:this.copy};  
+        return {rotation:this.rotation.copy(),scale:this.scale,offset:this.offset.copy(),copy:this.copy};  
     };
     
 	var inputManager = new InputManager();

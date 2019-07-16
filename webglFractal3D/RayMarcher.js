@@ -2,8 +2,13 @@ const RayMarcher = function(canvas){
 	var exports = {};
 	
 	var gl = canvas.getContext("webgl2",{preserveDrawingBuffer:true});
+    if (!gl){
+        throw new Error("Couldn't get webgl2 context!")
+    }
     var ext = gl.getExtension("EXT_COLOR_BUFFER_FLOAT");
-    console.log(ext);
+    if (!ext){
+        throw new Error("Couldn't get EXT_COLOR_BUFFER_FLOAT extension!")
+    }
 	
 	var shaderProgram = Shaders.createShaderProgram(gl);
 	shaderProgram.use();
