@@ -72,6 +72,35 @@ body {
 .box-error > .box-head {
     background: #ff4000;
 }
+.scroll {
+	overflow: auto;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+.scroll::-webkit-scrollbar {
+	display: none;
+}
+.scrollbar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	margin: 10px 5px 20px 0;
+	background: #101010;
+	opacity: 1;
+}
+.scrollbar, .scrollbar-handle {
+	width: 5px;
+	border-radius: 500px;
+	transition: all 0.25s ease-out;
+}
+.scrollbar-handle {
+	background: #303030;
+	position: absolute;
+}
+.scrollbar.scrollbar-hidden {
+	opacity: 0;
+}
 .textarea {
 	width: 100%;
 	height: 100%;
