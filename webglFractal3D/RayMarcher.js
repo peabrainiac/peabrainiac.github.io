@@ -121,6 +121,9 @@ const RayMarcher = function(canvas){
 	exports.setPixelSize = function(ps){
 		pixelSize = ps;
 	};
+	exports.getPixelSize = function(){
+		return pixelSize;
+	};
 	exports.setSmoothingRadius = function(rad){
 		smoothingRadius = rad;
 	};

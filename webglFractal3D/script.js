@@ -44,7 +44,10 @@ Utils.onPageLoad(function(){
     inputManager.onScreenshotTake(function(screenshotWidth,screenshotHeight){
         canvas.width = screenshotWidth;
         canvas.height = screenshotHeight;
+        var pixelSize = rayMarcher.getPixelSize();
+        rayMarcher.setPixelSize(1);
         rayMarcher.render(screenshotWidth,screenshotHeight,camera);
+        rayMarcher.setPixelSize(pixelSize);
         var canvas2 = document.createElement("canvas");
         canvas2.width = screenshotWidth;
         canvas2.height = screenshotHeight;
