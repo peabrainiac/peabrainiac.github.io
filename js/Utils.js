@@ -17,6 +17,35 @@ const Utils = (function(){
 			element.height = height;
 		}
 	};
+
+	exports.enableSmartTab = function(element){
+		console.log("Enabling smart tab for element:",element);
+		element.addEventListener("keydown",function(e){
+			if (e.code=="Tab"){
+				e.preventDefault();
+				var start = element.selectionStart;
+				var end = element.selectionEnd;
+				var value = element.value;
+				var before = value.substring(0,start);
+				var selection = value.substring(start,end)
+				var after = value.substring(end);
+				console.log("old value:",{v:element.value});
+				if(selection.indexOf("\n")==-1){
+					element.value = before+"\t"+after;
+					element.selectionStart = start+1;
+					element.selectionEnd = element.selectionStart;
+					console.log("Inserting Tab!");
+				}else{
+					selection = (e.shiftKey?selection.replace(/\n\t/g,"\n"):selection.replace(/\n/g,"\n\t"))
+					console.log("Adding/Removing Tabs!");
+					element.value = before+selection+after;
+					element.selectionStart = start;
+					element.selectionEnd = start+selection.length;
+				}
+				console.log("new value:",{v:element.value});
+			}
+		});
+	}
 	
 	return exports;
 })();
