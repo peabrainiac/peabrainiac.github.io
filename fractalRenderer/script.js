@@ -15,7 +15,8 @@ Utils.onPageLoad(function(){
 	var ctx = canvas.getContext("2d");
 	var imageData = new ImageData(WIDTH,HEIGHT);
 	
-	Utils.setSize(canvas,WIDTH,HEIGHT);
+	canvas.width = WIDTH;
+	canvas.height = HEIGHT;
 	Utils.setSize(canvas.parentElement,WIDTH,HEIGHT);
 	
 	renderFrame(0);
@@ -44,19 +45,11 @@ Utils.onPageLoad(function(){
 		var y = cy;
 		var temp;
 		for (var i=0;i<ITERATIONS&&(x*x+y*y<16);i++){
-			if (i%2==0){
-				temp = x*x-y*y+cx/2;//+cx;
-				y = 2*x*y+cy/2;//+cy;
-				x = temp;
-			}else{
-				temp = x*x-y*y+cx;
-				y = 2*x*y+cy;
-				x = temp;
-			}
-			//temp = (x*x*x-3*y*y*x)+cx;
-			//y = (3*x*x*y-y*y*y)+cy;
-			//x = temp;
-			//cy *= -1;
+			temp = (x*x*x-3*y*y*x)+cx;
+			y = (3*x*x*y-y*y*y)+cy;
+			x = temp;
+			cx *= -1;
+			cy *= -1;
 		}
 		var c = Math.sqrt((i/ITERATIONS)%1);
 		var pixelI = pixelX+pixelY*WIDTH;
