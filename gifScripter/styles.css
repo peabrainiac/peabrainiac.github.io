@@ -8,3 +8,7 @@
     -moz-tab-size: 4;
     tab-size: 4;
 }
+#run-button {
+    float: right;
+    margin: -4px 0;
+}
