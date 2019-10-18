@@ -1,12 +1,12 @@
-const Popup = function(parentElement,titleText,width,height){
+const Popup = function(parentElement,titleText,width="auto",height="auto"){
     var exports = {};
     
     var box = document.createElement("div");
     var head = document.createElement("div");
     var body = document.createElement("div");
-    box.className = "centered box";
-    box.style.width = width+"px";
-    box.style.height = height+"px";
+    box.className = "transform-centered box";
+    box.style.width = (width=="auto")?"auto":width+"px";
+    box.style.height = (height=="auto")?"auto":height+"px";
     head.className = "box-head";
     body.className = "box-body";
     box.appendChild(head);

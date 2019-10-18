@@ -20,9 +20,15 @@ const SemiSandbox = (function(){
         for (name in envObjectConstructors){
             enviroment[name] = new (envObjectConstructors[name])();
         }
-        obj = new Proxy(enviroment,{has:((target,key)=>true)});
-        console.log("Sandbox object: ",obj);
-        eval("with(obj){"+code+"}");
+        proxy = new Proxy(enviroment,{has:((target,key)=>true)});
+        console.log("Sandbox object: ",proxy);
+        proxy.code = code;
+        proxy.eval = eval;
+        with (proxy){
+            (function(){
+                eval("code = undefined;\neval = undefined;\n"+code);
+            })();
+        }
     }
 
     return exports;

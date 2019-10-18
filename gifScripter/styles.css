@@ -7,6 +7,7 @@
     color: inherit;
     -moz-tab-size: 4;
     tab-size: 4;
+    font-size: 1.17em;
 }
 #run-button {
     float: right;
