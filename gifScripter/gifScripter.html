@@ -5,8 +5,10 @@
 		<link rel="stylesheet" type="text/css" href="../css/styles.css">
 		<link rel="stylesheet" type="text/css" href="./styles.css">
 		<script src="../js/Utils.js"></script>
-		<script src="../js/Popup.js"></script>
+		<script src="../js/BinaryFile.js"></script>
+		<script src="../js/GifEncoder.js"></script>
 		<script src="../js/SemiSandbox.js"></script>
+		<script src="../js/Popup.js"></script>
 		<script src="./GifScripterSandbox.js"></script>
 		<script src="./script.js"></script>
 		<title>Gif Scripter</title>
@@ -27,7 +29,7 @@
                 </div>
             </div>
             <div class="panel padding-30">
-                <textarea id="textarea">const TOTAL_FRAMES = 16;&#13;const WIDTH = 480;&#13;const HEIGHT = 360;&#13;&#13;var frame = 0;&#13;&#13;var canvas = GifWriter.createCanvas(WIDTH,HEIGHT);&#13;var ctx = canvas.getContext("2d");&#13;&#13;&#13;console.log(computeNextFrame);&#13;computeNextFrame();&#13;&#13;function computeNextFrame(){&#13;&#9;if (frame&lt;TOTAL_FRAMES){&#13;&#9;&#9;&#13;&#9;&#9;let x = (frame%4)/4;&#13;&#9;&#9;let y = Math.floor(frame/4)/4;&#13;&#9;&#9;ctx.fillStyle = "rgb(255,"+255*x+","+255*y+")";&#13;&#9;&#9;ctx.fillRect(x*WIDTH,y*HEIGHT,WIDTH/4,HEIGHT/4);&#13;&#9;&#9;&#13;&#9;&#9;frame++;&#13;&#9;&#9;GifWriter.addFrame(canvas).then(computeNextFrame);&#13;&#9;}else{&#13;&#9;&#9;GifWriter.finish();&#13;&#9;}&#13;}</textarea>
+                <textarea id="textarea">const TOTAL_FRAMES = 16;&#13;const WIDTH = 480;&#13;const HEIGHT = 360;&#13;&#13;var frame = 0;&#13;&#13;var canvas = GifWriter.createCanvas(WIDTH,HEIGHT);&#13;var ctx = canvas.getContext("2d");&#13;&#13;&#13;computeNextFrame();&#13;&#13;function computeNextFrame(){&#13;&#9;if (frame&lt;TOTAL_FRAMES){&#13;&#9;&#9;&#13;&#9;&#9;let x = (frame%4)/4;&#13;&#9;&#9;let y = Math.floor(frame/4)/4;&#13;&#9;&#9;ctx.fillStyle = "rgb(255,"+255*x+","+255*y+")";&#13;&#9;&#9;ctx.fillRect(x*WIDTH,y*HEIGHT,WIDTH/4,HEIGHT/4);&#13;&#9;&#9;&#13;&#9;&#9;frame++;&#13;&#9;&#9;GifWriter.addFrame(canvas).then(computeNextFrame);&#13;&#9;}else{&#13;&#9;&#9;GifWriter.finish();&#13;&#9;}&#13;}</textarea>
             </div>
         </div>
         <div id="popup-overlay" class="overlay"></div>
