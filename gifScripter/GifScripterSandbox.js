@@ -30,7 +30,7 @@ const GifScripterSandbox = (function(){
         };
         exports.finish = function(){
             onFinish();
-        }
+        };
         return exports;
     });
 

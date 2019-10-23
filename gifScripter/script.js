@@ -17,9 +17,13 @@ Utils.onPageLoad(function(){
     });
     sandbox.onFinish(function(){
         console.log("Finished!");
-        popup.addCloseButton();
         gifEncoder.finish();
-        gifEncoder.download("Test.txt");
+        var imageElement = document.createElement("img");
+        imageElement.src = gifEncoder.toURL();
+        popup.clear();
+        popup.addImageOrCanvas(imageElement);
+        popup.addCloseButton();
+        console.log("Result: ",gifEncoder.toURL());
     });
 
     button.addEventListener("click",function(){

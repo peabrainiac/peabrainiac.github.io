@@ -52,6 +52,20 @@ const Popup = function(parentElement,titleText,width="auto",height="auto"){
     	container.appendChild(canvas);
     	body.appendChild(container);
     };
+    exports.addImageOrCanvas = function(element){
+    	var container = document.createElement("div");
+    	container.style.margin = "20px";
+    	container.style.textAlign = "center";
+    	element.style.width = "100%";
+    	element.style.boxShadow = "2px 2px 8px #000000";
+    	container.appendChild(element);
+    	body.appendChild(container);
+    };
+    exports.clear = function(){
+        while(body.firstChild){
+            body.firstChild.remove();
+        }
+    };
     exports.resize = function(width=Math.max(head.offsetWidth,body.offsetWidth),height=head.offsetHeight+body.offsetHeight){
         box.style.width = width+"px";
         box.style.height = height+"px";
