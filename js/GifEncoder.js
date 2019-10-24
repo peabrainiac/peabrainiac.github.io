@@ -215,21 +215,6 @@ const GifEncoder = function(){
                     }
                 }
             },
-            codeOf:function(indexBuffer){
-                var j,c;
-                for (let l=this.table.length,i=0;i<l;i++){
-                    if (this.table[i].length==indexBuffer.length){
-                        c = this.table[i];
-                        j = 0;
-                        while(c[j]==indexBuffer[j]){
-                            if (++j==indexBuffer.length){
-                                return i;
-                            }
-                        }
-                    }
-                }
-                return -1;
-            },
             reset:function(){
                 codeSize = MIN_CODE_SIZE;
                 codeTable.table = [];
@@ -250,21 +235,31 @@ const GifEncoder = function(){
             this.length++;
         }};
         codeTable.reset();
-        var indexBuffer = [indexArray[0]];
-        var pixelIndex = 1;
-        var k,indexBufferWithoutK;
-        while(pixelIndex<indexArray.length){
-            k = indexArray[pixelIndex++];
-            indexBuffer.push(k);
-            var c = codeTable.codeOf(indexBuffer);
-            if (c==-1){
-                indexBufferWithoutK = indexBuffer.slice(0,indexBuffer.length-1);
-                codeStream.add(codeTable.codeOf(indexBufferWithoutK));
-                codeTable.add(indexBuffer);
-                indexBuffer = [k];
+        var pixelIndex = 0;
+        var longestMatch, longestMatchLength, i, l, code, isMatch, i2;
+        while (pixelIndex<indexArray.length){
+            longestMatch = -1;
+            longestMatchLength = 0;
+            for (i=0,l=codeTable.table.length;i<l;i++){
+                if (codeTable.table[i].length>longestMatchLength&&!(pixelIndex+codeTable.table[i].length>indexArray.length)){
+                    code = codeTable.table[i];
+                    isMatch = true;
+                    for (i2=0;i2<code.length;i2++){
+                        if (code[i2]!=indexArray[pixelIndex+i2]){
+                            isMatch = false;
+                            break;
+                        }
+                    }
+                    if (isMatch){
+                        longestMatch = i;
+                        longestMatchLength = code.length;
+                    }
+                }
             }
+            codeStream.add(longestMatch);
+            codeTable.add(indexArray.slice(pixelIndex,pixelIndex+longestMatchLength+1));
+            pixelIndex += longestMatchLength;
         }
-        codeStream.add(codeTable.codeOf(indexBuffer));
         codeStream.add(CODE_EOI);
 
         byteStream = codeStreamToByteStream(codeStream);

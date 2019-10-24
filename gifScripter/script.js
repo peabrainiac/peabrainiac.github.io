@@ -17,7 +17,7 @@ Utils.onPageLoad(function(){
         gifEncoder.addFrame(imageData);
     });
     sandbox.onFinish(function(){
-        console.log("Finished in "+(Date.now()-startTime)+"ms!"); // currently about 25.2 seconds for the default script  | EDIT: now 20.9, it's getting faster!
+        console.log("Finished in "+(Date.now()-startTime)+"ms!"); // originally 25 seconds for me with the default script, now just 15! Still working on it...
         gifEncoder.finish();
         var imageElement = document.createElement("img");
         imageElement.src = gifEncoder.toURL();
