@@ -23,7 +23,7 @@ const GifScripterSandbox = (function(){
             return new Promise(function(resolve,reject){
                 setTimeout(function(){
                     resolve();
-                },100);
+                },0);
                 imageData = (canvasOrImageData instanceof ImageData)?canvasOrImageData:canvasOrImageData.getContext("2d").getImageData(0,0,canvasOrImageData.width,canvasOrImageData.height);
                 onAddingFrame(imageData);
             });

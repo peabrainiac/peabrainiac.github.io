@@ -6,6 +6,7 @@ Utils.onPageLoad(function(){
     var popup;
     var progressCanvas;
     var gifEncoder;
+    var startTime;
 
     var sandbox = new GifScripterSandbox();
     sandbox.onAddingFrame(function(imageData){
@@ -16,7 +17,7 @@ Utils.onPageLoad(function(){
         gifEncoder.addFrame(imageData);
     });
     sandbox.onFinish(function(){
-        console.log("Finished!");
+        console.log("Finished in "+(Date.now()-startTime)+"ms!"); // currently about 25.2 seconds for the default script  | EDIT: now 20.9, it's getting faster!
         gifEncoder.finish();
         var imageElement = document.createElement("img");
         imageElement.src = gifEncoder.toURL();
@@ -30,6 +31,8 @@ Utils.onPageLoad(function(){
         popup = new Popup(document.getElementById("popup-overlay"),"Writing Gif...");
         progressCanvas = document.createElement("canvas");
         popup.addCanvas(progressCanvas);
+
+        startTime = Date.now();
 
         gifEncoder = new GifEncoder();
         gifEncoder.start();

@@ -33,7 +33,7 @@ const GifEncoder = function(){
         finished = false;
     };
 
-    exports.addFrame = function(imgData,delay=50){
+    exports.addFrame = function(imgData,delay=5){
         if (!started){
             throw new Error("Invalid state: Encoding hasn't started yet!");
         }else if(!(imgData instanceof ImageData)){
@@ -46,11 +46,14 @@ const GifEncoder = function(){
                 height = imgData.height;
                 sizeSet = true;
             }
+            var time = Date.now();
             var rgbArray = toRgbArray(imgData);
             var indexArray = new Uint8Array(rgbArray.length/3);
             for (let l=indexArray.length,i=0;i<l;i++){
                 indexArray[i] = getColorIndex(rgbArray[i*3],rgbArray[i*3+1],rgbArray[i*3+2]);
             }
+            console.log("Created index array: "+(Date.now()-time)+"ms");
+            time = Date.now();
             if (firstFrame){
                 writeLogicalScreenDescriptor(width,height,true,tableSize);
                 writeColorTable(colorTable);
@@ -63,7 +66,10 @@ const GifEncoder = function(){
                 writeImageDescriptor(width,height,tableSize);
                 writeColorTable(colorTable);
             }
+            console.log("Wrote color table: "+(Date.now()-time)+"ms");
+            time = Date.now();
             writePixelData(width,height,indexArray,tableSize+1);
+            console.log("Wrote pixel data: "+(Date.now()-time)+"ms");
             firstFrame = false;
         }
     };
@@ -189,12 +195,13 @@ const GifEncoder = function(){
         logBlock("Image Descriptor");
     }
     function writePixelData(width,height,indexArray,minCodeSize){
-        var codeSize = Math.max(2,Math.min(12,minCodeSize));
+        const MIN_CODE_SIZE = Math.max(2,Math.min(12,minCodeSize))
+        const COLOR_CODES = 1<<MIN_CODE_SIZE;
+        const CODE_CLEAR = COLOR_CODES;
+        const CODE_EOI = COLOR_CODES+1;
+
+        var codeSize = MIN_CODE_SIZE;
         var codeSizeBuffer = codeSize+1;
-        var colorTableSize = 1<<codeSize;
-        var CODE_CLEAR = colorTableSize;
-        var CODE_EOI = colorTableSize+1;
-        file.writeByte(codeSize);
         var codeTable = {
             table:[],
             add:function(entry){
@@ -224,9 +231,9 @@ const GifEncoder = function(){
                 return -1;
             },
             reset:function(){
-                codeSize = Math.max(2,Math.min(12,minCodeSize));
+                codeSize = MIN_CODE_SIZE;
                 codeTable.table = [];
-                for (let l=colorTableSize+2,i=0;i<l;i++){
+                for (let l=COLOR_CODES+2,i=0;i<l;i++){
                     codeTable.add([i]);
                 }
                 codeStream.add(CODE_CLEAR);
@@ -259,22 +266,9 @@ const GifEncoder = function(){
         }
         codeStream.add(codeTable.codeOf(indexBuffer));
         codeStream.add(CODE_EOI);
-        var byteStream = [];
-        var nextBytes = 0;
-        var bitsUsed = 0;
-        var code, size;
-        for (let l=codeStream.length,i=0;i<l;i++){
-            code = codeStream.codes[i];
-            size = codeStream.codeSize[i];
-            nextBytes |= (code&((1<<size)-1))<<bitsUsed;
-            bitsUsed += size;
-            while (bitsUsed>=8){
-                byteStream.push(nextBytes&0xff);
-                nextBytes >>= 8;
-                bitsUsed -= 8;
-            }
-        }
-        byteStream.push(nextBytes&0xff);
+
+        byteStream = codeStreamToByteStream(codeStream);
+        file.writeByte(MIN_CODE_SIZE);
         for (let l=byteStream.length,i=0;i<l;i++){
             if (i%255==0){
                 file.writeByte(Math.min(l-i,255));
@@ -283,6 +277,31 @@ const GifEncoder = function(){
         }
         file.writeByte(0);
         logBlock("Image Data");
+    }
+    function codeStreamToByteStream(codeStream){
+        var totalBitsUsed = 0;
+        for (let l=codeStream.length,i=0;i<l;i++){
+            totalBitsUsed += codeStream.codeSize[i];
+        }
+        var totalBytesUsed = Math.ceil(totalBitsUsed/8)
+        var byteStream = new Uint8Array(totalBytesUsed);
+        var nextByte = 0;
+        var nextByteContents = 0;
+        var bitsUsed = 0;
+        var code, size;
+        for (let l=codeStream.length,i=0;i<l;i++){
+            code = codeStream.codes[i];
+            size = codeStream.codeSize[i];
+            nextByteContents |= (code&((1<<size)-1))<<bitsUsed;
+            bitsUsed += size;
+            while (bitsUsed>=8){
+                byteStream[nextByte++] = nextByteContents&0xff;
+                nextByteContents >>= 8;
+                bitsUsed -= 8;
+            }
+        }
+        byteStream[nextByte++] = nextByteContents&0xff;
+        return byteStream;
     }
     function writeTrailer(){
         file.writeByte(0x3b);
