@@ -5,6 +5,7 @@ Utils.onPageLoad(function(){
 
     var popup;
     var progressCanvas;
+    var quantizer;
     var gifEncoder;
     var startTime;
 
@@ -14,6 +15,7 @@ Utils.onPageLoad(function(){
         progressCanvas.width = imageData.width;
         progressCanvas.height = imageData.height;
         progressCanvas.getContext("2d").putImageData(imageData,0,0);
+        gifEncoder.setColorTable(quantizer.quantize(imageData,"octree"));
         gifEncoder.addFrame(imageData);
     });
     sandbox.onFinish(function(){
@@ -34,6 +36,7 @@ Utils.onPageLoad(function(){
 
         startTime = Date.now();
 
+        quantizer = new ColorQuantizer()
         gifEncoder = new GifEncoder();
         gifEncoder.start();
 

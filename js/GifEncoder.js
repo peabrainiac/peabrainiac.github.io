@@ -19,7 +19,7 @@ const GifEncoder = function(){
 
     var tableSize = 7;
     var colorTable = new Uint8Array(256*3);
-    for (let i=0;i<255;i++){
+    for (let i=0;i<256;i++){
         colorTable[i*3] = i;
         colorTable[i*3+1] = i;
         colorTable[i*3+2] = i;
@@ -37,7 +37,7 @@ const GifEncoder = function(){
         if (!started){
             throw new Error("Invalid state: Encoding hasn't started yet!");
         }else if(!(imgData instanceof ImageData)){
-            throw new Error("Invalid argument: \"imgData\" is not an ImageData!");
+            throw new Error("Invalid argument: \"imgData\" must be an ImageData!");
         }else if(sizeSet&&(width!=imgData.width||height!=imgData.height)){
             throw new Error("Invalid argument: ImageData dimensions differ from specified gif dimensions!");
         }else{
@@ -71,6 +71,16 @@ const GifEncoder = function(){
             writePixelData(width,height,indexArray,tableSize+1);
             console.log("Wrote pixel data: "+(Date.now()-time)+"ms");
             firstFrame = false;
+        }
+    };
+
+    exports.setColorTable = function(table){
+        if (!(table instanceof Uint8Array)){
+            throw new Error("Invalid argument: \"table\" must be an Uint8Array!");
+        }else if(table.length!=256*3){
+            throw new Error("Invalid argument: \"table\" must have a length of 256*3!");
+        }else{
+            colorTable = table;
         }
     };
 
