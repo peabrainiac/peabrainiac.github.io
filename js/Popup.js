@@ -25,7 +25,13 @@ const Popup = function(parentElement,titleText,width="auto",height="auto"){
     exports.addText = function(text){
         var textNode = document.createTextNode(text);
         body.appendChild(textNode);
+        var br = document.createElement("br");
+        body.appendChild(br);
+        return textNode;
     };
+    exports.setTitle = function(text){
+        title.nodeValue = text;
+    }
     exports.addButton = function(text,callback){
         var line = document.createElement("div");
         line.style.textAlign = "center";

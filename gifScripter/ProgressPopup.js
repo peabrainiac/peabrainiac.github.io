@@ -4,6 +4,8 @@ const ProgressPopup = function(){
     var popup = new Popup(document.getElementById("popup-overlay"),"Writing Gif...");
     var progressCanvas = document.createElement("canvas");
     popup.addCanvas(progressCanvas);
+    var progressText1 = popup.addText("\n");
+    var progressText2 = popup.addText("\n");
     popup.addButton("Cancel",cancel);
     var wasCancelled = false;
 
@@ -18,11 +20,20 @@ const ProgressPopup = function(){
         upscaleImage(progressCanvas,width,height);
     };
 
+    exports.showProgress1 = function(frames){
+        progressText1.nodeValue = "Frames generated: "+frames+"\r\n";
+    };
+
+    exports.showProgress2 = function(frames){
+        progressText2.nodeValue = "Frames encoded: "+frames+"\r\n";
+    };
+
     exports.finish = function(gifURL){
         var image = document.createElement("img");
         image.src = gifURL;
         upscaleImage(image,width,height);
         popup.clear();
+        popup.setTitle("Gif finished");
         popup.addImageOrCanvas(image);
         popup.addCloseButton();
     };

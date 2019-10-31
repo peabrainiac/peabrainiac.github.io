@@ -4,8 +4,8 @@ Utils.onPageLoad(function(){
     Utils.enableSmartTab(input);
 
     var popup;
-    var quantizer;
-    var gifEncoder;
+    var frames;
+    var encoder = new Encoder();
     var startTime;
 
     var sandbox = new GifScripterSandbox();
@@ -15,24 +15,27 @@ Utils.onPageLoad(function(){
             throw new Error("Gif creation cancelled!");
         }
         popup.showFrame(imageData);
-        gifEncoder.setColorTable(quantizer.quantize(imageData,"octree"));
-        gifEncoder.addFrame(imageData);
+        popup.showProgress1(++frames);
+        return encoder.addFrame(imageData);
     });
     sandbox.onFinish(function(){
-        console.log("Finished in "+(Date.now()-startTime)+"ms!");
-        gifEncoder.finish();
-        popup.finish(gifEncoder.toURL());
-        console.log("Result: ",gifEncoder.toURL());
+        encoder.finish().then(function(result){
+            console.log("Finished in "+(Date.now()-startTime)+"ms!");
+            popup.finish(result.url);
+            console.log("Result: ",result.url);
+        });
     });
 
     button.addEventListener("click",function(){
         popup = new ProgressPopup();
 
         startTime = Date.now();
+        frames = 0;
 
-        quantizer = new ColorQuantizer()
-        gifEncoder = new GifEncoder();
-        gifEncoder.start();
+        encoder.start();
+        encoder.onProgress(function(progress){
+            popup.showProgress2(progress);
+        });
 
         sandbox.eval(input.value);
     });

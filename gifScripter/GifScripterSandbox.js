@@ -40,10 +40,11 @@ const GifScripterSandbox = (function(){
         exports.addFrame = function(canvasOrImageData){
             return new Promise(function(resolve,reject){
                 imageData = (canvasOrImageData instanceof ImageData)?canvasOrImageData:canvasOrImageData.getContext("2d").getImageData(0,0,canvasOrImageData.width,canvasOrImageData.height);
-                onAddingFrame(imageData);
-                setTimeout(function(){
-                    resolve();
-                },30);
+                onAddingFrame(imageData).then(function(){
+                    setTimeout(function(){
+                        resolve();
+                    },30);
+                });
             });
         };
         exports.finish = function(){

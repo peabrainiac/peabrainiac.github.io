@@ -1,0 +1,61 @@
+const Encoder = function(){
+    var exports = {};
+
+    var onFinish;
+    var onProgress;
+
+    var framesRequested;
+    var framesEncoded;
+    var framePromiseResolvers = [];
+
+    var webWorker = new Worker("./EncoderWebWorker.js");
+    webWorker.onmessage = function(e){
+        var message = e.data;
+        console.log("Message from web worker: ",message);
+        if (message.action=="finished"){
+            if (onFinish){
+                onFinish(message.data);
+            }
+        }else if(message.action=="addedFrame"){
+            framesEncoded++;
+            if (onProgress){
+                onProgress(framesEncoded);
+            }
+            var promiseResolver = framePromiseResolvers.shift();
+            if (promiseResolver){
+                promiseResolver();
+            }
+        }
+    };
+
+    exports.start = function(){
+        framesRequested = 0;
+        framesEncoded = 0;
+        webWorker.postMessage({action:"start"});
+    };
+
+    exports.addFrame = function(imgData){
+        webWorker.postMessage({action:"addFrame",data:{imgData:imgData}});
+        framesRequested++;
+        if (framesRequested-framesEncoded>2){
+            return new Promise(function(resolve,reject){
+                framePromiseResolvers.push(resolve);
+            })
+        }else{
+            return Promise.resolve();
+        }
+    };
+
+    exports.finish = function(){
+        webWorker.postMessage({action:"finish"});
+        return new Promise(function(resolve,reject){
+            onFinish = resolve;
+        });
+    };
+
+    exports.onProgress = function(callback){
+        onProgress = callback;
+    };
+
+    return exports;
+};
