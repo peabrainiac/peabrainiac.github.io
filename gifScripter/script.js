@@ -4,7 +4,6 @@ Utils.onPageLoad(function(){
     Utils.enableSmartTab(input);
 
     var popup;
-    var progressCanvas;
     var quantizer;
     var gifEncoder;
     var startTime;
@@ -12,27 +11,22 @@ Utils.onPageLoad(function(){
     var sandbox = new GifScripterSandbox();
     sandbox.onAddingFrame(function(imageData){
         console.log("Adding Frame:",imageData);
-        progressCanvas.width = imageData.width;
-        progressCanvas.height = imageData.height;
-        progressCanvas.getContext("2d").putImageData(imageData,0,0);
+        if (popup.wasCancelled()){
+            throw new Error("Gif creation cancelled!");
+        }
+        popup.showFrame(imageData);
         gifEncoder.setColorTable(quantizer.quantize(imageData,"octree"));
         gifEncoder.addFrame(imageData);
     });
     sandbox.onFinish(function(){
-        console.log("Finished in "+(Date.now()-startTime)+"ms!"); // originally 25 seconds for me with the default script, now just 15! Still working on it...
+        console.log("Finished in "+(Date.now()-startTime)+"ms!");
         gifEncoder.finish();
-        var imageElement = document.createElement("img");
-        imageElement.src = gifEncoder.toURL();
-        popup.clear();
-        popup.addImageOrCanvas(imageElement);
-        popup.addCloseButton();
+        popup.finish(gifEncoder.toURL());
         console.log("Result: ",gifEncoder.toURL());
     });
 
     button.addEventListener("click",function(){
-        popup = new Popup(document.getElementById("popup-overlay"),"Writing Gif...");
-        progressCanvas = document.createElement("canvas");
-        popup.addCanvas(progressCanvas);
+        popup = new ProgressPopup();
 
         startTime = Date.now();
 
