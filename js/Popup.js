@@ -1,17 +1,10 @@
 const Popup = function(parentElement,titleText,width="auto",height="auto"){
     var exports = {};
     
-    var box = document.createElement("div");
-    var head = document.createElement("div");
-    var body = document.createElement("div");
-    box.className = "transform-centered box";
-    box.style.width = (width=="auto")?"auto":width+"px";
-    box.style.height = (height=="auto")?"auto":height+"px";
-    head.className = "box-head";
-    body.className = "box-body";
-    box.appendChild(head);
-    box.appendChild(body);
-    parentElement.appendChild(box);
+    var overlay = Utils.addNewElement(parentElement,"div","popup-background-overlay")
+    var box = Utils.addNewElement(overlay,"div","transform-centered box","width:"+((width=="auto")?"auto":width+"px")+";height:"+((height=="auto")?"auto":height+"px"));
+    var head = Utils.addNewElement(box,"div","box-head");
+    var body = Utils.addNewElement(box,"div","box-body");
     
     var title = document.createTextNode(titleText);
     head.appendChild(title);
@@ -20,7 +13,7 @@ const Popup = function(parentElement,titleText,width="auto",height="auto"){
         box.classList.add("box-"+type);
     };
     exports.close = function(){
-        box.parentElement.removeChild(box);
+        overlay.remove();
     };
     exports.addText = function(text){
         var textNode = document.createTextNode(text);
@@ -28,6 +21,9 @@ const Popup = function(parentElement,titleText,width="auto",height="auto"){
         var br = document.createElement("br");
         body.appendChild(br);
         return textNode;
+    };
+    exports.addElement = function(element){
+        body.appendChild(element);
     };
     exports.setTitle = function(text){
         title.nodeValue = text;

@@ -38,6 +38,16 @@ const ProgressPopup = function(){
         popup.addCloseButton();
     };
 
+    exports.showError = function(error){
+        popup.clear();
+        popup.setTitle("Gif Creation failed!");
+        var errorCodeContainer = Utils.createElement("pre");
+        errorCodeContainer.innerText = Utils.errorToString(error);
+        popup.addElement(errorCodeContainer);
+        console.log({error});
+        popup.addCloseButton();
+    };
+
     exports.wasCancelled = function(){
         return wasCancelled;
     };

@@ -41,7 +41,34 @@ const Utils = (function(){
 				}
 			}
 		});
-	}
+	};
+
+	exports.createElement = function(type,className,style){
+		var element = document.createElement(type);
+		element.className = className;
+		element.style = style;
+		return element;
+	};
+
+	exports.addNewElement = function(parent,type,className,style){
+		var element = exports.createElement(type,className,style);
+		parent.appendChild(element);
+		return element;
+	};
+
+	exports.addNewTextNode = function(parent,text){
+		var textNode = document.createTextNode(text);
+		parent.appendChild(textNode);
+		return textNode;
+	};
+
+	exports.errorToString = function(error){
+		var string = error.stack;
+		if (!string.startsWith(error.name)){
+			string = error.name+": "+error.message+("\n"+string).replace(/\n(?=[^$])/g,"\n    at ");
+		}
+		return string;
+	};
 	
 	return exports;
 })();

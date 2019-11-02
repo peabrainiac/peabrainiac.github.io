@@ -32,11 +32,15 @@ Utils.onPageLoad(function(){
         startTime = Date.now();
         frames = 0;
 
-        encoder.start();
-        encoder.onProgress(function(progress){
-            popup.showProgress2(progress);
-        });
-
-        sandbox.eval(input.value);
+        try {
+            encoder.start();
+            encoder.onProgress(function(progress){
+                popup.showProgress2(progress);
+            });
+    
+            sandbox.eval(input.value);
+        }catch(e){
+            popup.showError(e);
+        }
     });
 });
