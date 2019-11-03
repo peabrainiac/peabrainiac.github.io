@@ -13,7 +13,9 @@ onmessage = function(e){
         gifEncoder.start();
     }else if(message.action=="addFrame"){
         let imgData = message.data.imgData;
+        var startTime = Date.now();
         gifEncoder.setColorTable(colorQuantizer.quantize(imgData,"octree"));
+        console.log("Built color table: "+(Date.now()-startTime)+"ms");
         gifEncoder.addFrame(imgData);
         postMessage({action:"addedFrame"});
     }else if(message.action=="finish"){

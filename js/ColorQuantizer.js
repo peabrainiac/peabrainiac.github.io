@@ -67,8 +67,12 @@ const ColorQuantizer = function(){
         console.log("Tree:",root);
         var leafCount = countLeaves(root);
         console.log("LeafCount:",leafCount);
-        if (leafCount>256){
-            throw new Error("Oops, this part is not yet implemented!");
+        while(leafCount>256){
+            var node = getLeastReferencedNode(root);
+            var nodeLeafCount = countLeaves(node);
+            node.childs = [];
+            node.childCount = 0;
+            leafCount -= nodeLeafCount-1;
         }
         var leaves = getLeaves(root);
         console.log("leaves:",leaves);
@@ -128,6 +132,18 @@ const ColorQuantizer = function(){
                 }
             }
             return leaves;
+        }
+        function getLeastReferencedNode(node){
+            var min = node;
+            for (let i=0;i<8;i++){
+                if (node.childs[i]&&node.childs[i].childCount>0){
+                    var minInChildNode = getLeastReferencedNode(node.childs[i]);
+                    if (minInChildNode.refs<min.refs){
+                        min = minInChildNode;
+                    }
+                }
+            }
+            return min;
         }
     }
 
