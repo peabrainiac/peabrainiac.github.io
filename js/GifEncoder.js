@@ -25,6 +25,17 @@ const GifEncoder = function(){
         colorTable[i*3+2] = i;
     }
 
+    var performanceConsole;
+    var codeBlockConsole;
+
+    exports.logPerformance = function(consoleObject){
+        performanceConsole = consoleObject;
+    };
+
+    exports.logCodeBlocks = function(consoleObject){
+        codeBlockConsole = consoleObject;
+    };
+
     exports.start = function(){
         file = new BinaryFile();
         writeHeader();
@@ -52,7 +63,7 @@ const GifEncoder = function(){
             for (let l=indexArray.length,i=0;i<l;i++){
                 indexArray[i] = getColorIndex(rgbArray[i*3],rgbArray[i*3+1],rgbArray[i*3+2]);
             }
-            console.log("Created index array: "+(Date.now()-time)+"ms");
+            logPerformance("Created index array: "+(Date.now()-time)+"ms");
             time = Date.now();
             if (firstFrame){
                 writeLogicalScreenDescriptor(width,height,true,tableSize);
@@ -66,10 +77,10 @@ const GifEncoder = function(){
                 writeImageDescriptor(width,height,tableSize);
                 writeColorTable(colorTable);
             }
-            console.log("Wrote color table: "+(Date.now()-time)+"ms");
+            logPerformance("Wrote color table: "+(Date.now()-time)+"ms");
             time = Date.now();
             writePixelData(width,height,indexArray,tableSize+1);
-            console.log("Wrote pixel data: "+(Date.now()-time)+"ms");
+            logPerformance("Wrote pixel data: "+(Date.now()-time)+"ms");
             firstFrame = false;
         }
     };
@@ -145,8 +156,16 @@ const GifEncoder = function(){
         file.writeByte((value>>8)&0xff)
     }
 
+    function logPerformance(string){
+        if (performanceConsole){
+            performanceConsole.log(string);
+        }
+    }
+
     function logBlock(name){
-        console.log("%c\t"+name+":%c\n\t\t"+file.lastAddedToHexString(),"background:#e0e0e0","background:#ffdfa0")
+        if (codeBlockConsole){
+            codeBlockConsole.log("%c\t"+name+":%c\n\t\t"+file.lastAddedToHexString(),"background:#e0e0e0","background:#ffdfa0");
+        }
     }
 
     function writeHeader(){

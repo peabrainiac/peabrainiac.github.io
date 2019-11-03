@@ -1,6 +1,12 @@
 const ColorQuantizer = function(){
     var exports = {};
 
+    var debugConsole;
+
+    exports.logDebugData = function(consoleObject){
+        debugConsole = consoleObject;
+    };
+
     exports.quantize = function(imgData,mode="uniform"){
         if (!(imgData instanceof ImageData)){
             throw new Error("Invalid argument: \"imgData\" must be an ImageData!");
@@ -32,8 +38,14 @@ const ColorQuantizer = function(){
         }
     };
 
+    function debugLog(){
+        if (debugConsole){
+            debugConsole.log(...arguments);
+        }
+    }
+
     function quantizeUsingOctree(imgData){
-        console.log("Quantizing using octree...");
+        debugLog("Quantizing using octree...");
         const MAX_DEPTH = 6;
         var root = {r:0,g:0,b:0,refs:0,childs:[],childCount:0};
         for (let pixel=0,l=imgData.data.length/4;pixel<l;pixel++){
@@ -64,9 +76,9 @@ const ColorQuantizer = function(){
             }
         }
         collapseChains(root);
-        console.log("Tree:",root);
+        debugLog("Tree:",root);
         var leafCount = countLeaves(root);
-        console.log("LeafCount:",leafCount);
+        debugLog("LeafCount:",leafCount);
         while(leafCount>256){
             var node = getLeastReferencedNode(root);
             var nodeLeafCount = countLeaves(node);
@@ -75,7 +87,7 @@ const ColorQuantizer = function(){
             leafCount -= nodeLeafCount-1;
         }
         var leaves = getLeaves(root);
-        console.log("leaves:",leaves);
+        debugLog("leaves:",leaves);
         var colors = new Uint8Array(256*3);
         for (let i=0;i<leaves.length;i++){
             colors[i*3] = leaves[i].r/leaves[i].refs;

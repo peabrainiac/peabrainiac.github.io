@@ -11,7 +11,6 @@ const Encoder = function(){
     var webWorker = new Worker("./EncoderWebWorker.js");
     webWorker.onmessage = function(e){
         var message = e.data;
-        console.log("Message from web worker: ",message);
         if (message.action=="finished"){
             if (onFinish){
                 onFinish(message.data);
@@ -25,6 +24,14 @@ const Encoder = function(){
             if (promiseResolver){
                 promiseResolver();
             }
+        }else if(message.action=="logPerformance"){
+            console.log(...message.data);
+        }else if (message.action=="logCodeBlock"){
+            //console.log(...message.data);
+        }else if (message.action=="logQuantizerDebugData"){
+            //console.log(...message.data);
+        }else{
+            console.log("Message from web worker: ",message);
         }
     };
 
