@@ -16,8 +16,15 @@ const BinaryFile = function(chunkSize){
         currentChunk[nextByte++] = byte;
     };
     exports.writeBytes = function(bytes){
-        for (let l=bytes.length,i=0;i<l;i++){
-            exports.writeByte(bytes[i]);
+        if (nextByte+bytes.length>currentChunk.length){
+            currentChunk.set(bytes.subarray(0,currentChunk.length-nextByte),nextByte);
+            filledChunks.push(currentChunk);
+            filledChunks.push(bytes.slice(currentChunk.length-nextByte));
+            currentChunk = new Uint8Array(BYTES_PER_CHUNK);
+            nextByte = 0;
+        }else{
+            currentChunk.set(bytes,nextByte);
+            nextByte += bytes.length;
         }
     };
     exports.writeChars = function(string){

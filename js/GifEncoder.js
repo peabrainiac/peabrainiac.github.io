@@ -303,18 +303,14 @@ const GifEncoder = function(){
                 nextBitsCount -= 8;
                 if (nextByte==codesChunk.length){
                     file.writeByte(nextByte);
-                    for (let b=0;b<nextByte;b++){
-                        file.writeByte(codesChunk[b]);
-                    }
+                    file.writeBytes(codesChunk);
                     nextByte = 0;
                 }
             }
         }
         codesChunk[nextByte++] = nextBits&0xff;
         file.writeByte(nextByte);
-        for (let b=0;b<nextByte;b++){
-            file.writeByte(codesChunk[b]);
-        }
+        file.writeBytes(codesChunk.slice(0,nextByte))
         file.writeByte(0);
         logBlock("Image Data");
     }
