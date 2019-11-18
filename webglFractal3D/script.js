@@ -1,8 +1,8 @@
-Utils.onPageLoad(function(){
+Utils.onPageLoad(async function(){
 	var scrollbar = new Scrollbar(document.getElementById("scroll-container"));
     try {
         var canvas = document.getElementById("canvas");
-        var rayMarcher = new RayMarcher(canvas);
+        var rayMarcher = await RayMarcher.create(canvas);
         var camera = new Camera(canvas);
     }catch (e){
         Errors.showError(e);

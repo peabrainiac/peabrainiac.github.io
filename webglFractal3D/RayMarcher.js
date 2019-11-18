@@ -1,4 +1,4 @@
-const RayMarcher = function(canvas){
+const RayMarcher = {create:async function(canvas){
 	var exports = {};
 	
 	var gl = canvas.getContext("webgl2",{preserveDrawingBuffer:true});
@@ -10,15 +10,15 @@ const RayMarcher = function(canvas){
         throw new Error("Couldn't get EXT_COLOR_BUFFER_FLOAT extension!")
     }
 	
-	var shaderProgram = Shaders.createShaderProgram(gl);
+	var shaderProgram = await Shaders.createShaderProgram(gl);
 	shaderProgram.use();
-    shaderProgram.bindTextureLocation(0),"startValuesSampler";
+    shaderProgram.bindTextureLocation(0,"startValuesSampler");
     
-	var simpleShader = Shaders.createSimpleShaderProgram(gl);
+	var simpleShader = await Shaders.createSimpleShaderProgram(gl);
     simpleShader.use();
 	simpleShader.bindTextureLocation(0,"sampler");
     
-    var bundleShader = Shaders.createBundleShaderProgram(gl);
+    var bundleShader = await Shaders.createBundleShaderProgram(gl);
     bundleShader.use();
 
 	var transformation1, offset1,  iterations;
@@ -185,4 +185,4 @@ const RayMarcher = function(canvas){
 	
 	init();
 	return exports;
-};
+}};
