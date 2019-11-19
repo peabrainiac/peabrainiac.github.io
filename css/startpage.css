@@ -1,0 +1,54 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background: #101010;
+    color: #dfdfdf;
+}
+
+#title {
+    color: #ffaf00;
+    font-size: 30px;
+    padding: 15px;
+    background: #202020;
+    box-shadow: 0 5px 8px #00000080;
+    margin-bottom: 20px;
+}
+#main-text {
+    padding: 15px;
+}
+
+a {
+    color: #ff8000;
+    text-decoration: none;
+}
+a:hover {
+    color: #ffaf00;
+}
+.centered-block {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.project {
+    margin-bottom: 20px;
+}
+.project-header {
+    padding: 15px;
+    font-size: 20px;
+    color: #ffaf00;
+}
+.project-body {
+    overflow: hidden;
+    font-size: 16px;
+}
+.project-image {
+    width: 240px;
+    float: right;
+    margin: 0 0 10px 10px;
+    box-shadow: 2px 2px 5px #00000080;
+}

@@ -2,15 +2,63 @@
 <html>
 	<head>
 		<meta charset="ISO-8859-1">
+		<link rel="stylesheet" type="text/css" href="../css/startpage.css">
 		<title>peabrainiac.github.io test</title>
 	</head>
 	<body>
-		<h1>Github pages test</h1>
-		<ul>
-			<li><a href="./fractalPathtracer/fractalPathtracer.html">fractal test project</a></li>
-			<li><a href="./fractalRenderer/fractalRenderer.html">second fractal test project</a></li>
-			<li><a href="./fractal3D/fractal3D.html">3d fractal thingy</a></li>
-			<li><a href="./webglFractal3D/main.html">raymarched 3d fractals</a></li>
-		</ul>
+		<div id="title">
+			<div class="centered-block">Github pages test</div>
+		</div>
+		<div id="main-text">
+			<div class="centered-block">
+				Hey! This is my Github Page, and here are some of the things I've been working on lately:
+			</div>
+		</div>
+		<div id="projects">
+			<div class="project">
+				<div class="project-header">
+					<div class="centered-block">GifScripter</div>
+				</div>
+				<div class="project-body">
+					<div class="centered-block">
+						<img class="project-image" src="./images/gifScripter.png">
+						After experimenting a little with animated fractal SVGs and quickly reaching their performance limits,
+						I started looking into other ways to create these animations programmatically - the end result is <a href="./gifScripter/gifScripter.html">this</a>,
+						a simple javascript scripting enviroment that can create be used to create almost arbitrary gif animations.
+						<br>
+						This isn't really finished yet, but the core functionalities are already there - you can write or edit some code, click run, and the gif will start getting encoded.
+						Things like syntax highlighting, faster encoding and some more code examples might follow a little later on.
+					</div>
+				</div>
+			</div>
+			<div class="project">
+				<div class="project-header">
+					<div class="centered-block">
+						3D fractals with WebGL
+					</div>
+				</div>
+				<div class="project-body">
+					<div class="centered-block">
+						<img class="project-image" src="./images/webglFractal3D.png">
+						After seeing <a href="https://www.youtube.com/watch?v=svLzmFuSBhk">@codeparade's video</a> on raymarched fractals, I decided to try to generate a few of these myself using WebGL.
+						The end result is <a href="./webglFractal3D/main.html">this</a>, a small 3d fractal renderer based on WebGL 2.
+						<br>
+						I've only implemented a single fractal formula so far, but I've hooked it up 7 different parameters, so there are actually a lot of different variants of the fractal available.
+						I've also implemented a simple screenshotting-tool, capable of producing high-resolution images up to 6000x4000 pixels in size (at least in firefox, where I tested it).
+						<br>
+						Due to the limited support for WebGL2 it sadly only works in a handful of browsers, most notably firefox and chrome, so make sure you use one of these if you want to try it out.
+					</div>
+				</div>
+			</div>
+		</div>
+		<br><br>
+		<div class="centered-block">
+			Other links:
+			<ul>
+				<li><a href="./fractalPathtracer/fractalPathtracer.html">fractal test project</a></li>
+				<li><a href="./fractalRenderer/fractalRenderer.html">second fractal test project</a></li>
+				<li><a href="./fractal3D/fractal3D.html">3d fractal thingy</a></li>
+			</ul>
+		</div>
 	</body>
 </html>
