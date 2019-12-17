@@ -3,6 +3,8 @@
     resize: none;
     width: 100%;
     height: 100%;
+    margin: 0;
+    box-sizing: border-box;
     background: inherit;
     color: inherit;
     -moz-tab-size: 4;
