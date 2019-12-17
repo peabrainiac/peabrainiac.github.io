@@ -41,8 +41,8 @@ const Encoder = function(){
         webWorker.postMessage({action:"start"});
     };
 
-    exports.addFrame = function(imgData){
-        webWorker.postMessage({action:"addFrame",data:{imgData:imgData}});
+    exports.addFrame = function(imgData,delay){
+        webWorker.postMessage({action:"addFrame",data:{imgData:imgData,delay:delay}});
         framesRequested++;
         if (framesRequested-framesEncoded>2){
             return new Promise(function(resolve,reject){

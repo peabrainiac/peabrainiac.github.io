@@ -9,14 +9,14 @@ Utils.onPageLoad(function(){
     var startTime;
 
     var sandbox = new GifScripterSandbox();
-    sandbox.onAddingFrame(function(imageData){
+    sandbox.onAddingFrame(function(imageData,delay){
         console.log("Adding Frame:",imageData);
         if (popup.wasCancelled()){
             throw new Error("Gif creation cancelled!");
         }
         popup.showFrame(imageData);
         popup.showProgress1(++frames);
-        return encoder.addFrame(imageData);
+        return encoder.addFrame(imageData,delay);
     });
     sandbox.onFinish(function(){
         encoder.finish().then(function(result){

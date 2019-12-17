@@ -4,6 +4,8 @@ const GifScripterSandbox = (function(){
     var onAddingFrame;
     var onFinish;
 
+    var delay = 5;
+
     var sandbox = new SemiSandbox();
     sandbox.setVariableConstructor("console",function(){
         return {log:function(){
@@ -40,12 +42,15 @@ const GifScripterSandbox = (function(){
         exports.addFrame = function(canvasOrImageData){
             return new Promise(function(resolve,reject){
                 imageData = (canvasOrImageData instanceof ImageData)?canvasOrImageData:canvasOrImageData.getContext("2d").getImageData(0,0,canvasOrImageData.width,canvasOrImageData.height);
-                onAddingFrame(imageData).then(function(){
+                onAddingFrame(imageData,delay).then(function(){
                     setTimeout(function(){
                         resolve();
                     },30);
                 });
             });
+        };
+        exports.setDelay = function(d){
+            delay = d;
         };
         exports.finish = function(){
             onFinish();
