@@ -8,6 +8,7 @@
 		<meta property="og:description" content="a  web renderer for the buddhabrot set and similar fractals.">
 		<meta property="og:image" content="https://peabrainiac.github.io/fractalPathtracer/preview.png">
 		<link rel="stylesheet" type="text/css" href="../css/styles.css">
+		<script type="module" src="../js/customElements/ScrollDiv.js"></script>
 		<script src="../js/Utils.js"></script>
 		<script src="../js/Sandbox.js"></script>
 		<script src="./script.js"></script>
@@ -15,22 +16,24 @@
 	</head>
 	<body style="display:flex">
 		<div class="sidebar-left resize-h" style="width:550px">
-			<div class="padding-20" style="max-height:100%;overflow:auto">
-				<span id="button" class="button float-r">Run &#9654</span>
-				<span class="h3">Options</span>
-				<div class="padding-10">
-					Image width: <input type="number" id="widthInput" class="input-number"><br>
-					Image Height: <input type="number" id="heightInput" class="input-number"><br><br>
-					Position: <input type="number" step="any" id="posInputX" class="input-number"> | <input type="number" step="any" id="posInputY" class="input-number"><br>
-					Zoom: <input type="number" step="any" id="zoomInput" class="input-number"><br><br>
-					Iterations: <input type="number" id="iterInput" class="input-number"><br>
-					Samples: <input type="number" id="samplesInput" class="input-number" style="width:75px">
+			<scroll-div style="max-height:100%">
+				<div class="padding-20">
+					<span id="button" class="button float-r">Run &#9654</span>
+					<span class="h3">Options</span>
+					<div class="padding-10">
+						Image width: <input type="number" id="widthInput" class="input-number"><br>
+						Image Height: <input type="number" id="heightInput" class="input-number"><br><br>
+						Position: <input type="number" step="any" id="posInputX" class="input-number"> | <input type="number" step="any" id="posInputY" class="input-number"><br>
+						Zoom: <input type="number" step="any" id="zoomInput" class="input-number"><br><br>
+						Iterations: <input type="number" id="iterInput" class="input-number"><br>
+						Samples: <input type="number" id="samplesInput" class="input-number" style="width:75px">
+					</div>
+					<span class="h3">Filter Function</span>
+					<textarea id="filterFunctionInput" class="textarea resize-v margin-v-10" style="height:300px" spellcheck="false">Edit me</textarea>
+					<span class="h3">Tracer Function</span>
+					<textarea id="tracerFunctionInput" class="textarea resize-v margin-v-10" style="height:300px" spellcheck="false">Edit me</textarea>
 				</div>
-				<span class="h3">Filter Function</span>
-				<textarea id="filterFunctionInput" class="textarea resize-v margin-v-10" style="height:300px" spellcheck="false">Edit me</textarea>
-				<span class="h3">Tracer Function</span>
-				<textarea id="tracerFunctionInput" class="textarea resize-v margin-v-10" style="height:300px" spellcheck="false">Edit me</textarea>
-			</div>
+			</scroll-div>
 		</div>
 		<div class="panel">
 			<div class="centered project resize" style="z-index:0">

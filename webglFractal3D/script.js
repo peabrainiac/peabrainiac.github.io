@@ -1,5 +1,4 @@
 Utils.onPageLoad(async function(){
-	var scrollbar = new Scrollbar(document.getElementById("scroll-container"));
     try {
         var canvas = document.getElementById("canvas");
         var rayMarcher = await RayMarcher.create(canvas);

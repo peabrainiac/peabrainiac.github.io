@@ -54,7 +54,7 @@ export default class ScrollDiv extends HTMLDivElement {
         }
 
         this.addEventListener("scroll",update);
-        (new ResizeObserver(update)).observe(this); 
+        (new ResizeObserver(update)).observe(this);
     }
 };
 

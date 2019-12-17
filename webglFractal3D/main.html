@@ -8,9 +8,9 @@
 		<meta property="og:description" content="A webgl-based renderer for 3D IFS fractals.">
 		<meta property="og:image" content="https://peabrainiac.github.io/webglFractal3D/preview.png">
 		<link rel="stylesheet" type="text/css" href="../css/styles.css">
+		<script type="module" src="../js/customElements/ScrollDiv.js"></script>
 		<script src="../js/Utils.js"></script>
 		<script src="../js/Popup.js"></script>
-		<script src="../js/Scrollbar.js"></script>
 		<script src="../js/gl/ShaderProgram.js"></script>
 		<script src="../js/gl/Vao.js"></script>
 		<script src="../js/gl/Texture.js"></script>
@@ -27,7 +27,7 @@
 	</head>
 	<body style="display:flex">
 		<div class="sidebar-left resize-h" style="width:430px">
-			<div id="scroll-container" style="height:100%">
+			<scroll-div style="height:100%">
 				<div class="padding-20">
 					<span class="h3">WebGL Fractal test</span><br>
 					A work-in-progress webgl fractal renderer. This uses webgl2, so it may not work on all browsers (chrome and firefox should work fine though).<br>
@@ -67,7 +67,7 @@
 	                <br><br><br>
 	                <span id="span-fps"></span>
 				</div>
-			</div>
+			</scroll-div>
 		</div>
 		<div class="panel">
 			<div class="centered project resize" style="width:75%;height:75%;z-index:0">
