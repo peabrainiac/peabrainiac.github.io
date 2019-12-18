@@ -6,12 +6,16 @@ export default class ScrollDiv extends HTMLDivElement {
             <style>
                 :host {
                     display: block;
+                    box-sizing: border-box;
                     overflow: auto;
                     -ms-overflow-style: none;
                     scrollbar-width: none;
                 }
                 :host(::-webkit-scrollbar) {
                     display: none;
+                }
+                #container {
+                    padding-bottom: inherit;
                 }
                 #scrollbar {
                     position: absolute;
@@ -35,7 +39,9 @@ export default class ScrollDiv extends HTMLDivElement {
                     opacity: 0;
                 }
             </style>
-            <slot></slot>
+            <div id="container">
+                <slot></slot>
+            </div>
             <div id="scrollbar" class="hidden">
                 <div id="scrollbar-handle"></div>
             </div>
