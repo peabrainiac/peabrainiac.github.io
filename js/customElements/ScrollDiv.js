@@ -1,4 +1,4 @@
-export default class ScrollDiv extends HTMLDivElement {
+export default class ScrollDiv extends HTMLElement {
     constructor(){
         super();
         var shadowRoot = this.attachShadow({mode:"open"});
@@ -11,7 +11,7 @@ export default class ScrollDiv extends HTMLDivElement {
                     -ms-overflow-style: none;
                     scrollbar-width: none;
                 }
-                :host(::-webkit-scrollbar) {
+                :host::-webkit-scrollbar {
                     display: none;
                 }
                 #container {
@@ -56,12 +56,10 @@ export default class ScrollDiv extends HTMLDivElement {
             scrollbar.classList.toggle("hidden",contentHeight<=height+1);
 		    handle.style.top = container.scrollTop*scrollbar.offsetHeight/contentHeight+"px";
             handle.style.bottom = (contentHeight-height-container.scrollTop)*scrollbar.offsetHeight/contentHeight+"px";
-            console.log("Updated!");
         }
 
         this.addEventListener("scroll",update);
         (new ResizeObserver(update)).observe(this);
     }
 };
-
-window.customElements.define("scroll-div",ScrollDiv,{extends:"div"});
+window.customElements.define("scroll-div",ScrollDiv);
