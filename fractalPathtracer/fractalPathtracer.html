@@ -9,13 +9,14 @@
 		<meta property="og:image" content="https://peabrainiac.github.io/fractalPathtracer/preview.png">
 		<link rel="stylesheet" type="text/css" href="../css/styles.css">
 		<script type="module" src="../js/customElements/ScrollDiv.js"></script>
+		<script type="module" src="../js/customElements/ResizeDiv.js"></script>
 		<script src="../js/Utils.js"></script>
 		<script src="../js/Sandbox.js"></script>
 		<script src="./script.js"></script>
 		<title>fractal path tracer</title>
 	</head>
 	<body style="display:flex">
-		<div class="sidebar-left resize-h" style="width:550px">
+		<resize-div class="sidebar-left" resize-x="1" resize-y="0" style="width:550px">
 			<scroll-div style="max-height:100%;padding:20px">
 				<span id="button" class="button float-r">Run &#9654</span>
 				<span class="h3">Options</span>
@@ -32,11 +33,11 @@
 				<span class="h3">Tracer Function</span>
 				<textarea id="tracerFunctionInput" class="textarea resize-v margin-v-10" style="height:300px" spellcheck="false">Edit me</textarea>
 			</scroll-div>
-		</div>
+		</resize-div>
 		<div class="panel">
-			<div class="centered project resize" style="z-index:0">
+			<resize-div class="centered project" resize-x="2" resize-y="2" style="z-index:0">
 				<iframe src="./sandbox.html" id="sandbox" class="iframe" style="width:100%;height:100%;position:relative;z-index:-1"></iframe>
-			</div>
+			</resize-div>
 		</div>
 	</body>
 </html>

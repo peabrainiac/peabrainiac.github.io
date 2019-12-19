@@ -9,6 +9,7 @@
 		<meta property="og:image" content="https://peabrainiac.github.io/webglFractal3D/preview.png">
 		<link rel="stylesheet" type="text/css" href="../css/styles.css">
 		<script type="module" src="../js/customElements/ScrollDiv.js"></script>
+		<script type="module" src="../js/customElements/ResizeDiv.js"></script>
 		<script src="../js/Utils.js"></script>
 		<script src="../js/Popup.js"></script>
 		<script src="../js/gl/ShaderProgram.js"></script>
@@ -26,7 +27,7 @@
 		<title>WebGL RayMarcher</title>
 	</head>
 	<body style="display:flex">
-		<div class="sidebar-left resize-h" style="width:350px">
+		<resize-div resize-x="1" resize-y="0" class="sidebar-left" style="width:350px">
 			<scroll-div style="height:100%;padding:20px">
 				<span class="h3">WebGL Fractal test</span><br>
 				A work-in-progress webgl fractal renderer. This uses webgl2, so it may not work on all browsers (chrome and firefox should work fine though).<br>
@@ -66,11 +67,11 @@
 				<br><br><br>
 				<span id="span-fps"></span>
 			</scroll-div>
-		</div>
+		</resize-div>
 		<div class="panel">
-			<div class="centered project resize" style="width:75%;height:75%;z-index:0">
+			<resize-div class="centered project" resize-x="2" resize-y="2" style="width:75%;height:75%">
 				<canvas id="canvas" style="width:100%;height:100%" tabindex="0"></canvas>
-			</div>
+			</resize-div>
 		</div>
         <div id="popup-overlay" class="overlay" style="z-index:10">
         </div>
