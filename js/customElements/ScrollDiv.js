@@ -6,16 +6,18 @@ export default class ScrollDiv extends HTMLElement {
             <style>
                 :host {
                     display: block;
-                    box-sizing: border-box;
+                    position: relative;
+                    padding: 0;
+                    overflow: hidden;
+                }
+                #container {
                     overflow: auto;
                     -ms-overflow-style: none;
                     scrollbar-width: none;
+                    max-height: 100%;
                 }
-                :host::-webkit-scrollbar {
+                #container::-webkit-scrollbar {
                     display: none;
-                }
-                #container {
-                    padding-bottom: inherit;
                 }
                 #scrollbar {
                     position: absolute;
@@ -46,7 +48,7 @@ export default class ScrollDiv extends HTMLElement {
                 <div id="scrollbar-handle"></div>
             </div>
         `;
-        var container = this;
+        var container = shadowRoot.getElementById("container");
         var scrollbar = shadowRoot.getElementById("scrollbar");
         var handle = shadowRoot.getElementById("scrollbar-handle");
 
@@ -58,8 +60,8 @@ export default class ScrollDiv extends HTMLElement {
             handle.style.bottom = (contentHeight-height-container.scrollTop)*scrollbar.offsetHeight/contentHeight+"px";
         }
 
-        this.addEventListener("scroll",update);
-        (new ResizeObserver(update)).observe(this);
+        container.addEventListener("scroll",update);
+        (new ResizeObserver(update)).observe(container);
     }
 };
 window.customElements.define("scroll-div",ScrollDiv);
