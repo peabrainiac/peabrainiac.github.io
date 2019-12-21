@@ -10,13 +10,19 @@ export default class CodeEditor extends HTMLElement {
                 }
                 #container {
                     position: relative;
+                    display: inline-block;
+                }
+                #code {
+                    display: inline-block;
                 }
                 #textarea, #code {
                     font-family: monospace;
-                    white-space: pre-wrap;
+                    white-space: pre;
                     font-size: 1em;
+                    overflow: visible;
                 }
                 #textarea {
+                    overflow: hidden;
                     color: transparent;
                     caret-color: #dfdfdf;
                     background: transparent;
@@ -31,6 +37,9 @@ export default class CodeEditor extends HTMLElement {
                     top: 0;
                     right: 0;
                     bottom: 0;
+                }
+                #textarea:focus {
+                    outline: none;
                 }
                 #textarea::selection {
                     background-color: #ffaf0040;
@@ -50,7 +59,7 @@ export default class CodeEditor extends HTMLElement {
             </style>
             <div id="container">
                 <div id="code"></div>
-                <textarea id="textarea"></textarea>
+                <textarea id="textarea" spellcheck="false"></textarea>
             </div>
         `;
         var textarea = shadowRoot.getElementById("textarea");

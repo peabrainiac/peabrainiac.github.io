@@ -61,10 +61,16 @@ export default class ResizeDiv extends HTMLElement {
             window.addEventListener("mousemove",onMouseMove);
             window.addEventListener("mouseup",onMouseUp);
             function onMouseMove(e){
-                let width = initialWidth+(e.screenX-initialMouseX)*element.getAttribute("resize-x");
-                let height = initialHeight+(e.screenY-initialMouseY)*element.getAttribute("resize-y");
-                element.style.width = Math.max(width,12)+"px";
-                element.style.height = Math.max(height,12)+"px";
+                let resizeX = element.getAttribute("resize-x");
+                let resizeY = element.getAttribute("resize-y");
+                let width = initialWidth+(e.screenX-initialMouseX)*resizeX;
+                let height = initialHeight+(e.screenY-initialMouseY)*resizeY;
+                if (resizeX!=0){
+                    element.style.width = Math.max(width,12)+"px";
+                }
+                if (resizeY!=0){
+                    element.style.height = Math.max(height,12)+"px";
+                }
             }
             function onMouseUp(){
                 window.removeEventListener("mousemove",onMouseMove);
