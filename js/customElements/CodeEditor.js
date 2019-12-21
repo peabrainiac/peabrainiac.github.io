@@ -11,10 +11,13 @@ export default class CodeEditor extends HTMLElement {
                 }
                 #container {
                     position: relative;
-                    display: inline-block;
                 }
-                #code {
+                #container, #code {
                     display: inline-block;
+                    width: auto;
+                    height: auto;
+                    min-width: 100%;
+                    min-height: 100%;
                 }
                 #textarea, #code {
                     font-family: monospace;
