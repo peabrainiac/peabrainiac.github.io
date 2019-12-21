@@ -1,7 +1,6 @@
 Utils.onPageLoad(function(){
     var input = document.getElementById("textarea");
     var button = document.getElementById("run-button");
-    Utils.enableSmartTab(input);
 
     var popup;
     var frames;
