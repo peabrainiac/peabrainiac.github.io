@@ -7,6 +7,7 @@ export default class CodeEditor extends HTMLElement {
             <style>
                 :host {
                     display: block;
+                    overflow: hidden;
                 }
                 #container {
                     position: relative;
@@ -44,6 +45,9 @@ export default class CodeEditor extends HTMLElement {
                 #textarea::selection {
                     background-color: #ffaf0040;
                 }
+                .comment {
+                    color: #bfaf80;
+                }
                 .keyword-var {
                     color: #ffaf00;
                 }
@@ -63,25 +67,18 @@ export default class CodeEditor extends HTMLElement {
             </div>
         `;
         var textarea = shadowRoot.getElementById("textarea");
-
+        
         var onInnerHTMLChange = (()=>{
             let textContent = this.textContent.replace(/\r\n|\n\r|\r/g,"\n");
             console.log("Mutation observed! TextContent:",textContent);
             this.shadowRoot.getElementById("textarea").value = textContent;
-            updateCode();
-        });
-        var updateCode = (()=>{
-            let code = this.shadowRoot.getElementById("textarea").value;
-            let tokens = extractTokens(code);
-            code = processTokens(tokens);
-            console.log("Updated code!");
-            this.shadowRoot.getElementById("code").innerHTML = code;
+            this.updateCode();
         });
         onInnerHTMLChange();
         (new MutationObserver(onInnerHTMLChange)).observe(this,{characterData:true,childList:true,subtree:true});
-        textarea.addEventListener("input",updateCode);
+        textarea.addEventListener("input",()=>{this.updateCode()});
 
-		textarea.addEventListener("keydown",function(e){
+		textarea.addEventListener("keydown",(e)=>{
 			if (e.code=="Tab"){
 				e.preventDefault();
 				var start = textarea.selectionStart;
@@ -100,41 +97,53 @@ export default class CodeEditor extends HTMLElement {
 					textarea.selectionStart = start;
 					textarea.selectionEnd = start+selection.length;
                 }
-                updateCode();
+                this.updateCode();
 			}
         });
-
-        function extractTokens(code){
-            let tokens = [];
-            let tokenPatterns = [/^\s+/,/^(?:const|let|var|function)/,/^(?:if|else|for|while|break|continue|return)/,/^[a-zA-Z]\w*/,/^(?:0x[\da-fA-F]+|0b\d+|0o\d+|\d+(?:\.\d*)?|\.\d+)/,/^./];
-            let tokenTypes = ["","keyword-var","keyword-control","identifier","number",""];
-            while (code.length>0){
-                for (let i=0;i<tokenPatterns.length;i++){
-                    if (tokenPatterns[i].test(code)){
-                        let token = code.match(tokenPatterns[i])[0];
-                        tokens.push({token:token,type:tokenTypes[i]});
-                        code = code.substring(token.length);
-                        break;
-                    }
-                }
-            }
-            return tokens;
-        }
-        function processTokens(tokens){
-            let code = "";
-            for (let i=0;i<tokens.length;i++){
-                let token = tokens[i].token;
-                token = token.replace(/>/g,"&gt").replace(/</g,"&lt");
-                if (tokens[i].type){
-                    token = `<span class="${tokens[i].type}">${token}</span>`;
-                }
-                code += token;
-            }
-            return code;
-        }
     }
     get value(){
-        return this.shadowRoot.getElementById("code").textContent;
+        return this.shadowRoot.getElementById("textarea").value;
+    }
+    set value(value){
+        this.shadowRoot.getElementById("textarea").value = value;
+        this.updateCode();
+    }
+    
+    updateCode(){
+        let code = this.shadowRoot.getElementById("textarea").value;
+        let tokens = this.extractTokens(code);
+        code = this.processTokens(tokens);
+        console.log("Updated code!");
+        this.shadowRoot.getElementById("code").innerHTML = code+`<span style="color:transparent">i</span>`;
+    };
+
+    extractTokens(code){
+        let tokens = [];
+        let tokenPatterns = [/^\s+/,/^(?:\/\/[^\n]*|\/\*(?:[^\*]*\*[^\/])*[^\*]*(?:\*\/|\*$|$))/,/^(?:const|let|var|function)/,/^(?:if|else|for|while|break|continue|return)/,/^[a-zA-Z]\w*/,/^(?:0x[\da-fA-F]+|0b\d+|0o\d+|\d+(?:\.\d*)?|\.\d+)/,/^./];
+        let tokenTypes = ["","comment","keyword-var","keyword-control","identifier","number",""];
+        while (code.length>0){
+            for (let i=0;i<tokenPatterns.length;i++){
+                if (tokenPatterns[i].test(code)){
+                    let token = code.match(tokenPatterns[i])[0];
+                    tokens.push({token:token,type:tokenTypes[i]});
+                    code = code.substring(token.length);
+                    break;
+                }
+            }
+        }
+        return tokens;
+    }
+    processTokens(tokens){
+        let code = "";
+        for (let i=0;i<tokens.length;i++){
+            let token = tokens[i].token;
+            token = token.replace(/>/g,"&gt").replace(/</g,"&lt");
+            if (tokens[i].type){
+                token = `<span class="${tokens[i].type}">${token}</span>`;
+            }
+            code += token;
+        }
+        return code;
     }
 }
 window.customElements.define("code-editor",CodeEditor);
