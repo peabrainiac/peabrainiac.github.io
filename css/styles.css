@@ -147,8 +147,7 @@ body {
     margin: 0;
 }
 .code-editor {
-	box-sizing: border-box;
-	padding: 5px;
+	--padding: 5px;
 	background: #101010;
 	border: 1px solid #303030;
 	transition: all 0.25s ease;

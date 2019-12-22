@@ -7,17 +7,34 @@ export default class ScrollDiv extends HTMLElement {
                 :host {
                     display: block;
                     position: relative;
-                    padding: 0;
+                    padding: 0 !important;
+                    --padding: 0;
+                    --inner-width: auto;
+                    --inner-height: auto;
                     overflow: hidden;
+                    display: inline-block;
+                    width: auto;
+                    height: auto;
                 }
-                #container {
+                #outer-container {
                     overflow: auto;
                     -ms-overflow-style: none;
                     scrollbar-width: none;
-                    max-height: 100%;
+                    width: 100%;
+                    height: 100%;
                 }
-                #container::-webkit-scrollbar {
+                #outer-container::-webkit-scrollbar {
                     display: none;
+                }
+                #inner-container {
+                    box-sizing: border-box;
+                    padding: var(--padding);
+                    display: inline-block;
+                    width: var(--inner-width);
+                    height: var(--inner-height);
+                    min-width: 100%;
+                    min-height: 100%;
+                    position: relative;
                 }
                 #scrollbar {
                     position: absolute;
@@ -41,14 +58,16 @@ export default class ScrollDiv extends HTMLElement {
                     opacity: 0;
                 }
             </style>
-            <div id="container">
-                <slot></slot>
+            <div id="outer-container">
+                <div id="inner-container">
+                    <slot></slot>
+                </div>
             </div>
             <div id="scrollbar" class="hidden">
                 <div id="scrollbar-handle"></div>
             </div>
         `;
-        var container = shadowRoot.getElementById("container");
+        var container = shadowRoot.getElementById("outer-container");
         var scrollbar = shadowRoot.getElementById("scrollbar");
         var handle = shadowRoot.getElementById("scrollbar-handle");
 

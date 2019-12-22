@@ -8,6 +8,12 @@ export default class CodeEditor extends HTMLElement {
                 :host {
                     display: block;
                     overflow: hidden;
+                    padding: 0 !important;
+                }
+                #scroll-container {
+                    --padding: inherit;
+                    width: 100%;
+                    height: 100%;
                 }
                 #container {
                     position: relative;
@@ -31,16 +37,15 @@ export default class CodeEditor extends HTMLElement {
                     caret-color: #dfdfdf;
                     background: transparent;
                     resize: none;
+                    box-sizing: border-box;
                     width: 100%;
                     height: 100%;
+                    padding: var(--padding);
                     margin: 0;
                     border: none;
-                    padding: 0;
                     position: absolute;
                     left: 0;
                     top: 0;
-                    right: 0;
-                    bottom: 0;
                 }
                 #textarea:focus {
                     outline: none;
@@ -64,10 +69,10 @@ export default class CodeEditor extends HTMLElement {
                     color: #bfff00;
                 }
             </style>
-            <div id="container">
-                <div id="code"></div>
+            <scroll-div id="scroll-container">
+                <span id="code"></span>
                 <textarea id="textarea" spellcheck="false"></textarea>
-            </div>
+            </scroll-div>
         `;
         var textarea = shadowRoot.getElementById("textarea");
         
