@@ -9,9 +9,13 @@ export default class CodeEditor extends HTMLElement {
                     display: block;
                     overflow: hidden;
                     padding: 0 !important;
+                    --padding: 5px;
+                    --scrollbar-width: 5px;
                 }
                 #scroll-container {
                     --padding: inherit;
+                    --scrollbar-width: inherit;
+                    vertical-align: top;
                     width: 100%;
                     height: 100%;
                 }

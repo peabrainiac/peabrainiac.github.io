@@ -11,6 +11,7 @@ export default class ScrollDiv extends HTMLElement {
                     --padding: 0;
                     --inner-width: auto;
                     --inner-height: auto;
+                    --scrollbar-width: 5px;
                     overflow: hidden;
                     display: inline-block;
                     width: auto;
@@ -55,21 +56,29 @@ export default class ScrollDiv extends HTMLElement {
                     margin: 10px 5px 20px 0;
                 }
                 #scrollbar-h, #scrollbar-handle-h {
-                    height: 5px;
+                    height: var(--scrollbar-width);
                 }
                 #scrollbar-v, #scrollbar-handle-v {
-                    width: 5px;
+                    width: var(--scrollbar-width);
                 }
-                #scrollbar-h, #scrollbar-v, #scrollbar-handle-h, #crollbar-handle-v {
-                    border-radius: 3px;
+                #scrollbar-h, #scrollbar-v, #scrollbar-handle-h, #scrollbar-handle-v {
+                    border-radius: var(--scrollbar-width);
                     transition: all 0.25s ease-out;
                 }
                 #scrollbar-handle-h, #scrollbar-handle-v {
                     position: absolute;
                     background: #303030;
+                    cursor: pointer;
+                }
+                #scrollbar-handle-h:hover, #scrollbar-handle-v:hover, #scrollbar-handle-h.active, #scrollbar-handle-v.active {
+                    background: #505050;
+                }
+                #scrollbar-handle-h.active, #scrollbar-handle-v.active {
+                    transition: none;
                 }
                 #scrollbar-h.hidden, #scrollbar-v.hidden {
                     opacity: 0;
+                    pointer-events: none;
                 }
             </style>
             <div id="outer-container">
@@ -85,6 +94,7 @@ export default class ScrollDiv extends HTMLElement {
             </div>
         `;
         var container = shadowRoot.getElementById("outer-container");
+        var innerContainer = shadowRoot.getElementById("inner-container");
         var horizontalScrollbar = shadowRoot.getElementById("scrollbar-h");
         var verticalScrollbar = shadowRoot.getElementById("scrollbar-v");
         var horizontalHandle = shadowRoot.getElementById("scrollbar-handle-h");
@@ -104,7 +114,49 @@ export default class ScrollDiv extends HTMLElement {
         }
 
         container.addEventListener("scroll",update);
-        (new ResizeObserver(update)).observe(container);
+        let resizeObserver = new ResizeObserver(update);
+        resizeObserver.observe(container);
+        resizeObserver.observe(innerContainer);
+
+        horizontalHandle.addEventListener("mousedown",startHorizontalDragging);
+        function startHorizontalDragging(e){
+            let initialX = container.scrollLeft;
+            let initialMouseX = e.screenX;
+            window.addEventListener("mousemove",onMouseMove);
+            window.addEventListener("mouseup",onMouseUp);
+            horizontalHandle.classList.add("active");
+            function onMouseMove(e){
+                let factor = container.scrollWidth/horizontalScrollbar.offsetWidth;
+                let x = initialX+(e.screenX-initialMouseX)*factor;
+                container.scrollLeft = x;
+                update();
+            }
+            function onMouseUp(){
+                horizontalHandle.classList.remove("active");
+                window.removeEventListener("mousemove",onMouseMove);
+                window.removeEventListener("mouseup",onMouseUp);
+            }
+        }
+
+        verticalHandle.addEventListener("mousedown",startVerticalDragging);
+        function startVerticalDragging(e){
+            let initialY = container.scrollTop;
+            let initialMouseY = e.screenY;
+            window.addEventListener("mousemove",onMouseMove);
+            window.addEventListener("mouseup",onMouseUp);
+            verticalHandle.classList.add("active");
+            function onMouseMove(e){
+                let factor = container.scrollHeight/verticalScrollbar.offsetHeight;
+                let y = initialY+(e.screenY-initialMouseY)*factor;
+                container.scrollTop = y;
+                update();
+            }
+            function onMouseUp(){
+                verticalHandle.classList.remove("active");
+                window.removeEventListener("mousemove",onMouseMove);
+                window.removeEventListener("mouseup",onMouseUp);
+            }
+        }
     }
 };
 window.customElements.define("scroll-div",ScrollDiv);
