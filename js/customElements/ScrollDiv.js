@@ -12,6 +12,9 @@ export default class ScrollDiv extends HTMLElement {
                     --inner-width: auto;
                     --inner-height: auto;
                     --scrollbar-width: 5px;
+                    --scrollbar-track-color: #00000080;
+                    --scrollbar-handle-color: #303030;
+                    --scrollbar-active-color: #505050;
                     overflow: hidden;
                     display: inline-block;
                     width: auto;
@@ -37,48 +40,48 @@ export default class ScrollDiv extends HTMLElement {
                     min-height: 100%;
                     position: relative;
                 }
-                #scrollbar-h, #scrollbar-v {
-                    background: #101010;
+                .scrollbar {
+                    background: var(--scrollbar-track-color);
                     opacity: 1;
                 }
-                #scrollbar-h {
+                .scrollbar.h {
                     position: absolute;
                     left: 0;
                     bottom: 0;
                     right: 0;
                     margin: 0 20px 5px 10px;
                 }
-                #scrollbar-v {
+                .scrollbar.v {
                     position: absolute;
                     top: 0;
                     right: 0;
                     bottom: 0;
                     margin: 10px 5px 20px 0;
                 }
-                #scrollbar-h, #scrollbar-handle-h {
+                .scrollbar.hidden {
+                    opacity: 0;
+                    pointer-events: none;
+                }
+                .scrollbar.h, .scrollbar-handle.h {
                     height: var(--scrollbar-width);
                 }
-                #scrollbar-v, #scrollbar-handle-v {
+                .scrollbar.v, .scrollbar-handle.v {
                     width: var(--scrollbar-width);
                 }
-                #scrollbar-h, #scrollbar-v, #scrollbar-handle-h, #scrollbar-handle-v {
+                .scrollbar, .scrollbar-handle {
                     border-radius: var(--scrollbar-width);
                     transition: all 0.25s ease-out;
                 }
-                #scrollbar-handle-h, #scrollbar-handle-v {
+                .scrollbar-handle {
                     position: absolute;
-                    background: #303030;
+                    background: var(--scrollbar-handle-color);
                     cursor: pointer;
                 }
-                #scrollbar-handle-h:hover, #scrollbar-handle-v:hover, #scrollbar-handle-h.active, #scrollbar-handle-v.active {
-                    background: #505050;
+                .scrollbar-handle:hover, #scrollbar-handle.active {
+                    background: var(--scrollbar-active-color);
                 }
-                #scrollbar-handle-h.active, #scrollbar-handle-v.active {
+                .scrollbar-handle.active {
                     transition: none;
-                }
-                #scrollbar-h.hidden, #scrollbar-v.hidden {
-                    opacity: 0;
-                    pointer-events: none;
                 }
             </style>
             <div id="outer-container">
@@ -86,11 +89,11 @@ export default class ScrollDiv extends HTMLElement {
                     <slot></slot>
                 </div>
             </div>
-            <div id="scrollbar-h" class="hidden">
-                <div id="scrollbar-handle-h"></div>
+            <div id="scrollbar-h" class="scrollbar h" class="hidden">
+                <div id="scrollbar-handle-h" class="scrollbar-handle h"></div>
             </div>
-            <div id="scrollbar-v" class="hidden">
-                <div id="scrollbar-handle-v"></div>
+            <div id="scrollbar-v" class="scrollbar v" class="hidden">
+                <div id="scrollbar-handle-v" class="scrollbar-handle v"></div>
             </div>
         `;
         var container = shadowRoot.getElementById("outer-container");
