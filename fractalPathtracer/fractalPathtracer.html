@@ -10,7 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/styles.css">
 		<script type="module" src="../js/customElements/ScrollDiv.js"></script>
 		<script type="module" src="../js/customElements/ResizeDiv.js"></script>
-		<script type="module" src="../js/customElements/CodeEditor.js"></script>
+		<script type="module" src="../js/customElements/CodeEditorJS.js"></script>
 		<script src="../js/Utils.js"></script>
 		<script src="./script.js"></script>
 		<title>fractal path tracer</title>
@@ -30,9 +30,9 @@
 						Samples: <input type="number" id="samplesInput" class="input-number" style="width:75px">
 					</div>
 					<span class="h3">Filter Function</span>
-					<code-editor id="filterFunctionInput" class="code-editor margin-v-10">Edit me</code-editor>
+					<code-editor-js id="filterFunctionInput" class="code-editor margin-v-10">Edit me</code-editor-js>
 					<span class="h3">Tracer Function</span>
-					<code-editor id="tracerFunctionInput" class="code-editor margin-v-10">Edit me</code-editor>
+					<code-editor-js id="tracerFunctionInput" class="code-editor margin-v-10">Edit me</code-editor-js>
 				</div>
 			</scroll-div>
 		</resize-div>

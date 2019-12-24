@@ -57,21 +57,6 @@ export default class CodeEditor extends HTMLElement {
                 #textarea::selection {
                     background-color: #ffaf0040;
                 }
-                .comment {
-                    color: #bfaf80;
-                }
-                .keyword-var {
-                    color: #ffaf00;
-                }
-                .keyword-control {
-                    color: #ff6000;
-                }
-                .identifier{
-                    color: #ffdf80;
-                }
-                .number {
-                    color: #bfff00;
-                }
             </style>
             <scroll-div id="scroll-container">
                 <span id="code"></span>
@@ -82,7 +67,6 @@ export default class CodeEditor extends HTMLElement {
         
         var onInnerHTMLChange = (()=>{
             let textContent = this.textContent.replace(/\r\n|\n\r|\r/g,"\n");
-            console.log("Mutation observed! TextContent:",textContent);
             this.shadowRoot.getElementById("textarea").value = textContent;
             this.updateCode();
         });
@@ -129,30 +113,24 @@ export default class CodeEditor extends HTMLElement {
         this.updateCode();
     }
     
+    injectCSS(css){
+        let style = document.createElement("style");
+        style.innerHTML = css;
+        this.shadowRoot.insertBefore(style,this.shadowRoot.getElementById("scroll-container"))
+        return style;
+    }
+
     updateCode(){
         let code = this.shadowRoot.getElementById("textarea").value;
         let tokens = this.extractTokens(code);
         code = this.processTokens(tokens);
-        console.log("Updated code!");
         this.shadowRoot.getElementById("code").innerHTML = code+`<span style="color:transparent">i</span>`;
     };
 
     extractTokens(code){
-        let tokens = [];
-        let tokenPatterns = [/^\s+/,/^(?:\/\/[^\n]*|\/\*(?:[^\*]*\*[^\/])*[^\*]*(?:\*\/|\*$|$))/,/^(?:const|let|var|function)/,/^(?:if|else|for|while|break|continue|return)/,/^[a-zA-Z]\w*/,/^(?:0x[\da-fA-F]+|0b\d+|0o\d+|\d+(?:\.\d*)?|\.\d+)/,/^./];
-        let tokenTypes = ["","comment","keyword-var","keyword-control","identifier","number",""];
-        while (code.length>0){
-            for (let i=0;i<tokenPatterns.length;i++){
-                if (tokenPatterns[i].test(code)){
-                    let token = code.match(tokenPatterns[i])[0];
-                    tokens.push({token:token,type:tokenTypes[i]});
-                    code = code.substring(token.length);
-                    break;
-                }
-            }
-        }
-        return tokens;
+        return [{token:code,type:""}];
     }
+    
     processTokens(tokens){
         let code = "";
         for (let i=0;i<tokens.length;i++){
