@@ -1,5 +1,6 @@
 Utils.onPageLoad(function(){
     var input = document.getElementById("textarea");
+    input.globalScope = {Math:{},GifWriter:{}};
     var button = document.getElementById("run-button");
 
     var popup;

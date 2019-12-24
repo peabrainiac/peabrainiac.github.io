@@ -1,6 +1,7 @@
 import CodeEditor from "/js/customElements/CodeEditor.js";
 
 export default class CodeEditorJS extends CodeEditor {
+
     constructor(){
         super();
         super.injectCSS(`
@@ -13,8 +14,14 @@ export default class CodeEditorJS extends CodeEditor {
             .keyword-control {
                 color: #ff6000;
             }
-            .identifier{
+            .identifier {
                 color: #ffdf80;
+            }
+            .identifier-const {
+                color: #dfdf60;
+            }
+            .identifier-global {
+                color: #ffaf80;
             }
             .number {
                 color: #bfff00;
@@ -37,7 +44,29 @@ export default class CodeEditorJS extends CodeEditor {
                 }
             }
         }
+        let constants = [];
+        for (let i=0;i<tokens.length;i++){
+            if (tokens[i].token=="const"){
+                if (i+2<tokens.length&&tokens[i+2].type=="identifier"){
+                    constants.push(tokens[i+2].token);
+                }
+            }else if(tokens[i].type=="identifier"){
+                if (constants.includes(tokens[i].token)){
+                    tokens[i].type = "identifier-const";
+                }else if(this._globalScope&&this._globalScope.hasOwnProperty(tokens[i].token)){
+                    tokens[i].type = "identifier-global";
+                }
+            }
+        }
         return tokens;
+    }
+
+    set globalScope(globalScope){
+        this._globalScope = globalScope;
+        this.updateCode();
+    }
+    get globalScope(){
+        return this._globalScope;
     }
 }
 
