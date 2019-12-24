@@ -90,27 +90,35 @@ export default class CodeEditor extends HTMLElement {
         (new MutationObserver(onInnerHTMLChange)).observe(this,{characterData:true,childList:true,subtree:true});
         textarea.addEventListener("input",()=>{this.updateCode()});
 
-		textarea.addEventListener("keydown",(e)=>{
-			if (e.code=="Tab"){
-				e.preventDefault();
-				var start = textarea.selectionStart;
-				var end = textarea.selectionEnd;
-				var value = textarea.value;
-				var before = value.substring(0,start);
-				var selection = value.substring(start,end)
-				var after = value.substring(end);
-				if(selection.indexOf("\n")==-1){
-					textarea.value = before+"\t"+after;
-					textarea.selectionStart = start+1;
-					textarea.selectionEnd = textarea.selectionStart;
-				}else{
-					selection = (e.shiftKey?selection.replace(/\n\t/g,"\n"):selection.replace(/\n/g,"\n\t"))
-					textarea.value = before+selection+after;
-					textarea.selectionStart = start;
-					textarea.selectionEnd = start+selection.length;
+        textarea.addEventListener("keydown",(e)=>{
+            if (e.key=="Tab"||e.key=="Enter"){
+                e.preventDefault();
+                var start = textarea.selectionStart;
+                var end = textarea.selectionEnd;
+                var value = textarea.value;
+                var before = value.substring(0,start);
+                var selection = value.substring(start,end)
+                var after = value.substring(end);
+                if (e.key=="Tab"){
+                    if(selection.indexOf("\n")==-1){
+                        textarea.value = before+"\t"+after;
+                        textarea.selectionStart = start+1;
+                        textarea.selectionEnd = textarea.selectionStart;
+                    }else{
+                        selection = (e.shiftKey?selection.replace(/\n\t/g,"\n"):selection.replace(/\n/g,"\n\t"))
+                        textarea.value = before+selection+after;
+                        textarea.selectionStart = start;
+                        textarea.selectionEnd = start+selection.length;
+                    }
+                }else if (e.key=="Enter"){
+                    let lineStarts = before.match(/\n\t*/g);
+                    let nextLineStart = lineStarts[lineStarts.length-1]+(before.endsWith("{")?"\t":"");
+                    textarea.value = before+nextLineStart+after;
+                    textarea.selectionStart = before.length+nextLineStart.length;
+                    textarea.selectionEnd = textarea.selectionStart;
                 }
                 this.updateCode();
-			}
+            }
         });
     }
     get value(){
