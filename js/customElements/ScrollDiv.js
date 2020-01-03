@@ -77,7 +77,7 @@ export default class ScrollDiv extends HTMLElement {
                     background: var(--scrollbar-handle-color);
                     cursor: pointer;
                 }
-                .scrollbar-handle:hover, #scrollbar-handle.active {
+                .scrollbar-handle:hover, .scrollbar-handle.active {
                     background: var(--scrollbar-active-color);
                 }
                 .scrollbar-handle.active {

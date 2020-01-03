@@ -12,7 +12,17 @@ const GifScripterSandbox = (function(){
             console.log.apply(console,arguments)
         }};
     });
-    sandbox.setVariable("Math",Object.freeze(Math));
+    sandbox.setVariable("Math",Math);
+    sandbox.setVariable("ImageData",ImageData);
+    sandbox.setVariable("Int8Array",Int8Array);
+    sandbox.setVariable("Uint8Array",Uint8Array);
+    sandbox.setVariable("Uint8ClampedArray",Uint8ClampedArray);
+    sandbox.setVariable("Int16Array",Int16Array);
+    sandbox.setVariable("Uint16Array",Uint16Array);
+    sandbox.setVariable("Int32Array",Int32Array);
+    sandbox.setVariable("Uint32Array",Uint32Array);
+    sandbox.setVariable("Float32Array",Float32Array);
+    sandbox.setVariable("Float64Array",Float64Array);
     sandbox.setVariableConstructor("Utils",function(){
         return {hslToRgb:function(h,s,l){
             let c = s*(1-Math.abs(2*l-1));
@@ -39,6 +49,11 @@ const GifScripterSandbox = (function(){
             }
             return imgData;
         };
+        exports.wait = async function(delay){
+            return new Promise(function(resolve,reject){
+                setTimeout(resolve,delay);
+            });
+        };
         exports.addFrame = function(canvasOrImageData){
             return new Promise(function(resolve,reject){
                 imageData = (canvasOrImageData instanceof ImageData)?canvasOrImageData:canvasOrImageData.getContext("2d").getImageData(0,0,canvasOrImageData.width,canvasOrImageData.height);
@@ -60,6 +75,10 @@ const GifScripterSandbox = (function(){
 
     exports.eval = function(code){
         sandbox.eval(code);
+    };
+
+    exports.getGlobalScope = function(){
+        return sandbox.getGlobalScope();
     };
 
     exports.onAddingFrame = function(callback){

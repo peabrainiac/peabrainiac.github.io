@@ -1,6 +1,5 @@
 Utils.onPageLoad(function(){
-    var input = document.getElementById("textarea");
-    input.globalScope = {Math:{},GifWriter:{}};
+    var editor = document.getElementById("textarea");
     var button = document.getElementById("run-button");
 
     var popup;
@@ -9,6 +8,7 @@ Utils.onPageLoad(function(){
     var startTime;
 
     var sandbox = new GifScripterSandbox();
+    editor.globalScope = sandbox.getGlobalScope();
     sandbox.onAddingFrame(function(imageData,delay){
         console.log("Adding Frame:",imageData);
         if (popup.wasCancelled()){
@@ -38,7 +38,7 @@ Utils.onPageLoad(function(){
                 popup.showProgress2(progress);
             });
     
-            sandbox.eval(input.value);
+            sandbox.eval(editor.value);
         }catch(e){
             popup.showError(e);
         }

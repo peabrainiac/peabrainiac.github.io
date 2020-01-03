@@ -6,20 +6,24 @@ const SemiSandbox = (function(){
 
     exports.setVariable = function(name,value){
         envVariables[name] = value;
-    }
+    };
     exports.setVariableConstructor = function(name,constructor){
         envObjectConstructors[name] = constructor;
-    }
+    };
 
-
-    exports.eval = function(code){
-        var enviroment = Object.create(null);
+    exports.getGlobalScope = function(prototype=Object){
+        var object = Object.create(prototype);
         for (name in envVariables){
-            enviroment[name] = envVariables[name];
+            object[name] = envVariables[name];
         }
         for (name in envObjectConstructors){
-            enviroment[name] = new (envObjectConstructors[name])();
+            object[name] = new (envObjectConstructors[name])();
         }
+        return object;
+    };
+
+    exports.eval = function(code){
+        var enviroment = exports.getGlobalScope(null);
         proxy = new Proxy(enviroment,{has:((target,key)=>true)});
         console.log("Sandbox object: ",proxy);
         proxy.code = code;
