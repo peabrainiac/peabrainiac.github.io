@@ -15,6 +15,7 @@
 		<script src="../js/Utils.js"></script>
 		<script src="../js/SemiSandbox.js"></script>
 		<script src="../js/Popup.js"></script>
+		<script src="../js/Mp4Encoder.js"></script>
 		<script src="./GifScripterSandbox.js"></script>
 		<script src="./Encoder.js"></script>
 		<script src="./ProgressPopup.js"></script>
@@ -23,8 +24,16 @@
 	</head>
 	<body class="flex-column">
         <div class="toolbar-top">
-            <span class="h3-white">peabrainiac.github.io/<span class="orange">GifScripter</span></span>
-            <span id="run-button" class="button">Run &#9654</span>
+			<span class="h3-white">peabrainiac.github.io/<span class="orange">GifScripter</span></span>
+			<span style="float:right;color:#bfbfbf">
+				Output:
+				<select id="output-format-select" class="big-select">
+					<option value="gif" title="Saves the animation to a gif file.">gif</option>
+					<option value="webm" title="Saves the animation to a webm video file. Currently not working correctly">webm (WIP)</option>
+					<option value="none" title="Runs the script without saving the animation to a file.">preview</option>
+				</select>
+            	<span id="run-button" class="button">Run &#9654</span>
+			</span>
         </div>
         <div class="flex-row" style="min-height: 0">
             <resize-div class="sidebar-left" resize-x="1" resize-y="0" style="width:300px;background:#202020">

@@ -49,7 +49,6 @@ const Popup = function(parentElement,titleText,width="auto",height="auto"){
     	var container = document.createElement("div");
     	container.style.margin = "20px";
     	container.style.textAlign = "center";
-    	canvas.style.width = "100%";
     	canvas.style.boxShadow = "2px 2px 8px #000000";
     	container.appendChild(canvas);
     	body.appendChild(container);
@@ -58,7 +57,6 @@ const Popup = function(parentElement,titleText,width="auto",height="auto"){
     	var container = document.createElement("div");
     	container.style.margin = "20px";
     	container.style.textAlign = "center";
-    	element.style.width = "100%";
     	element.style.boxShadow = "2px 2px 8px #000000";
     	container.appendChild(element);
     	body.appendChild(container);

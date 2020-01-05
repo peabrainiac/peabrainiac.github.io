@@ -51,6 +51,7 @@ Utils.onPageLoad(async function(){
         canvas2.width = screenshotWidth;
         canvas2.height = screenshotHeight;
         canvas2.getContext("2d").drawImage(canvas,0,0);
+        canvas2.style.width = "100%";
         var popup = new Popup(document.getElementById("popup-overlay"),"Screenshot",480,360);
         popup.addCanvas(canvas2);
         popup.addCloseButton();

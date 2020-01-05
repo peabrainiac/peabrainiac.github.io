@@ -11,7 +11,9 @@
     tab-size: 4;
     font-size: 1.17em;
 }
+#output-format-select {
+    margin: -2px 20px -2px 2px;
+}
 #run-button {
-    float: right;
     margin: -4px 0;
 }

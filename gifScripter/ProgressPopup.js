@@ -28,14 +28,32 @@ const ProgressPopup = function(){
         progressText2.nodeValue = "Frames encoded: "+frames+"\r\n";
     };
 
-    exports.finish = function(gifURL){
-        var image = document.createElement("img");
-        image.src = gifURL;
-        upscaleImage(image,width,height);
-        popup.clear();
-        popup.setTitle("Gif finished");
-        popup.addImageOrCanvas(image);
-        popup.addCloseButton();
+    exports.finish = function(url,type="gif"){
+        if (url){
+            var imageOrVideo;
+            if (type=="gif"){
+                imageOrVideo = document.createElement("img");
+                imageOrVideo.src = url;
+            }else if (type=="webm"){
+                imageOrVideo = document.createElement("video");
+                imageOrVideo.controls = true;
+                imageOrVideo.autoplay = true;
+                imageOrVideo.loop = true;
+                let source = document.createElement("source");
+                source.src = url;
+                source.type = "video/webm";
+                imageOrVideo.appendChild(source);
+            }
+            upscaleImage(imageOrVideo,width,height);
+            popup.clear();
+            popup.setTitle("Gif finished");
+            popup.addImageOrCanvas(imageOrVideo);
+            popup.addCloseButton();
+        }else{
+            popup.clear();
+            popup.addCanvas(progressCanvas);
+            popup.addCloseButton();
+        }
     };
 
     exports.showError = function(error){
@@ -56,7 +74,9 @@ const ProgressPopup = function(){
         let scale = Math.ceil(360/Math.max(width,height));
         image.style.width = width*scale+"px";
         image.style.height = height*scale+"px";
+        console.log("Set width to "+width*scale+"px"+" and height to "+height*scale+"px"+"!");
         image.style.imageRendering = "crisp-edges";
+        image.style.imageRendering = "pixelated";
     }
     function cancel(){
         wasCancelled = true;
