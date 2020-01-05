@@ -6,7 +6,7 @@ Utils.onPageLoad(function(){
     var popup;
     var frames;
     var outputType;
-    var mp4Encoder = new Mp4Encoder();
+    var videoEncoder = new VideoEncoder();
     var gifEncoder = new Encoder();
     var startTime;
 
@@ -22,26 +22,20 @@ Utils.onPageLoad(function(){
         if (outputType=="gif"){
             return gifEncoder.addFrame(imageData,delay);
         }else if (outputType=="webm"){
-            return mp4Encoder.addFrame(imageData,delay);
+            return videoEncoder.addFrame(imageData,delay);
         }else{
             return Promise.resolve();
         }
     });
     sandbox.onFinish(function(){
-        if (outputType=="gif"){
-            gifEncoder.finish().then(function(result){
-                console.log("Finished in "+(Date.now()-startTime)+"ms!");
-                popup.finish(result.url);
-                console.log("Result: ",result.url);
-            });
-        }else if(outputType=="webm"){
-            mp4Encoder.finish().then(function(result){
-                console.log("Finished in "+(Date.now()-startTime)+"ms!");
-                popup.finish(result.url,"webm");
+        console.log("Finished in "+(Date.now()-startTime)+"ms!");
+        if (outputType=="gif"||outputType=="webm"){
+            encoder = (outputType=="gif"?gifEncoder:videoEncoder);
+            encoder.finish().then(function(result){
+                popup.finish(result.url,outputType);
                 console.log("Result: ",result.url);
             });
         }else{
-            console.log("Finished in "+(Date.now()-startTime)+"ms!");
             popup.finish();
         }
     });
@@ -63,7 +57,7 @@ Utils.onPageLoad(function(){
                 });
             }else if(outputType=="webm"){
                 console.log("Starting webm encoding!");
-                mp4Encoder.start();
+                videoEncoder.start();
             }
     
             sandbox.eval(editor.value);

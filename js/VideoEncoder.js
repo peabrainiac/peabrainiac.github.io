@@ -1,4 +1,4 @@
-class Mp4Encoder {
+class VideoEncoder {
 
     start(){
         this.canvas = document.createElement("canvas");
