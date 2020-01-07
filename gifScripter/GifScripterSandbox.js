@@ -13,7 +13,7 @@ const GifScripterSandbox = (function(){
         }};
     });
     sandbox.setVariable("Math",Math);
-    sandbox.setVariable("ImageData",ImageData);
+    sandbox.setVariable("ImageData",BetterImageData);
     sandbox.setVariable("Int8Array",Int8Array);
     sandbox.setVariable("Uint8Array",Uint8Array);
     sandbox.setVariable("Uint8ClampedArray",Uint8ClampedArray);
