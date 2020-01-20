@@ -95,8 +95,12 @@ export default class CodeEditor extends HTMLElement {
                         textarea.selectionEnd = start+selection.length;
                     }
                 }else if (e.key=="Enter"){
-                    let lineStarts = before.match(/\n\t*/g);
-                    let nextLineStart = lineStarts[lineStarts.length-1]+(before.endsWith("{")?"\t":"");
+                    let lineStarts = before.match(/(?:^|\n)\t*/g);
+                    let lastLineStart = lineStarts[lineStarts.length-1];
+                    if (!lastLineStart.startsWith("\n")){
+                        lastLineStart = "\n"+lastLineStart;
+                    }
+                    let nextLineStart = lastLineStart+(before.endsWith("{")?"\t":"");
                     textarea.value = before+nextLineStart+after;
                     textarea.selectionStart = before.length+nextLineStart.length;
                     textarea.selectionEnd = textarea.selectionStart;

@@ -26,14 +26,24 @@ export default class CodeEditorJS extends CodeEditor {
             .number {
                 color: #bfff00;
             }
+            .string {
+                color: #ff9050;
+            }
         `);
         console.log("Created JS-CodeEditor!");
     }
     
     extractTokens(code){
         let tokens = [];
-        let tokenPatterns = [/^\s+/,/^(?:\/\/[^\n]*|\/\*(?:[^\*]*\*[^\/])*[^\*]*(?:\*\/|\*$|$))/,/^(?:const|let|var|function)/,/^(?:if|else|for|while|break|continue|return)/,/^[a-zA-Z]\w*/,/^(?:0x[\da-fA-F]+|0b\d+|0o\d+|\d+(?:\.\d*)?|\.\d+)/,/^./];
-        let tokenTypes = ["","comment","keyword-var","keyword-control","identifier","number",""];
+        let whiteSpaceRegex = /^\s+/;
+        let commentRegex = /^(?:\/\/[^\n]*|\/\*(?:[^\*]*\*[^\/])*[^\*]*(?:\*\/|\*$|$))/;
+        let keywordRegex1 = /^(?:const|let|var|function|async)/;
+        let keywordRegex2 = /^(?:if|else|for|while|break|continue|return|await)/;
+        let identifierRegex = /^[a-zA-Z]\w*/;
+        let numberRegex = /^(?:0x[\da-fA-F]+|0b\d+|0o\d+|(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)/;
+        let stringRegex = /^(?:\"(?:[^\\\"]*\\.)*[^\\\"]*(?:\"|$))/;
+        let tokenPatterns = [whiteSpaceRegex,commentRegex,keywordRegex1,keywordRegex2,identifierRegex,numberRegex,stringRegex,/^./];
+        let tokenTypes = ["","comment","keyword-var","keyword-control","identifier","number","string",""];
         while (code.length>0){
             for (let i=0;i<tokenPatterns.length;i++){
                 if (tokenPatterns[i].test(code)){
