@@ -1,7 +1,21 @@
 Utils.onPageLoad(function(){
     var editor = document.getElementById("textarea");
     var formatSelect = document.getElementById("output-format-select");
-    var button = document.getElementById("run-button");
+    var runButton = document.getElementById("run-button");
+    var loadFileButton = document.getElementById("load-file-button");
+    var loadFileInput = document.getElementById("load-file-input");
+
+    loadFileButton.addEventListener("click",function(){
+        loadFileInput.click();
+    });
+    loadFileInput.addEventListener("change",function(){
+        let file = loadFileInput.files[0];
+        let fileReader = new FileReader();
+        fileReader.onload = function(evt){
+            editor.value = fileReader.result;
+        };
+        fileReader.readAsText(file);
+    });
 
     var popup;
     var frames;
@@ -40,7 +54,7 @@ Utils.onPageLoad(function(){
         }
     });
 
-    button.addEventListener("click",function(){
+    runButton.addEventListener("click",function(){
         popup = new ProgressPopup();
 
         startTime = Date.now();

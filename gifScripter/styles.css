@@ -1,3 +1,16 @@
+#load-file-group {
+    border-left: 1px solid #ffffff40;
+    margin-left: 50px;
+    padding: 4px 0 4px 20px;
+}
+#load-file-input {
+    display: none;
+}
+#load-file-button:not(:hover) {
+    background:#808080;
+    box-shadow: none;
+}
+
 #textarea {
     border: none;
     resize: none;
