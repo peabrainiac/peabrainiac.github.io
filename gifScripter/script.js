@@ -6,6 +6,10 @@ Utils.onPageLoad(function(){
     var loadFileButton = document.getElementById("load-file-button");
     var loadFileInput = document.getElementById("load-file-input");
 
+    editor.onsave = function(e){
+        e.preventDefault();
+        saveFileButton.click();
+    };
     saveFileButton.addEventListener("click",function(){
         let url = URL.createObjectURL(new Blob([editor.value],{type:"application/octet-stream"}));
         let a = document.createElement("a");

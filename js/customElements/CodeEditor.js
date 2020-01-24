@@ -106,6 +106,10 @@ export default class CodeEditor extends HTMLElement {
                     textarea.selectionEnd = textarea.selectionStart;
                 }
                 this.updateCode();
+            }else if((e.key=="s"||e.key=="S")&&(e.ctrlKey||e.metaKey)){
+                if (this.onsave instanceof Function){
+                    this.onsave(e);
+                }
             }
         });
     }
@@ -129,7 +133,7 @@ export default class CodeEditor extends HTMLElement {
         let tokens = this.extractTokens(code);
         code = this.processTokens(tokens);
         this.shadowRoot.getElementById("code").innerHTML = code+`<span style="color:transparent">i</span>`;
-    };
+    }
 
     extractTokens(code){
         return [{token:code,type:""}];
