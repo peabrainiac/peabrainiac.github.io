@@ -2,9 +2,20 @@ Utils.onPageLoad(function(){
     var editor = document.getElementById("textarea");
     var formatSelect = document.getElementById("output-format-select");
     var runButton = document.getElementById("run-button");
+    var saveFileButton = document.getElementById("save-file-button");
     var loadFileButton = document.getElementById("load-file-button");
     var loadFileInput = document.getElementById("load-file-input");
 
+    saveFileButton.addEventListener("click",function(){
+        let url = URL.createObjectURL(new Blob([editor.value],{type:"application/octet-stream"}));
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "script.js";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
     loadFileButton.addEventListener("click",function(){
         loadFileInput.click();
     });

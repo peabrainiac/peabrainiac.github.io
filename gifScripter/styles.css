@@ -6,7 +6,10 @@
 #load-file-input {
     display: none;
 }
-#load-file-button:not(:hover) {
+#save-file-button, #load-file-button {
+    margin: 0 4px;
+}
+#save-file-button:not(:hover), #load-file-button:not(:hover) {
     background:#808080;
     box-shadow: none;
 }
