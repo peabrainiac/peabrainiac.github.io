@@ -26,10 +26,24 @@ Utils.onPageLoad(function(){
     loadFileInput.addEventListener("change",function(){
         let file = loadFileInput.files[0];
         let fileReader = new FileReader();
-        fileReader.onload = function(evt){
-            editor.value = fileReader.result;
-        };
-        fileReader.readAsText(file);
+        console.log("Loading file...");
+        console.log("MIME type:",file.type);
+        if (file.type=="image/gif"){
+            fileReader.onload = function(evt){
+                let decoder = new GifDecoder();
+                let data = decoder.decode(fileReader.result);
+                console.log("gif data:",data);
+                let comments = data.getComments();
+                console.log("comments:",comments);
+                editor.value = JSON.parse(comments[1]).src;
+            };
+            fileReader.readAsArrayBuffer(file);
+        }else{
+            fileReader.onload = function(evt){
+                editor.value = fileReader.result;
+            };
+            fileReader.readAsText(file);
+        }
     });
 
     var popup;
