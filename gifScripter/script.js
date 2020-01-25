@@ -46,6 +46,12 @@ Utils.onPageLoad(function(){
         if (popup.wasCancelled()){
             throw new Error("Gif creation cancelled!");
         }
+        if (frames==0){
+            console.log("Starting gif encoding!");
+            gifEncoder.start();
+            gifEncoder.addComment("Made using peabrainiac.github.com/GifScripter. See the next comment for more specific information about the used script");
+            gifEncoder.addComment(JSON.stringify({src:editor.value}));
+        }
         popup.showFrame(imageData);
         popup.showProgress1(++frames);
         if (outputType=="gif"){
@@ -79,8 +85,7 @@ Utils.onPageLoad(function(){
         console.log("output type:",outputType);
         try {
             if (outputType=="gif"){
-                console.log("Starting gif encoding!");
-                gifEncoder.start();
+                console.log("Preparing gif encoding... encoding will start once the first frame is added!");
                 gifEncoder.onProgress(function(progress){
                     popup.showProgress2(progress);
                 });

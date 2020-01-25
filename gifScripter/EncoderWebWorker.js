@@ -24,6 +24,8 @@ onmessage = function(e){
         gifEncoder.logPerformance(performanceConsole);
         gifEncoder.logCodeBlocks(codeBlockConsole);
         gifEncoder.start();
+    }else if(message.action=="addComment"){
+        gifEncoder.addComment(message.data.text)
     }else if(message.action=="addFrame"){
         let imgData = message.data.imgData;
         let delay = message.data.delay;

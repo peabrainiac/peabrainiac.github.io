@@ -36,12 +36,20 @@ const GifEncoder = function(){
         codeBlockConsole = consoleObject;
     };
 
-    exports.start = function(){
+    exports.start = function(w,h){
+        width = w;
+        height = h;
         file = new BinaryFile();
         writeHeader();
+        writeLogicalScreenDescriptor(width,height,false,tableSize);
+        writeNetscapeExtension();
         started = true;
         firstFrame = true;
         finished = false;
+    };
+
+    exports.addComment = function(text){
+        writeComment(text);
     };
 
     exports.addFrame = function(imgData,delay=5){
@@ -65,18 +73,9 @@ const GifEncoder = function(){
             }
             logPerformance("Created index array: "+(Date.now()-time)+"ms");
             time = Date.now();
-            if (firstFrame){
-                writeLogicalScreenDescriptor(width,height,true,tableSize);
-                writeColorTable(colorTable);
-                writeNetscapeExtension();
-            }
             writeGraphicsControlExtension(delay);
-            if (firstFrame){
-                writeImageDescriptor(width,height);
-            }else{
-                writeImageDescriptor(width,height,tableSize);
-                writeColorTable(colorTable);
-            }
+            writeImageDescriptor(width,height,tableSize);
+            writeColorTable(colorTable);
             logPerformance("Wrote color table: "+(Date.now()-time)+"ms");
             time = Date.now();
             writePixelData(width,height,indexArray,tableSize+1);
@@ -188,6 +187,17 @@ const GifEncoder = function(){
             }
         }
         logBlock("Color Table");
+    }
+    function writeComment(text){
+        file.writeByte(0x21);
+        file.writeByte(0xfe);
+        for (let i=0;i<text.length;i+=255){
+            let next = text.substring(i,i+255);
+            file.writeByte(next.length);
+            file.writeChars(next);
+        }
+        file.writeByte(0);
+        logBlock("Comment");
     }
     function writeNetscapeExtension(repeats=0){
         file.writeByte(0x21);

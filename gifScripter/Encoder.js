@@ -27,7 +27,7 @@ const Encoder = function(){
         }else if(message.action=="logPerformance"){
             console.log(...message.data);
         }else if (message.action=="logCodeBlock"){
-            //console.log(...message.data);
+            console.log(...message.data);
         }else if (message.action=="logQuantizerDebugData"){
             //console.log(...message.data);
         }else{
@@ -39,6 +39,10 @@ const Encoder = function(){
         framesRequested = 0;
         framesEncoded = 0;
         webWorker.postMessage({action:"start"});
+    };
+
+    exports.addComment = function(text){
+        webWorker.postMessage({action:"addComment",data:{text:text}});
     };
 
     exports.addFrame = function(imgData,delay){
