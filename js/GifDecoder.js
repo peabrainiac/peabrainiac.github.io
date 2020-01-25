@@ -33,8 +33,16 @@ class GifDecoder {
                 }
                 length += 1;
                 let blockByteArray = byteArray.slice(i,i+length);
-                if (byteArray[i+1]==0xfe){
+                if (blockByteArray[1]==0xfe){
                     data.addBlock(new CommentBlock(blockByteArray));
+                }else if(blockByteArray[1]==0xff){
+                    if (String.fromCharCode(...blockByteArray.subarray(3,14))=="NETSCAPE2.0"){
+                        data.addBlock(new NetscapeExtensionBlock(blockByteArray));
+                    }else{
+                        data.addBlock(new ApplicationExtensionBlock(blockByteArray,"Unknown Application Extension"));
+                    }
+                }else if(blockByteArray[1]==0xf9){
+                    data.addBlock(new GraphicsControlExtensionBlock(blockByteArray));
                 }else{
                     data.addBlock(new UnknownExtensionBlock(blockByteArray))
                 }
@@ -149,6 +157,18 @@ class ImageDataBlock extends GifDataBlock {
     }
 }
 
+class GraphicsControlExtensionBlock extends GifDataBlock {
+    constructor(byteArray){
+        super(byteArray,"Graphics Control Extension");
+        this.data = {};
+        this.data.disposalMethod = (byteArray[3]>>2)&7;
+        this.data.userInputFlag = (byteArray[3]>>1)&1;
+        this.data.transparencyFlag = byteArray[3]&1;
+        this.data.delayTime = byteArray[4]+256*byteArray[5];
+        this.data.transparencyIndex = byteArray[6];
+    }
+}
+
 class CommentBlock extends GifDataBlock {
     constructor(byteArray){
         super(byteArray,"Comment Extension");
@@ -160,6 +180,21 @@ class CommentBlock extends GifDataBlock {
                 this.data += String.fromCharCode(...byteArray.subarray(i+1,i+byteArray[i]+1));
             }
         }
+    }
+}
+
+class ApplicationExtensionBlock extends GifDataBlock {
+    constructor(byteArray,name="Application Extension"){
+        super(byteArray,name);
+        this.data = {};
+        this.data.applicationIdentifier = String.fromCharCode(...byteArray.subarray(3,14));
+    }
+}
+
+class NetscapeExtensionBlock extends ApplicationExtensionBlock {
+    constructor(byteArray){
+        super(byteArray,"Netscape Application Extension");
+        this.data.repeats = byteArray[16]+256*byteArray[17];
     }
 }
 
