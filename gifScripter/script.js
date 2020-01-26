@@ -35,7 +35,14 @@ Utils.onPageLoad(function(){
                 console.log("gif data:",data);
                 let comments = data.getComments();
                 console.log("comments:",comments);
-                editor.value = JSON.parse(comments[1]).src;
+                try {
+                    editor.value = JSON.parse(comments[1]).src;
+                }catch (e){
+                    console.log(e);
+                    let popup = new Popup(document.getElementById("popup-overlay"),"Couldn't load script!");
+                    popup.addText("The uploaded gif file doesn't seem to contain any script information. Note that only scripts generated using this editor can be used to load the corresponding script again.");
+                    popup.addCloseButton();
+                }
             };
             fileReader.readAsArrayBuffer(file);
         }else{
