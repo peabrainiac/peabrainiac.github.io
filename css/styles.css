@@ -138,6 +138,9 @@ body {
 	width: 50px;
 	-moz-appearance: textfield;
 }
+.input-text {
+	margin: 2px;
+}
 .input-slider {
 	vertical-align: middle;
 }
@@ -164,13 +167,13 @@ body {
 	margin: 0;
 	padding: 5px;
 }
-.textarea, .input-number {
+.textarea, .input-number, .input-text {
 	border: 1px solid #303030;
 	background: #101010;
 	color: #808080;
 	transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
-.textarea:focus,.input-number:focus {
+.textarea:focus,.input-number:focus, .input-text:focus {
 	color: #dfdfdf;
 	border-color: #ffaf00;
 	box-shadow: 0 0 3px #ffaf00;

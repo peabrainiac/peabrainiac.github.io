@@ -1,0 +1,26 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+html {
+	height: 100%;
+}
+body {
+	height: auto;
+	min-height: 100%;
+}
+#input-a, #input-b {
+	width: 500px;
+}
+#input-a-button, #input-b-button {
+	margin: 2px;
+	padding: 2px;
+}
+#results {
+	margin: 15px;
+	font-family: monospace;
+	white-space: pre;
+	text-align: center;
+	font-size: 20px;
+}
