@@ -30,8 +30,12 @@ body {
 }
 span.number {
 	color: #bfbfbf;
+	cursor: default;
 }
 span.mantissa {
-	color: #ffffff;
+	color: #ffcf80;
 	background: #ffaf0020;
+}
+.bit-a, .bit-b {
+	cursor: pointer;
 }
