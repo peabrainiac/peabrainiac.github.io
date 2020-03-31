@@ -10,6 +10,9 @@ body {
 	height: auto;
 	min-height: 100%;
 }
+#container {
+	text-align: center;
+}
 #input-a, #input-b {
 	width: 500px;
 }
@@ -18,9 +21,17 @@ body {
 	padding: 2px;
 }
 #results {
+	display: inline-block;
 	margin: 15px;
 	font-family: monospace;
 	white-space: pre;
-	text-align: center;
+	text-align: right;
 	font-size: 20px;
+}
+span.number {
+	color: #bfbfbf;
+}
+span.mantissa {
+	color: #ffffff;
+	background: #ffaf0020;
 }
