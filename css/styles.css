@@ -179,6 +179,11 @@ body {
 	box-shadow: 0 0 3px #ffaf00;
 	outline: none;
 }
+.input-text.invalid {
+	color: #dfdfdf;
+	border-bottom-color: #ff4000;
+	box-shadow: 0 3px 5px -3px #ff4000;
+}
 .input-text:focus-within {
 	color: #dfdfdf;
 	border-bottom-color: #ffaf00;

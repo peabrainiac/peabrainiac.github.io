@@ -38,8 +38,10 @@ export default class TextInput extends HTMLElement {
 		`;
 		this._input = this.shadowRoot.querySelector("input");
 		this._text = this.shadowRoot.querySelector("span");
+		this._validator = ()=>(true);
 		this._input.addEventListener("input",()=>{
 			this._text.innerText = this._input.value||" ";
+			this.validate();
 		});
 	}
 
@@ -54,6 +56,25 @@ export default class TextInput extends HTMLElement {
 	set value(value){
 		this._input.value = value;
 		this._text.innerText = value||" ";
+		this.validate();
+	}
+
+	validate(){
+		if (this.validator(this._input.value)){
+			this.classList.remove("invalid");
+			this.dispatchEvent(new Event("validinput"))
+		}else{
+			this.classList.add("invalid");
+		}
+	}
+
+	get validator(){
+		return this._validator;
+	}
+
+	set validator(validator){
+		this._validator = validator;
+		this.validate();
 	}
 
 	static get observedAttributes(){

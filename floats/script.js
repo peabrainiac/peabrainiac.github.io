@@ -1,6 +1,6 @@
 Utils.onPageLoad(()=>{
-	let inputA = document.getElementById("input-a");
-	let inputB = document.getElementById("input-b");
+	let inputA2 = document.getElementById("input-a-bits");
+	let inputB2 = document.getElementById("input-b-bits");
 	let buttonA = document.getElementById("input-a-button");
 	let buttonB = document.getElementById("input-b-button");
 	let resultsDiv = document.getElementById("results");
@@ -8,6 +8,7 @@ Utils.onPageLoad(()=>{
 	let float = (string)=>(new Float64Array(Uint8Array.from(string.split(" ").reverse(),(str)=>(1*("0b"+str))).buffer)[0]);
 	let precision = (float)=>(1023+52-("0b"+bits(float).substring(1,13).replace(" ","")));
 	let mantissa = (float)=>(bits(float).substring(13).replace(/ /g,""));
+	let isValidBitString = (string)=>(/([01]{8} ){7}[01]{8}/.test(string));
 	let string = (float,minPrecision=0,minLength=0,mantissaStartText="",mantissaEndText="")=>{
 		let string = float.toString(2);
 		let p = precision(float);
@@ -24,18 +25,20 @@ Utils.onPageLoad(()=>{
 		return string;
 	};
 	buttonA.addEventListener("click",()=>{
-		inputA.value = bits(Math.random());
+		inputA2.value = bits(Math.random());
 		refresh();
 	});
 	buttonB.addEventListener("click",()=>{
-		inputB.value = bits(Math.random());
+		inputB2.value = bits(Math.random());
 		refresh();
 	});
-	inputA.addEventListener("input",refresh);
-	inputB.addEventListener("input",refresh);
+	inputA2.validator = isValidBitString;
+	inputB2.validator = isValidBitString;
+	inputA2.addEventListener("validinput",refresh);
+	inputB2.addEventListener("validinput",refresh);
 	function refresh(){
-		let a = float(inputA.value);
-		let b = float(inputB.value);
+		let a = float(inputA2.value);
+		let b = float(inputB2.value);
 		let labels = ["a","b","a+b","(a+b)-b"];
 		let values = [a,b,a+b,(a+b)-b];
 		let maxPrecision = Math.max(...values.map((float)=>(precision(float))));
@@ -56,12 +59,12 @@ Utils.onPageLoad(()=>{
 		};
 		onChangeBit(".bit-a",Math.max(1,Math.pow(2,Math.floor(Math.log2(a)))),(bitValue)=>{
 			a += bitValue;
-			inputA.value = bits(a);
+			inputA2.value = bits(a);
 			refresh();
 		});
 		onChangeBit(".bit-b",Math.max(1,Math.pow(2,Math.floor(Math.log2(b)))),(bitValue)=>{
 			b += bitValue;
-			inputB.value = bits(b);
+			inputB2.value = bits(b);
 			refresh();
 		});
 		let numberSpans = resultsDiv.querySelectorAll(".number");
@@ -71,7 +74,7 @@ Utils.onPageLoad(()=>{
 			});
 		}
 	}
-	inputA.value = bits(Math.random());
-	inputB.value = bits(Math.random());
+	inputA2.value = bits(Math.random());
+	inputB2.value = bits(Math.random());
 	refresh();
 });
