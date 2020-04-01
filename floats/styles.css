@@ -13,9 +13,6 @@ body {
 #container {
 	text-align: center;
 }
-#input-a, #input-b {
-	width: 500px;
-}
 #input-a-button, #input-b-button {
 	margin: 2px;
 	padding: 2px;

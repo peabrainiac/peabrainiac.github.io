@@ -179,6 +179,12 @@ body {
 	box-shadow: 0 0 3px #ffaf00;
 	outline: none;
 }
+.input-text:focus-within {
+	color: #dfdfdf;
+	border-bottom-color: #ffaf00;
+	box-shadow: 0 3px 5px -3px #ffaf00;
+	outline: none;
+}
 .input-select {
 	background: #202020;
 	color: inherit;
