@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<link rel="stylesheet" type="text/css" href="../css/styles.css">
+		<script type="module" src="../js/customElements/ScrollDiv.js"></script>
+		<script type="module" src="../js/customElements/ResizeDiv.js"></script>
+		<script src="../js/Utils.js"></script>
+		<script type="module" src="./script.js"></script>
+		<title>reaction-diffusion-simulation</title>
+	</head>
+	<body class="flex-column">
+        <div class="toolbar-top">
+			<span class="h3-white">peabrainiac.github.io/<span class="orange" style="font-size:1.05em">reaction-diffusion-simulation</span></span>
+        </div>
+        <div class="flex-row" style="min-height: 0">
+			<resize-div class="sidebar-left" resize-x="1" resize-y="0" style="width:550px">
+				<scroll-div style="width:100%;height:100%;--inner-width:100%">
+					<div style="padding:20px">
+						An implementation of the reaction-diffusion-simulation as described <a href="https://www.karlsims.com/rd.html">here</a>.
+						<br><br>
+						<!--span id="button" class="button float-r">Run &#9654</span-->
+						<span class="h3">Options</span>
+						<div class="padding-10">
+							Steps per frame: <input type="number" id="stepsPerFrameInput" class="input-number"><br>
+							<!--Image width: <input type="number" id="widthInput" class="input-number"><br>
+							Image Height: <input type="number" id="heightInput" class="input-number"><br><br>
+							Position: <input type="number" step="any" id="posInputX" class="input-number"> | <input type="number" step="any" id="posInputY" class="input-number"><br>
+							Zoom: <input type="number" step="any" id="zoomInput" class="input-number"><br><br>
+							Iterations: <input type="number" id="iterInput" class="input-number"><br>
+							Samples: <input type="number" id="samplesInput" class="input-number" style="width:75px"-->
+						</div>
+						<br><br>
+						<span id="fps"></span>
+					</div>
+				</scroll-div>
+			</resize-div>
+			<div class="panel">
+				<div class="centered project">
+					<canvas id="canvas" style="width:100%;height:100%;position:relative;"></canvas>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
