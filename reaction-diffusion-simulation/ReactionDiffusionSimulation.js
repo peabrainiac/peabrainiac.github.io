@@ -4,10 +4,11 @@ export default class ReactionDiffusionSimulation {
 		this._width = width;
 		this._height = height;
 		this._speed = 1;
-		this._diffusionA = 0.75;
-		this._diffusionB = 0.75;
-		this._growthRateA = 0.0258;
-		this._deathRateB = 0.0523;
+		this._diffusionA = 0.95;
+		this._diffusionB = 0.95;
+		this._diffusionScale = 1;
+		this._growthRateA = 0.023;
+		this._deathRateB = 0.05;
 		this._grid = new Float64Array(width*height*2);
 		for (let i=0;i<this._grid.length;i++){
 			this._grid[i] = Math.random()*Math.random();
@@ -19,8 +20,8 @@ export default class ReactionDiffusionSimulation {
 		const nextGrid = this._prevGrid;
 		const prevGrid = this._grid;
 		const speed = this._speed;
-		const diffusionA = this._diffusionA;
-		const diffusionB = this._diffusionB; 
+		const diffusionA = this._diffusionA*this._diffusionScale;
+		const diffusionB = this._diffusionB*this._diffusionScale; 
 		const growthRateA = this._growthRateA;
 		const deathRateB = this._deathRateB;
 		for (let x=1,w=this._width-1;x<w;x++){
@@ -34,7 +35,6 @@ export default class ReactionDiffusionSimulation {
 				nextGrid[i+1] = b+((averageB-b)*diffusionB+a*b*b-(deathRateB+growthRateA)*b)*speed;
 			}
 		}
-		console.log("new Grid:",nextGrid);
 		this._grid = nextGrid;
 		this._prevGrid = prevGrid;
 	}
@@ -49,6 +49,33 @@ export default class ReactionDiffusionSimulation {
 			imageData.data[i*4+3] = 255;
 		}
 		return imageData;
+	}
+
+	set scale(scale){
+		this._scale = scale;
+		this._diffusionScale = 1/(scale*scale);
+	}
+
+	get scale(){
+		return this._scale;
+	}
+
+	set growthRate(growthRate){
+		this._growthRateA = growthRate;
+		console.log("new growth rate:",growthRate);
+	}
+
+	get growthRate(){
+		return this._growthRateA;
+	}
+
+	set deathRate(deathRate){
+		this._deathRateB = deathRate;
+		console.log("new death rate:",deathRate);
+	}
+
+	get deathRate(){
+		return this._deathRateB;
 	}
 
 	get width(){
