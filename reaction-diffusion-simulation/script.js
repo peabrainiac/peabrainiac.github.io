@@ -1,4 +1,5 @@
 import ReactionDiffusionSimulation from "./ReactionDiffusionSimulation.js";
+import WebGLReactionDiffusionSimulation from "./WebGLReactionDiffusionSimulation.js";
 
 Utils.onPageLoad(async()=>{
 	const stepsPerFrameInput = document.getElementById("stepsPerFrameInput");
@@ -17,7 +18,7 @@ Utils.onPageLoad(async()=>{
 
 	const canvas = document.getElementById("canvas");
 	const container = canvas.parentElement;
-	const simulation = new ReactionDiffusionSimulation(canvas,480,360);
+	const simulation = new WebGLReactionDiffusionSimulation(canvas,480,360);
 	container.style.width = 2*simulation.width+"px";
 	container.style.height = 2*simulation.height+"px";
 
@@ -32,9 +33,9 @@ Utils.onPageLoad(async()=>{
 		simulation.diffusionA = diffusionInputA.value;
 		simulation.diffusionB = diffusionInputB.value;
 		for (let i=0,l=stepsPerFrameInput.value;i<l;i++){
-			simulation.update();
+			await simulation.update();
 		}
-		simulation.render();
+		await simulation.render();
 		frames++;
 		if (Date.now()-lastFpsTimestamp>1000){
 			fpsSpan.innerText = frames+" fps";
