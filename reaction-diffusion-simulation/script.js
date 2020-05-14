@@ -19,6 +19,7 @@ Utils.onPageLoad(async()=>{
 	const canvas = document.getElementById("canvas");
 	const container = canvas.parentElement;
 	const simulation = new WebGLReactionDiffusionSimulation(canvas,480,360);
+	await simulation.waitUntilReady();
 	container.style.width = 2*simulation.width+"px";
 	container.style.height = 2*simulation.height+"px";
 
