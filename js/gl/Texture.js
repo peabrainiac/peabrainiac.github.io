@@ -1,28 +1,36 @@
-const Texture = function(gl){
-	this.texture = gl.createTexture();
-	gl.bindTexture(gl.TEXTURE_2D,this.texture);
-	gl.texParameterf(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
-	gl.texParameterf(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+export default class Texture {
 	
-	this.setFormat = function(internalFormat,format,width=this.width,height=this.height,type=this.type){
-		gl.bindTexture(gl.TEXTURE_2D,this.texture);
-		gl.texImage2D(gl.TEXTURE_2D,0,internalFormat,width,height,0,format,type,null);
-		this.width = width;
-		this.height = height;
-		this.internalFormat = internalFormat;
-		this.format = format;
-        this.type = type;
+	constructor(gl){
+		this._gl = gl;
+		this._id = gl.createTexture();
+		gl.bindTexture(gl.TEXTURE_2D,this._id);
+		gl.texParameterf(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
+		gl.texParameterf(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+		this.setFormat(gl.RGBA8,gl.RGBA,0,0,gl.UNSIGNED_BYTE)
+	}
+	
+	setFormat(internalFormat,format,width=this._width,height=this._height,type=this._type){
+		this._gl.bindTexture(this._gl.TEXTURE_2D,this._id);
+		this._gl.texImage2D(this._gl.TEXTURE_2D,0,internalFormat,width,height,0,format,type,null);
+		this._width = width;
+		this._height = height;
+		this._internalFormat = internalFormat;
+		this._format = format;
+        this._type = type;
 		console.log("Set texture size to "+width+"x"+height);
-	};
-	this.setSize = function(width,height){
-		if (this.width!=width||this.height!=height){
-			this.setFormat(this.internalFormat,this.format,width,height);
+	}
+	
+	setSize(width,height){
+		if (this._width!=width||this._height!=height){
+			this.setFormat(this._internalFormat,this._format,width,height);
 		}
-	};
+	}
+
+	get id(){
+		return this._id;
+	}
 	
-	this.setFormat(gl.RGBA8,gl.RGBA,0,0,gl.UNSIGNED_BYTE);
-	
-	this.destroy = function(){
-		gl.deleteTexture(this.texture);
+	destroy(){
+		this._gl.deleteTexture(this._id);
 	};
 };

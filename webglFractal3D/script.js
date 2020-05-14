@@ -1,3 +1,5 @@
+import RayMarcher from "./RayMarcher.js";
+
 Utils.onPageLoad(async function(){
     try {
         var canvas = document.getElementById("canvas");
