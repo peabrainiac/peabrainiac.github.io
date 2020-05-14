@@ -5,6 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/styles.css">
 		<script type="module" src="../js/customElements/ScrollDiv.js"></script>
 		<script type="module" src="../js/customElements/ResizeDiv.js"></script>
+		<script type="module" src="../js/customElements/RangeInput.js"></script>
 		<script src="../js/Utils.js"></script>
 		<script type="module" src="./script.js"></script>
 		<title>reaction-diffusion-simulation</title>
@@ -23,9 +24,11 @@
 						<span class="h3">Options</span>
 						<div class="padding-10">
 							Steps per frame: <input type="number" id="stepsPerFrameInput" class="input-number"><br>
-							Zoom: <input type="range" id="scaleInput" class="input-slider" min="1" max="3" step="0.01"><br><br>
-							Growth rate: <input type="range" id="growthRateInput" class="input-slider" min="0" max="0.1" step="0.001" value="0.23"><br>
-							Death rate: <input type="range" id="deathRateInput" class="input-slider" min="0" max="0.1" step="0.001" value="0.5"><br>
+							Zoom: <range-input id="scaleInput" min="1" max="3" step="0.01" value="2"></range-input><br><br>
+							Growth rate: <range-input id="growthRateInput" min="0" max="0.1" step="0.001" value="0.011"></range-input><br>
+							Death rate: <range-input id="deathRateInput" min="0" max="0.1" step="0.001" value="0.035"></range-input><br>
+							Diffusion a: <range-input id="diffusionInputA" min="0" max="1" step="0.01" value="1"></range-input><br>
+							Diffusion b: <range-input id="diffusionInputB" min="0" max="1" step="0.01" value="1"></range-input><br>
 							<!--Image width: <input type="number" id="widthInput" class="input-number"><br>
 							Image Height: <input type="number" id="heightInput" class="input-number"><br><br>
 							Position: <input type="number" step="any" id="posInputX" class="input-number"> | <input type="number" step="any" id="posInputY" class="input-number"><br>

@@ -4,8 +4,8 @@ export default class ReactionDiffusionSimulation {
 		this._width = width;
 		this._height = height;
 		this._speed = 1;
-		this._diffusionA = 0.95;
-		this._diffusionB = 0.95;
+		this._diffusionA = 1;
+		this._diffusionB = 1;
 		this._diffusionScale = 1;
 		this._growthRateA = 0.023;
 		this._deathRateB = 0.05;
@@ -20,17 +20,19 @@ export default class ReactionDiffusionSimulation {
 		const nextGrid = this._prevGrid;
 		const prevGrid = this._grid;
 		const speed = this._speed;
-		const diffusionA = this._diffusionA*this._diffusionScale;
-		const diffusionB = this._diffusionB*this._diffusionScale; 
-		const growthRateA = this._growthRateA;
-		const deathRateB = this._deathRateB;
-		for (let x=1,w=this._width-1;x<w;x++){
-			for (let y=1,h=this._height-1;y<h;y++){
-				let i = (x+y*this._width)*2;
+		const diffusionA = this._diffusionA*this._diffusionScale*0.95;
+		const diffusionB = this._diffusionB*this._diffusionScale*0.95; 
+		let growthRateA = this._growthRateA;
+		let deathRateB = this._deathRateB;
+		for (let x=1,w=this._width;x<w-1;x++){
+			for (let y=1,h=this._height;y<h-1;y++){
+				//growthRateA = (h-y)*0.125/w;
+				//deathRateB = x*0.1/w;
+				let i = (x+y*w)*2;
 				let a = prevGrid[i];
 				let b = prevGrid[i+1];
-				let averageA = (prevGrid[i+2]+prevGrid[i-2]+prevGrid[i+this._width*2]+prevGrid[i-this._width*2])*0.2+(prevGrid[i+this._width*2+2]+prevGrid[i-this._width*2+2]+prevGrid[i+this._width*2-2]+prevGrid[i-this._width*2-2])*0.05;
-				let averageB = (prevGrid[i+3]+prevGrid[i-1]+prevGrid[i+this._width*2+1]+prevGrid[i-this._width*2+1])*0.2+(prevGrid[i+this._width*2+3]+prevGrid[i-this._width*2+3]+prevGrid[i+this._width*2-1]+prevGrid[i-this._width*2-1])*0.05;
+				let averageA = (prevGrid[i+2]+prevGrid[i-2]+prevGrid[i+w*2]+prevGrid[i-w*2])*0.2+(prevGrid[i+w*2+2]+prevGrid[i-w*2+2]+prevGrid[i+w*2-2]+prevGrid[i-w*2-2])*0.05;
+				let averageB = (prevGrid[i+3]+prevGrid[i-1]+prevGrid[i+w*2+1]+prevGrid[i-w*2+1])*0.2+(prevGrid[i+w*2+3]+prevGrid[i-w*2+3]+prevGrid[i+w*2-1]+prevGrid[i-w*2-1])*0.05;
 				nextGrid[i] = a+((averageA-a)*diffusionA-a*b*b+growthRateA*(1-a))*speed;
 				nextGrid[i+1] = b+((averageB-b)*diffusionB+a*b*b-(deathRateB+growthRateA)*b)*speed;
 			}
@@ -76,6 +78,22 @@ export default class ReactionDiffusionSimulation {
 
 	get deathRate(){
 		return this._deathRateB;
+	}
+
+	set diffusionA(diffusionA){
+		this._diffusionA = diffusionA;
+	}
+
+	get diffusionA(){
+		return this._diffusionA;
+	}
+
+	set diffusionB(diffusionB){
+		this._diffusionB = diffusionB;
+	}
+
+	get diffusionB(){
+		return this._diffusionB;
 	}
 
 	get width(){
