@@ -274,3 +274,6 @@ body {
 .margin-v-10 {
 	margin: 10px 0;
 }
+.hidden {
+	display: none;
+}

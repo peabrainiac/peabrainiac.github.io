@@ -1,6 +1,11 @@
 export default class ReactionDiffusionSimulation {
 
-	constructor(width=480,height=360){
+	constructor(canvas,width=480,height=360){
+		this._canvas = canvas;
+		canvas.width = width;
+		canvas.height = height;
+		this._ctx = canvas.getContext("2d");
+		this._imageData = new ImageData(width,height);
 		this._width = width;
 		this._height = height;
 		this._speed = 1;
@@ -42,15 +47,15 @@ export default class ReactionDiffusionSimulation {
 	}
 
 	render(){
-		let imageData = new ImageData(this._width,this._height);
+		let data = this._imageData.data;
 		for (let i=0,l=this._width*this._height;i<l;i++){
 			let c = this._grid[i*2+1]*256;
-			imageData.data[i*4] = c;
-			imageData.data[i*4+1] = c;
-			imageData.data[i*4+2] = c;
-			imageData.data[i*4+3] = 255;
+			data[i*4] = c;
+			data[i*4+1] = c;
+			data[i*4+2] = c;
+			data[i*4+3] = 255;
 		}
-		return imageData;
+		this._ctx.putImageData(this._imageData,0,0);
 	}
 
 	set scale(scale){
@@ -63,8 +68,10 @@ export default class ReactionDiffusionSimulation {
 	}
 
 	set growthRate(growthRate){
-		this._growthRateA = growthRate;
-		console.log("new growth rate:",growthRate);
+		if (this._growthRateA!=growthRate){
+			this._growthRateA = growthRate;
+			console.log("new growth rate:",growthRate);
+		}
 	}
 
 	get growthRate(){
@@ -72,8 +79,10 @@ export default class ReactionDiffusionSimulation {
 	}
 
 	set deathRate(deathRate){
-		this._deathRateB = deathRate;
-		console.log("new death rate:",deathRate);
+		if (this._deathRateB!=deathRate){
+			this._deathRateB = deathRate;
+			console.log("new death rate:",deathRate);
+		}
 	}
 
 	get deathRate(){

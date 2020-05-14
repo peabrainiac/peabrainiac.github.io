@@ -16,12 +16,10 @@ Utils.onPageLoad(async()=>{
 	diffusionInputB.valueToString = (value)=>(`${Math.round(value*100)}%`);
 
 	const canvas = document.getElementById("canvas");
-	const simulation = new ReactionDiffusionSimulation(480,360);
-	canvas.width = simulation.width;
-	canvas.height = simulation.height;
-	canvas.parentElement.style.width = 2*simulation.width+"px";
-	canvas.parentElement.style.height = 2*simulation.height+"px";
-	const ctx = canvas.getContext("2d");
+	const container = canvas.parentElement;
+	const simulation = new ReactionDiffusionSimulation(canvas,480,360);
+	container.style.width = 2*simulation.width+"px";
+	container.style.height = 2*simulation.height+"px";
 
 	let lastFpsTimestamp = Date.now();
 	let frames = 0;
@@ -36,7 +34,7 @@ Utils.onPageLoad(async()=>{
 		for (let i=0,l=stepsPerFrameInput.value;i<l;i++){
 			simulation.update();
 		}
-		ctx.putImageData(simulation.render(),0,0);
+		simulation.render();
 		frames++;
 		if (Date.now()-lastFpsTimestamp>1000){
 			fpsSpan.innerText = frames+" fps";
