@@ -1,5 +1,6 @@
 import ReactionDiffusionSimulation from "./ReactionDiffusionSimulation.js";
 import WebGLReactionDiffusionSimulation from "./WebGLReactionDiffusionSimulation.js";
+import MouseObserver from "../js/MouseObserver.js";
 
 Utils.onPageLoad(async()=>{
 	const stepsPerFrameInput = document.getElementById("stepsPerFrameInput");
@@ -23,6 +24,8 @@ Utils.onPageLoad(async()=>{
 	container.style.width = 2*simulation.width+"px";
 	container.style.height = 2*simulation.height+"px";
 
+	const mouseObserver = new MouseObserver(container);
+
 	let lastFpsTimestamp = Date.now();
 	let frames = 0;
 
@@ -34,6 +37,9 @@ Utils.onPageLoad(async()=>{
 		simulation.diffusionA = diffusionInputA.value;
 		simulation.diffusionB = diffusionInputB.value;
 		for (let i=0,l=stepsPerFrameInput.value;i<l;i++){
+			if (mouseObserver.mouseDown){
+				await simulation.addLiquidB(mouseObserver.mouseX/2,mouseObserver.mouseY/2);
+			}
 			await simulation.update();
 		}
 		await simulation.render();

@@ -96,6 +96,8 @@ export default class ShaderProgram {
 			this.loadInt(name,value);
 		}else if(type==this._gl.FLOAT){
 			this.loadFloat(name,value);
+		}else if(type==this._gl.FLOAT_VEC2){
+			this.loadVector2f(name,value);
 		}else if(type==this._gl.FLOAT_VEC3){
 			if (this._uniformNames[name].endsWith("[0]")){
 				this.loadVector3fArray(name,value);
@@ -113,6 +115,10 @@ export default class ShaderProgram {
 
 	loadFloat(name,value){
 		this._gl.uniform1f(this._uniformLocations[name],value);
+	}
+
+	loadVector2f(name,vector){
+		this._gl.uniform2f(this._uniformLocations[name],vector.x,vector.y);
 	}
 
 	loadVector3f(name,vector){

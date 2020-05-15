@@ -17,11 +17,13 @@ export default class WebGLReactionDiffusionSimulation {
 			data[i] = Math.floor(256*Math.random());
 			data[i+1] = Math.floor(256*Math.random());
 		}
-		this._texture = new Texture(this._gl,width,height,data);
+		this._texture = new Texture(this._gl);
+		this._texture.setFormat(this._gl.RGBA8,this._gl.RGBA,width,height,this._gl.UNSIGNED_BYTE,data);
 		this._framebuffer = new Framebuffer(this._gl);
 		this._framebuffer.setSize(width,height);
 		this._framebuffer.attachTexture(this._texture,this._gl.COLOR_ATTACHMENT0);
-		this._tempTexture = new Texture(this._gl,width,height);
+		this._tempTexture = new Texture(this._gl);
+		this._tempTexture.setFormat(this._gl.RGBA8,this._gl.RGBA,width,height,this._gl.UNSIGNED_BYTE,null);
 		this._tempFramebuffer = new Framebuffer(this._gl);
 		this._tempFramebuffer.setSize(width,height);
 		this._tempFramebuffer.attachTexture(this._tempTexture,this._gl.COLOR_ATTACHMENT0)
@@ -51,6 +53,12 @@ export default class WebGLReactionDiffusionSimulation {
 				this._simulationShader2.bindTextureLocation(0,"textureSampler");
 				this._simulationShader2.uniforms.pixelHeight = 1/height;
 				this._simulationShader2.uniforms.kernel = {x:0.5,y:0.2,z:0.05};
+				let clickVertexSource = await (await fetch("click.vert")).text();
+				let clickFragmentSource = await (await fetch("click.frag")).text();
+				this._clickShader = new ShaderProgram(this._gl,clickVertexSource,clickFragmentSource);
+				this._clickShader.bindAttribLocation(0,"position");
+				this._clickShader.bindAttribLocation(1,"textureCoords");
+				this._clickShader.uniforms.screenSize = {x:width,y:height};
 				resolve();
 			}catch (e){
 				reject(e);
@@ -59,6 +67,8 @@ export default class WebGLReactionDiffusionSimulation {
 		this._vao = new Vao(this._gl);
 		this._vao.addVbo(0,2,[-1,1,-1,-1,1,-1,1,-1,1,1,-1,1]);
 		this._vao.addVbo(1,2,[0,0,0,1,1,1,1,1,1,0,0,0]);
+		this._gl.enable(this._gl.BLEND);
+		this._gl.blendFunc(this._gl.SRC_ALPHA,this._gl.ONE_MINUS_SRC_ALPHA);
 	}
 
 	async waitUntilReady(){
@@ -87,6 +97,15 @@ export default class WebGLReactionDiffusionSimulation {
 		this._vao.bind();
 		this._gl.activeTexture(this._gl.TEXTURE0);
 		this._gl.bindTexture(this._gl.TEXTURE_2D,this._texture.id);
+		this._gl.drawArrays(this._gl.TRIANGLES,0,6);
+	}
+
+	async addLiquidB(x,y){
+		this._clickShader.use();
+		this._clickShader.uniforms.mousePosition = {x,y};
+		this._clickShader.uniforms.radius = 5;
+		this._framebuffer.bind();
+		this._vao.bind();
 		this._gl.drawArrays(this._gl.TRIANGLES,0,6);
 	}
 
