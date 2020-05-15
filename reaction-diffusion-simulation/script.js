@@ -10,7 +10,7 @@ Utils.onPageLoad(async()=>{
 	const scaleInput = document.getElementById("scaleInput");
 	const fpsSpan = document.getElementById("fps");
 
-	stepsPerFrameInput.value = 5;
+	stepsPerFrameInput.value = 0;
 	growthRateInput.valueToString = (value)=>(`${(value*100).toPrecision(2)}% per tick`);
 	deathRateInput.valueToString = (value)=>(`${(value*100).toPrecision(2)}% per tick`);
 	diffusionInputA.valueToString = (value)=>(`${Math.round(value*100)}%`);
