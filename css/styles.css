@@ -277,3 +277,10 @@ body {
 .hidden {
 	display: none;
 }
+a {
+    color: #ff8000;
+    text-decoration: none;
+}
+a:hover {
+    color: #ffaf00;
+}

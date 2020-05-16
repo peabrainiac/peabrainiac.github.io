@@ -23,7 +23,7 @@ Utils.onPageLoad(async()=>{
 	container.style.width = 2*simulation.width+"px";
 	container.style.height = 2*simulation.height+"px";
 
-	const mouseObserver = new MouseObserver(container);
+	const mouseObserver = new MouseObserver(canvas);
 
 	let lastFpsTimestamp = Date.now();
 	let frames = 0;
@@ -37,7 +37,9 @@ Utils.onPageLoad(async()=>{
 		simulation.diffusionB = diffusionInputB.value;
 		for (let i=0,l=stepsPerFrameInput.value;i<l;i++){
 			if (mouseObserver.mouseDown){
-				await simulation.addLiquidB(mouseObserver.mouseX/2,mouseObserver.mouseY/2);
+				let mouseX = mouseObserver.mouseX*simulation.width/container.offsetWidth;
+				let mouseY = mouseObserver.mouseY*simulation.height/container.offsetHeight;
+				await simulation.addLiquidB(mouseX,mouseY);
 			}
 			await simulation.update();
 		}
