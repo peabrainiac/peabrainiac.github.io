@@ -33,31 +33,13 @@ export default class WebGLReactionDiffusionSimulation {
 		this._mainFramebuffer.setSize(width,height);
 		this._readyPromise = new Promise(async(resolve,reject)=>{
 			try {
-				let renderVertexSource = await (await fetch("render.vert")).text();
-				let renderFragmentSource = await (await fetch("render.frag")).text();
-				this._renderShader = new ShaderProgram(this._gl,renderVertexSource,renderFragmentSource);
-				this._renderShader.bindAttribLocation(0,"position");
-				this._renderShader.bindAttribLocation(1,"textureCoords");
-				this._renderShader.bindTextureLocation(0,"textureSampler");
-				let step1VertexSource = await (await fetch("step1.vert")).text();
-				let step1FragmentSource = await (await fetch("step1.frag")).text();
-				this._simulationShader1 = new ShaderProgram(this._gl,step1VertexSource,step1FragmentSource);
-				this._simulationShader1.bindAttribLocation(0,"position");
-				this._simulationShader1.bindAttribLocation(1,"textureCoords");
-				this._simulationShader1.bindTextureLocation(0,"textureSampler");
+				let vertexSource = await (await fetch("generic.vert")).text();
+				this._renderShader = await ShaderProgram.fetch(this._gl,vertexSource,"render.frag",{attribs:["position","textureCoords"],textures:["textureSampler"]});
+				this._simulationShader1 = await ShaderProgram.fetch(this._gl,vertexSource,"step1.frag",{attribs:["position","textureCoords"],textures:["textureSampler"]});
 				this._simulationShader1.uniforms.pixelWidth = 1/width;
-				let step2VertexSource = await (await fetch("step2.vert")).text();
-				let step2FragmentSource = await (await fetch("step2.frag")).text();
-				this._simulationShader2 = new ShaderProgram(this._gl,step2VertexSource,step2FragmentSource);
-				this._simulationShader2.bindAttribLocation(0,"position");
-				this._simulationShader2.bindAttribLocation(1,"textureCoords");
-				this._simulationShader2.bindTextureLocation(0,"textureSampler");
+				this._simulationShader2 = await ShaderProgram.fetch(this._gl,vertexSource,"step2.frag",{attribs:["position","textureCoords"],textures:["textureSampler"]});
 				this._simulationShader2.uniforms.pixelHeight = 1/height;
-				let clickVertexSource = await (await fetch("click.vert")).text();
-				let clickFragmentSource = await (await fetch("click.frag")).text();
-				this._clickShader = new ShaderProgram(this._gl,clickVertexSource,clickFragmentSource);
-				this._clickShader.bindAttribLocation(0,"position");
-				this._clickShader.bindAttribLocation(1,"textureCoords");
+				this._clickShader = await ShaderProgram.fetch(this._gl,vertexSource,"click.frag",{attribs:["position","textureCoords"]});
 				this._clickShader.uniforms.screenSize = {x:width,y:height};
 				resolve();
 			}catch (e){

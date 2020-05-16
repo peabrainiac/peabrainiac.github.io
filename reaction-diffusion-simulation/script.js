@@ -1,4 +1,3 @@
-import ReactionDiffusionSimulation from "./ReactionDiffusionSimulation.js";
 import WebGLReactionDiffusionSimulation from "./WebGLReactionDiffusionSimulation.js";
 import MouseObserver from "../js/MouseObserver.js";
 

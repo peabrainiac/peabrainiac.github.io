@@ -1,7 +1,7 @@
 import Shader from "./Shader.js";
 
 export default class ShaderProgram {
-	constructor(gl,vertexSource,fragmentSource){
+	constructor(gl,vertexSource,fragmentSource,options){
 		this._gl = gl;
 		this._vertexSource = vertexSource;
 		this._fragmentSource = fragmentSource;
@@ -31,7 +31,23 @@ export default class ShaderProgram {
 		this._isReady = false;
 		if (vertexSource&&fragmentSource){
 			this.compile(vertexSource,fragmentSource);
+			if (options&&options.attribs){
+				for (let i=0;i<options.attribs.length;i++){
+					this.bindAttribLocation(i,options.attribs[0]);
+				}
+			}
+			if (options&&options.textures){
+				for (let i=0;i<options.textures.length;i++){
+					this.bindTextureLocation(0,options.textures[0]);
+				}
+			}
 		}
+	}
+
+	static async fetch(gl,vertexPathOrSource,fragmentPathOrSource,options){
+		let vertexSource = /^.*$/.test(vertexPathOrSource)?(await (await fetch(vertexPathOrSource)).text()):vertexPathOrSource;
+		let fragmentSource = /^.*$/.test(fragmentPathOrSource)?(await (await fetch(fragmentPathOrSource)).text()):fragmentPathOrSource;
+		return new ShaderProgram(gl,vertexSource,fragmentSource,options);
 	}
 
 	compile(vertexSource,fragmentSource){
