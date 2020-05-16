@@ -2,6 +2,7 @@ import Framebuffer from "../js/gl/Framebuffer.js";
 import Texture from "../js/gl/Texture.js";
 import ShaderProgram from "../js/gl/ShaderProgram.js";
 import Vao from "../js/gl/Vao.js";
+import {Vector3f} from "../js/Vectors.js";
 
 export default class WebGLReactionDiffusionSimulation {
 
@@ -9,7 +10,7 @@ export default class WebGLReactionDiffusionSimulation {
 		this._canvas = canvas;
 		canvas.width = width;
 		canvas.height = height;
-		this._gl = canvas.getContext("webgl2");
+		this._gl = canvas.getContext("webgl2",{preserveDrawingBuffer:true});
         let ext = this._gl.getExtension("EXT_COLOR_BUFFER_FLOAT");
 		this._width = width;
 		this._height = height;
@@ -45,7 +46,6 @@ export default class WebGLReactionDiffusionSimulation {
 				this._simulationShader1.bindAttribLocation(1,"textureCoords");
 				this._simulationShader1.bindTextureLocation(0,"textureSampler");
 				this._simulationShader1.uniforms.pixelWidth = 1/width;
-				this._simulationShader1.uniforms.kernel = {x:0.5,y:0.2,z:0.05};
 				let step2VertexSource = await (await fetch("step2.vert")).text();
 				let step2FragmentSource = await (await fetch("step2.frag")).text();
 				this._simulationShader2 = new ShaderProgram(this._gl,step2VertexSource,step2FragmentSource);
@@ -53,7 +53,6 @@ export default class WebGLReactionDiffusionSimulation {
 				this._simulationShader2.bindAttribLocation(1,"textureCoords");
 				this._simulationShader2.bindTextureLocation(0,"textureSampler");
 				this._simulationShader2.uniforms.pixelHeight = 1/height;
-				this._simulationShader2.uniforms.kernel = {x:0.5,y:0.2,z:0.05};
 				let clickVertexSource = await (await fetch("click.vert")).text();
 				let clickFragmentSource = await (await fetch("click.frag")).text();
 				this._clickShader = new ShaderProgram(this._gl,clickVertexSource,clickFragmentSource);
@@ -110,9 +109,29 @@ export default class WebGLReactionDiffusionSimulation {
 		this._gl.drawArrays(this._gl.TRIANGLES,0,6);
 	}
 
+	rebuildKernel(){
+		console.log("Triggered Kernel rebuild!");
+		let diffusionA = this._diffusionA*this._diffusionScale;
+		let diffusionB = this._diffusionB*this._diffusionScale;
+		let kernelA = new Vector3f(1,Math.exp(-0.25/diffusionA),Math.exp(-1/diffusionA));
+		let kernelB = new Vector3f(1,Math.exp(-0.25/diffusionB),Math.exp(-1/diffusionB));
+		kernelA.scale(1/(kernelA.x+2*kernelA.y+2*kernelA.z));
+		kernelB.scale(1/(kernelB.x+2*kernelB.y+2*kernelB.z));
+		this._simulationShader1.use();
+		this._simulationShader1.uniforms.kernelA = kernelA;
+		this._simulationShader1.uniforms.kernelB = kernelB;
+		this._simulationShader2.use();
+		this._simulationShader2.uniforms.kernelA = kernelA;
+		this._simulationShader2.uniforms.kernelB = kernelB;
+		console.log(kernelA,kernelB);
+	}
+
 	set scale(scale){
-		this._scale = scale;
-		this._diffusionScale = 1/(scale*scale);
+		if (this._scale!=scale){
+			this._scale = scale;
+			this._diffusionScale = 1/(scale*scale);
+			this.rebuildKernel();
+		}
 	}
 
 	get scale(){
@@ -147,7 +166,10 @@ export default class WebGLReactionDiffusionSimulation {
 	}
 
 	set diffusionA(diffusionA){
-		this._diffusionA = diffusionA;
+		if (this._diffusionA!=diffusionA){
+			this._diffusionA = diffusionA;
+			this.rebuildKernel();
+		}
 	}
 
 	get diffusionA(){
@@ -155,7 +177,10 @@ export default class WebGLReactionDiffusionSimulation {
 	}
 
 	set diffusionB(diffusionB){
-		this._diffusionB = diffusionB;
+		if (this._diffusionB!=diffusionB){
+			this._diffusionB = diffusionB;
+			this.rebuildKernel();
+		}
 	}
 
 	get diffusionB(){
