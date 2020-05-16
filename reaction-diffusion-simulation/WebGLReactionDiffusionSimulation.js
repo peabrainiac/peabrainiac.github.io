@@ -10,20 +10,21 @@ export default class WebGLReactionDiffusionSimulation {
 		canvas.width = width;
 		canvas.height = height;
 		this._gl = canvas.getContext("webgl2");
+        let ext = this._gl.getExtension("EXT_COLOR_BUFFER_FLOAT");
 		this._width = width;
 		this._height = height;
-		let data = new Uint8Array(width*height*4);
+		let data = new Float32Array(width*height*4);
 		for (let i=0;i<data.length;i+=4){
-			data[i] = Math.floor(256*Math.random());
-			data[i+1] = Math.floor(256*Math.random());
+			data[i] = Math.random();
+			data[i+1] = Math.random();
 		}
 		this._texture = new Texture(this._gl);
-		this._texture.setFormat(this._gl.RGBA8,this._gl.RGBA,width,height,this._gl.UNSIGNED_BYTE,data);
+		this._texture.setFormat(this._gl.RGBA16F,this._gl.RGBA,width,height,this._gl.FLOAT,data);
 		this._framebuffer = new Framebuffer(this._gl);
 		this._framebuffer.setSize(width,height);
 		this._framebuffer.attachTexture(this._texture,this._gl.COLOR_ATTACHMENT0);
 		this._tempTexture = new Texture(this._gl);
-		this._tempTexture.setFormat(this._gl.RGBA8,this._gl.RGBA,width,height,this._gl.UNSIGNED_BYTE,null);
+		this._tempTexture.setFormat(this._gl.RGBA16F,this._gl.RGBA,width,height,this._gl.FLOAT,null);
 		this._tempFramebuffer = new Framebuffer(this._gl);
 		this._tempFramebuffer.setSize(width,height);
 		this._tempFramebuffer.attachTexture(this._tempTexture,this._gl.COLOR_ATTACHMENT0)
