@@ -63,8 +63,8 @@ export default class RayMarcher {
                 bundleShader.use();
                 bundleShader.loadFloat("screenRatio",width/height);
                 bundleShader.loadFloat("bundleSize",bundlePrecision*(smoothingRadius+bundleSize)*pixelSize/Math.sqrt(width*height));
-                bundleShader.loadVector3f("cameraPosition",camera.getPosition());
-                bundleShader.loadMatrix3f("viewMatrix",camera.getViewMatrix());
+                bundleShader.loadVector3f("cameraPosition",camera.position);
+                bundleShader.loadMatrix3f("viewMatrix",camera.viewMatrix);
                 gl.drawArrays(gl.TRIANGLES,0,6);
             }
             
@@ -74,8 +74,8 @@ export default class RayMarcher {
             shaderProgram.use();
             shaderProgram.loadFloat("minDistance",smoothingRadius*pixelSize/Math.sqrt(width*height));
             shaderProgram.loadFloat("screenRatio",width/height);
-            shaderProgram.loadVector3f("cameraPosition",camera.getPosition());
-            shaderProgram.loadMatrix3f("viewMatrix",camera.getViewMatrix());
+            shaderProgram.loadVector3f("cameraPosition",camera.position);
+            shaderProgram.loadMatrix3f("viewMatrix",camera.viewMatrix);
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D,texture.id);
             gl.drawArrays(gl.TRIANGLES,0,6);

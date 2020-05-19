@@ -1,4 +1,5 @@
 import RayMarcher from "./RayMarcher.js";
+import Camera from "./Camera.js";
 
 Utils.onPageLoad(async function(){
     try {
@@ -26,8 +27,8 @@ Utils.onPageLoad(async function(){
 	inputManager.onSmoothingRadiusChange(function(smoothingRadius){
 		rayMarcher.setSmoothingRadius(smoothingRadius);
 	});
-    inputManager.onSpeedModifierChange(function(speedModifier){
-        camera.setSpeedModifier(speedModifier);
+    inputManager.onSpeedModifierChange((speedModifier)=>{
+        camera.speedModifier = speedModifier;
     });
     inputManager.onBundlingChange(function(bundling){
         rayMarcher.setBundling(bundling);
@@ -60,8 +61,8 @@ Utils.onPageLoad(async function(){
         canvas.width = width;
         canvas.height = height;
     });
-    camera.setPosition(new Vector3f(0,0,-5));
-    camera.setViewMatrix(new Matrix3f());
+    camera.position = new Vector3f(0,0,-5);
+    camera.viewMatrix = new Matrix3f();
 	
 	requestAnimationFrame(render);
     
@@ -129,7 +130,7 @@ Utils.onPageLoad(async function(){
             setOffset(formula.offset.x,formula.offset.y,formula.offset.z);
         }
 		
-		camera.setDistanceToFractal(rayMarcher.getDistanceToFractal(camera.getPosition()));
+		camera.distanceToFractal = rayMarcher.getDistanceToFractal(camera.position);
 		camera.update();
 		rayMarcher.render(width,height,camera);
         
@@ -152,23 +153,23 @@ Utils.onPageLoad(async function(){
     function setTransformation(rotation1,rotation2,rotation3,scale){
         formula.rotation = new Vector3f(rotation1,rotation2,rotation3);
         formula.scale = scale;
-        var pos = camera.getPosition();
-        var dir = camera.getViewMatrix();
+        var pos = camera.position;
+        var dir = camera.viewMatrix;
         var newTransform = rayMarcher.genTransformationMatrix(rotation1,rotation2,rotation3,scale);
         rayMarcher.changePointWithFormula(pos,dir,rayMarcher.getTransformation1(),rayMarcher.getOffset1(),newTransform,rayMarcher.getOffset1());
-        camera.setPosition(pos);
-        camera.setViewMatrix(dir);
+        camera.position = pos;
+        camera.viewMatrix = dir;
 		rayMarcher.setTransformation1(rotation1,rotation2,rotation3,scale);
 	}
     
     function setOffset(offsetX,offsetY,offsetZ){
         formula.offset = new Vector3f(offsetX,offsetY,offsetZ);
-        var pos = camera.getPosition();
-        var dir = camera.getViewMatrix();
+        var pos = camera.position;
+        var dir = camera.viewMatrix;
         var newOffset = new Vector3f(offsetX,offsetY,offsetZ);
         rayMarcher.changePointWithFormula(pos,dir,rayMarcher.getTransformation1(),rayMarcher.getOffset1(),rayMarcher.getTransformation1(),newOffset);
-        camera.setPosition(pos);
-        camera.setViewMatrix(dir);
+        camera.position = pos;
+        camera.viewMatri = dir;
         rayMarcher.setOffset1(offsetX,offsetY,offsetZ);
     }
 });

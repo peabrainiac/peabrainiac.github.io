@@ -1,89 +1,93 @@
-const Camera = function(canvasElement){
-	var exports = {};
+export default class Camera {
+	constructor(canvasElement){
+		this._position = new Vector3f(0,0,-5);
+		this._velocity = new Vector3f(0);
+		this._viewMatrix = new Matrix3f();
+		this._maxAcceleration = 0.0005;
+		this._speedModifier = 1;
+		
+		this._keyDown = {};
+		canvasElement.addEventListener("keydown",(e)=>{
+			this._keyDown[e.key] = true;
+		});
+		canvasElement.addEventListener("keyup",(e)=>{
+			this._keyDown[e.key] = false;
+		});
+		let locked = false;
+		let cancelRightClick = false;
+		canvasElement.addEventListener("click",()=>{
+			canvasElement.requestPointerLock();
+		});
+		document.addEventListener("pointerlockchange",()=>{
+			if (document.pointerLockElement==canvasElement){
+				locked = true;
+			}else{
+				locked = false;
+				canvasElement.blur();
+			}
+		});
+		canvasElement.addEventListener("mousemove",(e)=>{
+			if (locked){
+				this._viewMatrix.rotate(e.movementY/10,e.movementX/10,0);
+			}
+		});
+		canvasElement.addEventListener("mousedown",(e)=>{
+			if (locked&&e.which==3){
+				cancelRightClick = true;
+				document.exitPointerLock();
+			}
+		});
+		canvasElement.addEventListener("contextmenu",(e)=>{
+			console.log("contextmenu event! cancelRightClick: "+cancelRightClick);
+			if (cancelRightClick){
+				cancelRightClick = false;
+				e.preventDefault();
+			}
+		});
+	}
 	
-	var position = new Vector3f(0,0,-5);
-	var velocity = new Vector3f(0);
-	var viewMatrix = new Matrix3f();
-	var maxAcceleration = 0.0005;
-    var speedModifier = 1;
+	update(){
+		let acceleration = new Vector3f(0,0,0);
+		if (this._keyDown.a){
+			acceleration.x -= this._maxAcceleration*this._speedModifier;
+		}
+		if (this._keyDown.d){
+			acceleration.x += this._maxAcceleration*this._speedModifier;
+		}
+		if (this._keyDown.s){
+			acceleration.z -= this._maxAcceleration*this._speedModifier;
+		}
+		if (this._keyDown.w){
+			acceleration.z += this._maxAcceleration*this._speedModifier;
+		}
+		this._viewMatrix.apply(acceleration);
+		this._velocity.scale(0.95);
+		this._velocity.add(acceleration);
+		this._position.add(this._velocity);
+	}
+
+	set distanceToFractal(d){
+		this._velocity.scale((d/200)/this._maxAcceleration);
+		this._maxAcceleration = d/200;
+	}
+
+    set speedModifier(speedModifier){
+        this._speedModifier = speedModifier;
+    }
 	
-	var keyDown = {};
-	canvasElement.addEventListener("keydown",function(e){
-		keyDown[e.key] = true;
-	});
-	canvasElement.addEventListener("keyup",function(e){
-		keyDown[e.key] = false;
-	});
-	var locked = false;
-	var cancelRightClick = false;
-	canvasElement.addEventListener("click",function(){
-		canvasElement.requestPointerLock();
-	});
-	document.addEventListener("pointerlockchange",function(){
-		if (document.pointerLockElement==canvasElement){
-			locked = true;
-		}else{
-			locked = false;
-			canvasElement.blur();
-		}
-	});
-	canvasElement.addEventListener("mousemove",function(e){
-		if (locked){
-			viewMatrix.rotate(e.movementY/10,e.movementX/10,0);
-		}
-	});
-	canvasElement.addEventListener("mousedown",function(e){
-		if (locked&&e.which==3){
-			cancelRightClick = true;
-			document.exitPointerLock();
-		}
-	});
-	canvasElement.addEventListener("contextmenu",function(e){
-		console.log("contextmenu event! cancelRightClick: "+cancelRightClick);
-		if (cancelRightClick){
-			cancelRightClick = false;
-			e.preventDefault();
-		}
-	});
+	set position(position){
+        this._position = position;
+	}
 	
-	exports.update = function(){
-		var acceleration = new Vector3f(0,0,0);
-		if (keyDown.a){
-			acceleration.x -= maxAcceleration*speedModifier;
-		}
-		if (keyDown.d){
-			acceleration.x += maxAcceleration*speedModifier;
-		}
-		if (keyDown.s){
-			acceleration.z -= maxAcceleration*speedModifier;
-		}
-		if (keyDown.w){
-			acceleration.z += maxAcceleration*speedModifier;
-		}
-		viewMatrix.apply(acceleration);
-		velocity.scale(0.95);
-		velocity.add(acceleration);
-		position.add(velocity);
-	};
-	exports.setDistanceToFractal = function(d){
-		velocity.scale((d/200)/maxAcceleration);
-		maxAcceleration = d/200;
-	};
-    exports.setSpeedModifier = function(speedMod){
-        speedModifier = speedMod;
-    };
-    exports.setPosition = function(pos){
-        position = pos;
-    };
-	exports.getPosition = function(){
-		return position;
-	};
-    exports.setViewMatrix = function(matrix){
-        viewMatrix = matrix;
-    };
-	exports.getViewMatrix = function(){
-		return viewMatrix;
-	};
+	get position(){
+		return this._position;
+	}
+
+    set viewMatrix(matrix){
+        this._viewMatrix = matrix;
+	}
 	
-	return exports;
+	get viewMatrix(){
+		return this._viewMatrix;
+	}
 };
