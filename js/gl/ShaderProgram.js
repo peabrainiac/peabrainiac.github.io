@@ -1,6 +1,20 @@
 import Shader from "./Shader.js";
 
+/**
+ * Wrapper for WebGL shader programs.
+ */
 export default class ShaderProgram {
+
+	/**
+	 * Constructs a new Shader.
+	 * @param {WebGL2RenderingContext} gl webgl context
+	 * @param {string} vertexSource vertex shader source
+	 * @param {string} fragmentSource fragment shader source
+	 * @param {Object} options options to initialize the shader with
+	 * @param {string[]} options.attribs vertex array attribute names, with the indices corresponding to the attribute locations
+	 * @param {string[]} options.textures texture names, with the indices corresponding to the texture location
+	 * @returns {ShaderProgram} constructed shader
+	 */
 	constructor(gl,vertexSource,fragmentSource,options){
 		this._gl = gl;
 		this._vertexSource = vertexSource;
@@ -12,6 +26,9 @@ export default class ShaderProgram {
 		gl.attachShader(this._id,this._fragmentShader.id);
 		this._uniformLocations = {};
 		this._uniformTypes = {};
+		/**
+		 * @property {Proxy} uniforms Proxy for the shaders uniform variables.
+		 */
 		this.uniforms = new Proxy({},{set:(target,property,value,receiver)=>{
 			target[property] = value;
 			if (this._isReady){
@@ -44,6 +61,16 @@ export default class ShaderProgram {
 		}
 	}
 
+	/**
+	 * Fetches and constructs a new Shader.
+	 * @param {WebGL2RenderingContext} gl webgl context
+	 * @param {string} vertexPathOrSource vertex shader source or path to fetch the source from
+	 * @param {string} fragmentPathOrSource fragment shader source or path to fetch the source from
+	 * @param {Object} options options to initialize the shader with
+	 * @param {string[]} options.attribs vertex array attribute names, with the indices corresponding to the attribute locations
+	 * @param {string[]} options.textures texture names, with the indices corresponding to the texture location
+	 * @returns {ShaderProgram} constructed shader
+	 */
 	static async fetch(gl,vertexPathOrSource,fragmentPathOrSource,options){
 		let vertexSource = /^.*$/.test(vertexPathOrSource)?(await (await fetch(vertexPathOrSource)).text()):vertexPathOrSource;
 		let fragmentSource = /^.*$/.test(fragmentPathOrSource)?(await (await fetch(fragmentPathOrSource)).text()):fragmentPathOrSource;
