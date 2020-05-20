@@ -2,6 +2,7 @@ import Framebuffer from "../js/gl/Framebuffer.js";
 import Texture from "../js/gl/Texture.js";
 import Vao from "../js/gl/Vao.js";
 import ShaderProgram from "../js/gl/ShaderProgram.js";
+import {Vector3f} from "../js/Vectors.js";
 
 export default class RayMarcher {
     constructor(canvas){
@@ -93,12 +94,12 @@ export default class RayMarcher {
         var factor = 1;
         var p = pos;
         for (var i=0;i<this._iterations;i++){
-            p = p.abs();
+            p = p.map((x)=>(Math.abs(x)));
             p.subtract(this._offset1);
             this._transformation1.apply(p);
             factor *= det;
         }
-        return (p.length()-1)/factor;
+        return (p.length-1)/factor;
     }
 
     setTransformation1(rotation1,rotation2,rotation3,scale){
@@ -159,6 +160,15 @@ export default class RayMarcher {
         return matrix;
     }
 
+    /**
+     * Updates the position and direction vectors with the same transformation that occured to the closest point in the fractal.
+     * @param {Vector3f} position
+     * @param {Matrix3f} direction
+     * @param {Matrix3f} oldTransform
+     * @param {Vector3f} oldOffset
+     * @param {Matrix3f} newTransform
+     * @param {Vector3f} newOffset
+     */
     changePointWithFormula(position,direction,oldTransform,oldOffset,newTransform,newOffset){
         var iter = 0;
         var p = position.copy();
@@ -166,9 +176,9 @@ export default class RayMarcher {
         var oldTransformNormalized = oldTransform.copy();
         oldTransformNormalized.normalize();
         var signs = [];
-        while(p.length()<5&&iter<100){
-            signs.push(new Vector3f(p.x>0?1:-1,p.y>0?1:-1,p.z>0?1:-1));
-            p = p.abs();
+        while(p.length<5&&iter<100){
+            signs.push(p.map((x)=>(x>0?1:-1)));
+            p = p.map((x)=>(Math.abs(x)));
             d.scaleColumns(signs[iter]);
             p.subtract(oldOffset);
             oldTransform.apply(p);
@@ -187,7 +197,7 @@ export default class RayMarcher {
             p.x = Math.max(p.x,0);
             p.y = Math.max(p.y,0);
             p.z = Math.max(p.z,0);
-            p.multiplyComponents(signs[iter]);
+            p.multiply(signs[iter]);
         }
         position.setTo(p);
         direction.setTo(d);

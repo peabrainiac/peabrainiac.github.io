@@ -1,6 +1,7 @@
 import RayMarcher from "./RayMarcher.js";
 import Camera from "./Camera.js";
 import InputManager from "./InputManager.js";
+import {Vector3f} from "../js/Vectors.js";
 
 Utils.onPageLoad(async function(){
     try {

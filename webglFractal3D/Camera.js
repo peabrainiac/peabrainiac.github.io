@@ -1,3 +1,5 @@
+import {Vector3f} from "../js/Vectors.js";
+
 export default class Camera {
 	constructor(canvasElement){
 		this._position = new Vector3f(0,0,-5);
