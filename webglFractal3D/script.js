@@ -1,5 +1,6 @@
 import RayMarcher from "./RayMarcher.js";
 import Camera from "./Camera.js";
+import InputManager from "./InputManager.js";
 
 Utils.onPageLoad(async function(){
     try {
