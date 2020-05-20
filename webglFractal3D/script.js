@@ -4,8 +4,9 @@ import Camera from "./Camera.js";
 Utils.onPageLoad(async function(){
     try {
         var canvas = document.getElementById("canvas");
-        var rayMarcher = await RayMarcher.create(canvas);
+        var rayMarcher = new RayMarcher(canvas);
         var camera = new Camera(canvas);
+        await rayMarcher.waitUntilReady();
     }catch (e){
         Errors.showError(e);
     }
@@ -18,26 +19,26 @@ Utils.onPageLoad(async function(){
 	var inputManager = new InputManager();
 	inputManager.onTransformationChange1(setTransformation);
     inputManager.onOffsetChange1(setOffset);
-	inputManager.onPixelSizeChange(function(pixelSize){
-		rayMarcher.setPixelSize(pixelSize);
+	inputManager.onPixelSizeChange((pixelSize)=>{
+		rayMarcher.pixelSize = pixelSize;
 	});
-	inputManager.onShadowModeChange(function(mode){
-		rayMarcher.setShadowMode(mode);
+	inputManager.onShadowModeChange((mode)=>{
+		rayMarcher.shadowMode = mode;
 	});
-	inputManager.onSmoothingRadiusChange(function(smoothingRadius){
-		rayMarcher.setSmoothingRadius(smoothingRadius);
+	inputManager.onSmoothingRadiusChange((smoothingRadius)=>{
+		rayMarcher.smoothingRadius = smoothingRadius;
 	});
     inputManager.onSpeedModifierChange((speedModifier)=>{
         camera.speedModifier = speedModifier;
     });
-    inputManager.onBundlingChange(function(bundling){
-        rayMarcher.setBundling(bundling);
+    inputManager.onBundlingChange((bundling)=>{
+        rayMarcher.bundling = bundling;
     });
-    inputManager.onBundleSizeChange(function(bundleSize){
-        rayMarcher.setBundleSize(bundleSize);
+    inputManager.onBundleSizeChange((bundleSize)=>{
+        rayMarcher.bundleSize = bundleSize;
     });
-    inputManager.onBundlePrecisionChange(function(precision){
-        rayMarcher.setBundlePrecision(precision);
+    inputManager.onBundlePrecisionChange((precision)=>{
+        rayMarcher.bundlePrecision = precision;
     });
     inputManager.onSizeChange(function(width,height){
         canvas.parentElement.style.width = width+"px";
@@ -46,10 +47,10 @@ Utils.onPageLoad(async function(){
     inputManager.onScreenshotTake(function(screenshotWidth,screenshotHeight){
         canvas.width = screenshotWidth;
         canvas.height = screenshotHeight;
-        var pixelSize = rayMarcher.getPixelSize();
-        rayMarcher.setPixelSize(1);
+        var pixelSize = rayMarcher.pixelSize;
+        rayMarcher.pixelSize = 1;
         rayMarcher.render(screenshotWidth,screenshotHeight,camera);
-        rayMarcher.setPixelSize(pixelSize);
+        rayMarcher.pixelSize = pixelSize;
         var canvas2 = document.createElement("canvas");
         canvas2.width = screenshotWidth;
         canvas2.height = screenshotHeight;
