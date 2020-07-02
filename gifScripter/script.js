@@ -1,3 +1,7 @@
+import Utils from "../js/Utils.js";
+
+import ProgressPopup from "./ProgressPopup.js";
+
 Utils.onPageLoad(function(){
     var editor = document.getElementById("textarea");
     var formatSelect = document.getElementById("output-format-select");
@@ -64,7 +68,7 @@ Utils.onPageLoad(function(){
     editor.globalScope = sandbox.getGlobalScope();
     sandbox.onAddingFrame(async function(imageData,delay){
         console.log("Adding Frame:",imageData);
-        if (popup.wasCancelled()){
+        if (popup.wasCancelled){
             throw new Error("Gif creation cancelled!");
         }
         if (frames==0){
@@ -86,7 +90,7 @@ Utils.onPageLoad(function(){
     sandbox.onFinish(function(){
         console.log("Finished in "+(Date.now()-startTime)+"ms!");
         if (outputType=="gif"||outputType=="webm"){
-            encoder = (outputType=="gif"?gifEncoder:videoEncoder);
+            let encoder = (outputType=="gif"?gifEncoder:videoEncoder);
             encoder.finish().then(function(result){
                 popup.finish(result.url,outputType);
                 console.log("Result: ",result.url);

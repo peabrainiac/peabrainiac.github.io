@@ -1,3 +1,5 @@
+import Utils from "../js/Utils.js";
+
 Utils.onPageLoad(function(){
 	var sandbox = document.getElementById("sandbox");
 	var button = document.getElementById("button");

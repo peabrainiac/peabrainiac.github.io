@@ -1,5 +1,7 @@
-import WebGLReactionDiffusionSimulation from "./WebGLReactionDiffusionSimulation.js";
+import Utils from "../js/Utils.js";
 import MouseObserver from "../js/MouseObserver.js";
+
+import WebGLReactionDiffusionSimulation from "./WebGLReactionDiffusionSimulation.js";
 
 Utils.onPageLoad(async()=>{
 	const stepsPerFrameInput = document.getElementById("stepsPerFrameInput");

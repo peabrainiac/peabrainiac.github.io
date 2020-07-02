@@ -1,15 +1,14 @@
-const Utils = (function(){
-	var exports = {};
+export default class Utils {
 	
-	exports.onPageLoad = function(f){
+	static onPageLoad(callback){
 		if (document.readyState!="loading"){
-			f();
+			callback();
 		}else{
-			window.addEventListener("load",f);
+			window.addEventListener("load",callback);
 		}
 	};
 	
-	exports.setSize = function(element,width,height){
+	static setSize(element,width,height){
 		element.style.width = width+"px";
 		element.style.height = height+"px";
 		if (element instanceof HTMLCanvasElement){
@@ -18,9 +17,9 @@ const Utils = (function(){
 		}
 	};
 
-	exports.enableSmartTab = function(element){
+	static enableSmartTab(element){
 		console.log("Enabling smart tab for element:",element);
-		element.addEventListener("keydown",function(e){
+		element.addEventListener("keydown",(e)=>{
 			if (e.code=="Tab"){
 				e.preventDefault();
 				var start = element.selectionStart;
@@ -41,34 +40,32 @@ const Utils = (function(){
 				}
 			}
 		});
-	};
+	}
 
-	exports.createElement = function(type,className,style){
+	static createElement(type,className,style){
 		var element = document.createElement(type);
 		element.className = className;
 		element.style = style;
 		return element;
-	};
+	}
 
-	exports.addNewElement = function(parent,type,className,style){
-		var element = exports.createElement(type,className,style);
+	static addNewElement(parent,type,className,style){
+		var element = Utils.createElement(type,className,style);
 		parent.appendChild(element);
 		return element;
-	};
+	}
 
-	exports.addNewTextNode = function(parent,text){
+	static addNewTextNode(parent,text){
 		var textNode = document.createTextNode(text);
 		parent.appendChild(textNode);
 		return textNode;
-	};
+	}
 
-	exports.errorToString = function(error){
+	static errorToString(error){
 		var string = error.stack;
 		if (!string.startsWith(error.name)){
 			string = error.name+": "+error.message+("\n"+string).replace(/\n(?=[^$])/g,"\n    at ");
 		}
 		return string;
-	};
-	
-	return exports;
-})();
+	}
+}

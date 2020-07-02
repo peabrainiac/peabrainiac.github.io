@@ -1,7 +1,11 @@
+import Utils from "../js/Utils.js";
+import {Vector3f} from "../js/Vectors.js";
+import Popup from "../js/Popup.js";
+
 import RayMarcher from "./RayMarcher.js";
 import Camera from "./Camera.js";
 import InputManager from "./InputManager.js";
-import {Vector3f} from "../js/Vectors.js";
+import Errors from "./Errors.js";
 
 Utils.onPageLoad(async function(){
     try {

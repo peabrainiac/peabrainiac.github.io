@@ -1,3 +1,5 @@
+import Utils from "../js/Utils.js";
+
 Utils.onPageLoad(function(){
 	var WIDTH = 1280;
 	var HEIGHT = 960;

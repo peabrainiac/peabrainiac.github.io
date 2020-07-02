@@ -1,7 +1,8 @@
-const Errors = (function(){
-    var exports = {};
-    
-    exports.showError = function(error){
+import Popup from "../js/Popup.js";
+
+export default class Errors {
+
+    static showError(error){
         var popup = new Popup(document.getElementById("popup-overlay"),"Error",240,120);
         popup.setType("error");
         console.log({error});
@@ -9,7 +10,5 @@ const Errors = (function(){
         popup.addButton("Close",function(){
             popup.close();
         });
-    };
-    
-    return exports;
-})();
+    }
+}

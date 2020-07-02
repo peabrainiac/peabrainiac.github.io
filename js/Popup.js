@@ -1,34 +1,41 @@
-const Popup = function(parentElement,titleText,width="auto",height="auto"){
-    var exports = {};
+import Utils from "./Utils.js";
+
+export default class Popup {
+    constructor(parentElement,titleText,width="auto",height="auto"){
+        this._overlay = Utils.addNewElement(parentElement,"div","popup-background-overlay")
+        this._box = Utils.addNewElement(this._overlay,"div","transform-centered box","width:"+((width=="auto")?"auto":width+"px")+";height:"+((height=="auto")?"auto":height+"px"));
+        this._head = Utils.addNewElement(this._box,"div","box-head");
+        this._body = Utils.addNewElement(this._box,"div","box-body");
     
-    var overlay = Utils.addNewElement(parentElement,"div","popup-background-overlay")
-    var box = Utils.addNewElement(overlay,"div","transform-centered box","width:"+((width=="auto")?"auto":width+"px")+";height:"+((height=="auto")?"auto":height+"px"));
-    var head = Utils.addNewElement(box,"div","box-head");
-    var body = Utils.addNewElement(box,"div","box-body");
-    
-    var title = document.createTextNode(titleText);
-    head.appendChild(title);
-    
-    exports.setType = function(type){
-        box.classList.add("box-"+type);
-    };
-    exports.close = function(){
-        overlay.remove();
-    };
-    exports.addText = function(text){
-        var textNode = document.createTextNode(text);
-        body.appendChild(textNode);
-        var br = document.createElement("br");
-        body.appendChild(br);
-        return textNode;
-    };
-    exports.addElement = function(element){
-        body.appendChild(element);
-    };
-    exports.setTitle = function(text){
-        title.nodeValue = text;
+        this._title = document.createTextNode(titleText);
+        this._head.appendChild(this._title);
     }
-    exports.addButton = function(text,callback){
+    
+    setType(type){
+        this._box.classList.add("box-"+type);
+    }
+    
+    close(){
+        this._overlay.remove();
+    }
+
+    addText(text){
+        var textNode = document.createTextNode(text);
+        this._body.appendChild(textNode);
+        var br = document.createElement("br");
+        this._body.appendChild(br);
+        return textNode;
+    }
+
+    addElement(element){
+        this._body.appendChild(element);
+    }
+
+    setTitle(text){
+        this._title.nodeValue = text;
+    }
+
+    addButton(text,callback){
         var line = document.createElement("div");
         line.style.textAlign = "center";
         line.style.margin = "10px";
@@ -39,37 +46,42 @@ const Popup = function(parentElement,titleText,width="auto",height="auto"){
         var buttonText = document.createTextNode(text);
         button.appendChild(buttonText);
         line.appendChild(button);
-        body.appendChild(line);
+        this._body.appendChild(line);
         button.addEventListener("click",callback);
-    };
-    exports.addCloseButton = function(){
-    	exports.addButton("Close",exports.close);
-    };
-    exports.addCanvas = function(canvas){
+    }
+
+    addCloseButton(){
+    	this.addButton("Close",()=>{
+            this.close();
+        });
+    }
+
+    addCanvas(canvas){
     	var container = document.createElement("div");
     	container.style.margin = "20px";
     	container.style.textAlign = "center";
     	canvas.style.boxShadow = "2px 2px 8px #000000";
     	container.appendChild(canvas);
-    	body.appendChild(container);
-    };
-    exports.addImageOrCanvas = function(element){
+    	this._body.appendChild(container);
+    }
+
+    addImageOrCanvas(element){
     	var container = document.createElement("div");
     	container.style.margin = "20px";
     	container.style.textAlign = "center";
     	element.style.boxShadow = "2px 2px 8px #000000";
     	container.appendChild(element);
-    	body.appendChild(container);
-    };
-    exports.clear = function(){
-        while(body.firstChild){
-            body.firstChild.remove();
+    	this._body.appendChild(container);
+    }
+
+    clear(){
+        while(this._body.firstChild){
+            this._body.firstChild.remove();
         }
-    };
-    exports.resize = function(width=Math.max(head.offsetWidth,body.offsetWidth),height=head.offsetHeight+body.offsetHeight){
-        box.style.width = width+"px";
-        box.style.height = height+"px";
-    };
-    
-    return exports;
-};
+    }
+
+    resize(width=Math.max(this._head.offsetWidth,this._body.offsetWidth),height=this._head.offsetHeight+this._body.offsetHeight){
+        this._box.style.width = width+"px";
+        this._box.style.height = height+"px";
+    }
+}

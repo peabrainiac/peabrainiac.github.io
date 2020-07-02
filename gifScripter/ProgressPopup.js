@@ -1,34 +1,38 @@
-const ProgressPopup = function(){
-    var exports = {};
+import Utils from "../js/Utils.js";
+import Popup from "../js/Popup.js";
 
-    var popup = new Popup(document.getElementById("popup-overlay"),"Writing Gif...");
-    var progressCanvas = document.createElement("canvas");
-    popup.addCanvas(progressCanvas);
-    var progressText1 = popup.addText("\n");
-    var progressText2 = popup.addText("\n");
-    popup.addButton("Cancel",cancel);
-    var wasCancelled = false;
+export default class ProgressPopup {
+    constructor(){
+        this._popup = new Popup(document.getElementById("popup-overlay"),"Writing Gif...");
+        this._progressCanvas = document.createElement("canvas");
+        this._popup.addCanvas(this._progressCanvas);
+        this._progressText1 = this._popup.addText("\n");
+        this._progressText2 = this._popup.addText("\n");
+        this._wasCancelled = false;
+        this._popup.addButton("Cancel",()=>{
+            this._wasCancelled = true;
+            this._popup.close();
+        });
+    }
 
-    var width, height;
+    showFrame(imgData){
+        this._width = imgData.width;
+        this._height = imgData.height;
+        this._progressCanvas.width = this._width;
+        this._progressCanvas.height = this._height;
+        this._progressCanvas.getContext("2d").putImageData(imgData,0,0);
+        this._upscaleImage(this._progressCanvas,this._width,this._height);
+    }
 
-    exports.showFrame = function(imgData){
-        width = imgData.width;
-        height = imgData.height;
-        progressCanvas.width = width;
-        progressCanvas.height = height;
-        progressCanvas.getContext("2d").putImageData(imgData,0,0);
-        upscaleImage(progressCanvas,width,height);
-    };
+    showProgress1(frames){
+        this._progressText1.nodeValue = "Frames generated: "+frames+"\r\n";
+    }
 
-    exports.showProgress1 = function(frames){
-        progressText1.nodeValue = "Frames generated: "+frames+"\r\n";
-    };
+    showProgress2(frames){
+        this._progressText2.nodeValue = "Frames encoded: "+frames+"\r\n";
+    }
 
-    exports.showProgress2 = function(frames){
-        progressText2.nodeValue = "Frames encoded: "+frames+"\r\n";
-    };
-
-    exports.finish = function(url,type="gif"){
+    finish(url,type="gif"){
         if (url){
             var imageOrVideo;
             if (type=="gif"){
@@ -44,33 +48,33 @@ const ProgressPopup = function(){
                 source.type = "video/webm";
                 imageOrVideo.appendChild(source);
             }
-            upscaleImage(imageOrVideo,width,height);
-            popup.clear();
-            popup.setTitle("Gif finished");
-            popup.addImageOrCanvas(imageOrVideo);
-            popup.addCloseButton();
+            this._upscaleImage(imageOrVideo,this._width,this._height);
+            this._popup.clear();
+            this._popup.setTitle("Gif finished");
+            this._popup.addImageOrCanvas(imageOrVideo);
+            this._popup.addCloseButton();
         }else{
-            popup.clear();
-            popup.addCanvas(progressCanvas);
-            popup.addCloseButton();
+            this._popup.clear();
+            this._popup.addCanvas(progressCanvas);
+            this._popup.addCloseButton();
         }
-    };
+    }
 
-    exports.showError = function(error){
-        popup.clear();
-        popup.setTitle("Gif Creation failed!");
+    showError(error){
+        this._popup.clear();
+        this._popup.setTitle("Gif Creation failed!");
         var errorCodeContainer = Utils.createElement("pre");
         errorCodeContainer.innerText = Utils.errorToString(error);
-        popup.addElement(errorCodeContainer);
+        this._popup.addElement(errorCodeContainer);
         console.log({error});
-        popup.addCloseButton();
-    };
+        this._popup.addCloseButton();
+    }
 
-    exports.wasCancelled = function(){
-        return wasCancelled;
-    };
+    get wasCancelled(){
+        return this._wasCancelled;
+    }
 
-    function upscaleImage(image,width,height){
+    _upscaleImage(image,width,height){
         let scale = Math.ceil(360/Math.max(width,height));
         image.style.width = width*scale+"px";
         image.style.height = height*scale+"px";
@@ -78,10 +82,4 @@ const ProgressPopup = function(){
         image.style.imageRendering = "crisp-edges";
         image.style.imageRendering = "pixelated";
     }
-    function cancel(){
-        wasCancelled = true;
-        popup.close();
-    }
-    
-    return exports;
-};
+}

@@ -1,3 +1,5 @@
+import Utils from "../js/Utils.js";
+
 Utils.onPageLoad(()=>{
 	let inputA2 = document.getElementById("input-a-bits");
 	let inputB2 = document.getElementById("input-b-bits");
