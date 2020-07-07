@@ -39,6 +39,8 @@ export default class ScrollDiv extends HTMLElement {
                     min-width: 100%;
                     min-height: 100%;
                     position: relative;
+                    overflow: hidden;
+                    vertical-align: top;
                 }
                 .scrollbar {
                     background: var(--scrollbar-track-color);

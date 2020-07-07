@@ -8,6 +8,10 @@ export default class ResizeDiv extends HTMLElement {
         let shadowRoot = this.attachShadow({mode:"open"});
         shadowRoot.innerHTML = `
             <style>
+                :host {
+                    display: block;
+                    position: relative;
+                }
                 #container {
                     width: 100%;
                     height: 100%;
