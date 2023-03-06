@@ -18,6 +18,81 @@
 			<div class="project">
 				<div class="project-header">
 					<div class="centered-block">
+						<a href="./black-hole-renderer/">Schwarzschild black holes</a>
+					</div>
+				</div>
+				<div class="project-body">
+					<div class="centered-block">
+						<img class="project-image" src="./images/black-hole-renderer.png">
+						During the winter semester of 2022/2023 I took a computer graphics course at university for which I also had to write and submit a graphics project of my own choice. I used this opportunity
+						to finally experiment with geodesic raytracing myself, based on the <a href="https://michaelmoroz.github.io/TracingGeodesics/">blog post</a> <a href="https://github.com/MichaelMoroz">Michael Moroz</a>
+						published a while ago. The end result is <a href="./black-hole-renderer/">this</a>, a renderer for Schwarzschild black holes with an (artistic, not physically based) accretion disk. 
+						<br><br>
+						I also experimented with integrating mesh rendering into this a bit, but in the end didn't have the time to fully get it to work and as such left it behind a setting. As usual, the project is
+						also still not as polished as I'd like, but it's nonetheless what I'll have to leave it at for now.
+					</div>
+				</div>
+			</div>
+			<div class="project">
+				<div class="project-header">
+					<div class="centered-block">
+						<a href="./mandelbrotJS/minibrots">Minibrots</a>
+					</div>
+				</div>
+				<div class="project-body">
+					<div class="centered-block">
+						<img class="project-image" src="./images/minibrots.png">
+						During the summer of 2022 I read through <a href="https://arxiv.org/abs/math/9411238">a paper</a> by Dierk Schleicher, seeking to better unterstand parameter rays and angled internal addresses.
+						In the process I wrote <a href="./mandelbrotJS/minibrots">this</a>, a web app that uses several of the algorithms outlined in the paper to find all minibrots and bulbs in the mandelbrot set,
+						ordered by their period, and display them together with several pieces of information about them, including their external angles, kneading sequences and angled internal addresses.
+						<br><br>
+						While this so far works great, the page isn't yet all that useful as it's still lacking some sort of search or filter system - because there's just so many minibrots, and they are all shown here,
+						you have to scroll down for quite a while before even finding one of period higher than 10. I also haven't yet gotten around to implementing several more details I wanted to display, such as the coefficients
+						needed for the rendering method I already explored in a shader recently.
+					</div>
+				</div>
+			</div>
+			<div class="project">
+				<div class="project-header">
+					<div class="centered-block">
+						<a href="https://www.shadertoy.com/view/NtKXRy">Nested minibrot shader</a>
+					</div>
+				</div>
+				<div class="project-body">
+					<div class="centered-block">
+						<img class="project-image" src="./images/mandelbrotShader.png">
+						After focusing mostly on my studies at university throughout most of 2021, and not coding much as a result, I eventually decided to at least implement the rendering algorithm for the mandelbrot set I had
+						already in mind in a shader, without focusing much on interactivity and a nice gui. What I eventually ended up with is a shadertoy shader, rendering one specific zoom into the mandelbrot set in real time with
+						just usual 32-bit floating point arithmetic, despite the zoom going up to a zoom factor of 1e100 and over half a million iterations. The way this works is by storing a list of nearby minibrots, each relative
+						to the next larger one, and iterating always in the reference frame of the closest minibrot, both to speed up rendering and avoid floating-point over- and underflows.
+						<br><br>
+						While I got that all to work relatively nicely for this and a few other specific zooms, the code is still relatively unstable; I have thus only published the shader with the minibrot information hardcoded in
+						as constants, but not the code I used to generate that information.
+					</div>
+				</div>
+			</div>
+			<div class="project">
+				<div class="project-header">
+					<div class="centered-block">
+						<a href="./MandelbrotJS/">MandelbrotJS</a>
+					</div>
+				</div>
+				<div class="project-body">
+					<div class="centered-block">
+						<img class="project-image" src="./images/mandelbrotJS.png">
+						After graduating high school in early 2020, I used some of the time I then had until fall to write a JS-based renderer for the mandelbrot set and related fractals, <a href="./MandelbrotJS">MandelbrotJS</a>.
+						My main goals here were to have an environment in which I could compute, debug and study numerical information about things like periodic points in the mandelbrot set, and to eventually use that
+						to develop some ideas I had about minibrots at the time into actual algorithms for quickly but approximately rendering images of the mandelbrot set.
+						<br><br>
+						I never got around to the latter; supporting multiple formulas, even non-holomorphic ones and ones with parameters, ended up adding a lot of programming complexity that made it hard to then make
+						the changes I'd need to make for the algorithms I had in mind. I did, however, manage to implement many of the numerics I had in mind, including code for finding minibrots and bulbs in
+						the mandelbrot and mandelbar sets, and computing their size, orientation and further coefficients.
+					</div>
+				</div>
+			</div>
+			<div class="project">
+				<div class="project-header">
+					<div class="centered-block">
 						<a href="https://github.com/Alexandros444/Snake3001">Snake 3001</a>
 					</div>
 				</div>
