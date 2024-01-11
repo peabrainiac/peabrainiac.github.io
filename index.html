@@ -11,10 +11,52 @@
 		</div>
 		<div id="main-text">
 			<div class="centered-block">
-				Hey! This is my Github Page, and here are some of the things I've been working on lately:
+				Hi! I'm Ben, also known as peabrainiac around here. I'm currently a full-time student of mathematics, physics and computer science at the Humboldt University of Berlin, but also interested
+				in graphics programming, fractals (in particular the mandelbrot set), automated theorem proving and web development. This place is where I put most of my programming projects, like small
+				browser games, fractal renderers, numerical experiments and others as you can see below.
 			</div>
 		</div>
 		<div id="projects">
+			<div class="project">
+				<div class="project-header">
+					<div class="centered-block">
+						<a href="./hexagonal-gridentify">Hexagonal Gridentify</a>
+					</div>
+				</div>
+				<div class="project-body">
+					<div class="centered-block">
+						<img class="project-image" src="./images/hexagonal-gridentify.png">
+						Some time during 2023 I stumbled upon the game <a href="https://gridentify.com/">gridentify</a> by <a href="https://three.consulting/">Three Point Consulting</a>. I liked the concept,
+						but noticed that the game became mostly dependent on luck quite fast, as the rectangular structure of the grid makes it easy for patterns with no equal neighbouring digits to spawn in
+						and end your run. In an attempt to fix this I've now written my own version of the game with a hexagonal grid instead, which can be found <a href="./hexagonal-gridentify">here</a>.
+						<br><br>
+						The idea behind that is that the hexagonal tile admits more connections between tiles while also having fewer tiles in total, giving you more option for your moves without making the game
+						too long/easy. I've also tweaked the scoring so that combining a lot of tiles at once yields a lot more points, to incentivise more risky playstyles over ones in which you only ever combine
+						two or three tiles at once.
+					</div>
+				</div>
+			</div>
+			<div class="project">
+				<div class="project-header">
+					<div class="centered-block">
+						<a href="https://github.com/teorth/pfr">PFR in Lean</a>
+					</div>
+				</div>
+				<div class="project-body">
+					<div class="centered-block">
+						<img class="project-image" src="./images/pfr.png">
+						Over the course of the summer of 2023 I've spent quite a lot of time finally <a hread="https://leanprover-community.github.io/index.html">Lean 4</a>, the latest version of a theorem
+						proving language I had already been loosely following for a while. While my initial efforts & learning projects did not really result in anything worth mentioning here, I did learn enough
+						from them to then successfully contribute to <a href="https://github.com/teorth/pfr">Terence Tao's formalisation</a> of his proof of the polynomial Freiman-Ruzsa conjecture (short pfr) in
+						Lean. The initial effort that I was part of took roughly three weeks and was even featured in
+						<a href="https://www.quantamagazine.org/a-team-of-math-proves-a-critical-link-between-addition-and-sets-20231206/">a Quanta article</a>, though a more slowly paced effort to extend the
+						formalised result is still ongoing.
+						<br><br>
+						Of course this is only something I contributed to rather than a project of my own, and my contributions were also relatively minor when compared to some of the others. Nonetheless this is
+						something I'm happy to have been a part of, and I'm looking forward to doing more with Lean in the future.
+					</div>
+				</div>
+			</div>
 			<div class="project">
 				<div class="project-header">
 					<div class="centered-block">
@@ -24,9 +66,10 @@
 				<div class="project-body">
 					<div class="centered-block">
 						<img class="project-image" src="./images/black-hole-renderer.png">
-						During the winter semester of 2022/2023 I took a computer graphics course at university for which I also had to write and submit a graphics project of my own choice. I used this opportunity
-						to finally experiment with geodesic raytracing myself, based on the <a href="https://michaelmoroz.github.io/TracingGeodesics/">blog post</a> <a href="https://github.com/MichaelMoroz">Michael Moroz</a>
-						published a while ago. The end result is <a href="./black-hole-renderer/">this</a>, a renderer for Schwarzschild black holes with an (artistic, not physically based) accretion disk. 
+						During the winter semester of 2022/2023 I took a computer graphics course at university for which I also had to write and submit a graphics programming project of my own choice. I used this
+						opportunity to finally experiment with geodesic raytracing myself, based on the <a href="https://michaelmoroz.github.io/TracingGeodesics/">blog post</a>
+						<a href="https://github.com/MichaelMoroz">Michael Moroz</a> published a while ago. The end result is <a href="./black-hole-renderer/">this</a>, a renderer for Schwarzschild black holes with
+						an (artistic, not physically based) accretion disk.
 						<br><br>
 						I also experimented with integrating mesh rendering into this a bit, but in the end didn't have the time to fully get it to work and as such left it behind a setting. As usual, the project is
 						also still not as polished as I'd like, but it's nonetheless what I'll have to leave it at for now.
