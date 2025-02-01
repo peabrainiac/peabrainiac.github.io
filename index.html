@@ -11,12 +11,36 @@
 		</div>
 		<div id="main-text">
 			<div class="centered-block">
-				Hi! I'm Ben, also known as peabrainiac around here. I'm currently a full-time student of mathematics, physics and computer science at the Humboldt University of Berlin, but also interested
-				in graphics programming, fractals (in particular the mandelbrot set), automated theorem proving and web development. This place is where I put most of my programming projects, like small
-				browser games, fractal renderers, numerical experiments and others as you can see below.
+				Hi! I'm Ben, also known as peabrainiac around here. I'm currently studying mathematics with a focus on differential geometry at the Humboldt University of Berlin, but am also interested
+				in verified/automated theorem proving, graphics programming, fractals and web development. This place is where I put most of my programming projects, like small
+				browser games, fractal renderers, numerical experiments, formalisation projects and others as you can see below.
 			</div>
 		</div>
 		<div id="projects">
+			<div class="project">
+				<div class="project-header">
+					<div class="centered-block">
+						<a href="https://github.com/peabrainiac/lean-orbifolds">Differential geometry in Lean</a>
+					</div>
+				</div>
+				<div class="project-body">
+					<div class="centered-block">
+						<img class="project-image" src="./images/orbifolds.png">
+						During the summer of 2024, while I was researching orbifolds for my Bachelor thesis, I started <a href="https://github.com/peabrainiac/lean-orbifolds">a repository</a> to also formalise
+						some of what I learnt in Lean. While my plan was originally to work specifically towards the theory of diffeological orbifolds, the repository soon turned into a
+						general collection of results on generalised smooth spaces, including (but not limited to) diffeological spaces, smooth spaces, Fr&ouml;licher spaces and diffeological manifolds/orbifolds.
+						I am still in the process of expanding the repository, with diffeological tangent bundles, concrete sheaves and the De-Rham-cohomology of smooth spaces being three future targets I have
+						in mind. I am also in the process of upstreaming parts of the repository to <a href="https://github.com/leanprover-community/mathlib4">mathlib</a>, with
+						<a href="https://github.com/leanprover-community/mathlib4/blob/3e804067d9fc8573787c40d500a61628c5d28c99/Mathlib/Topology/Compactness/DeltaGeneratedSpace.lean">delta-generated spaces</a>
+						and <a href="https://github.com/leanprover-community/mathlib4/blob/3e804067d9fc8573787c40d500a61628c5d28c99/Mathlib/Topology/Category/DeltaGenerated.lean">their category</a>
+						having already landed there.
+						<br><br>
+						This is the first time that I have developed a large API in Lean all on my own; while I have formalised results on e.g. Riemannian manifolds and end compactifications of topological spaces
+						before, they have for good reason never made it into a public repository like mathlib. This time though I feel like I have finally learnt to make good design decisions, and am confident
+						that much of the material can be upstreamed to mathlib without major changes.
+					</div>
+				</div>
+			</div>
 			<div class="project">
 				<div class="project-header">
 					<div class="centered-block">
@@ -45,7 +69,7 @@
 				<div class="project-body">
 					<div class="centered-block">
 						<img class="project-image" src="./images/pfr.png">
-						Over the course of the summer of 2023 I've spent quite a lot of time finally learning <a hread="https://leanprover-community.github.io/index.html">Lean 4</a>, the latest version of a theorem
+						Over the course of the summer of 2023 I've spent quite a lot of time finally learning <a href="https://leanprover-community.github.io/index.html">Lean 4</a>, the latest version of a theorem
 						proving language I had already been loosely following for a while. While my initial efforts & learning projects did not really result in anything worth mentioning here, I did learn enough
 						from them to then successfully contribute to <a href="https://github.com/teorth/pfr">Terence Tao's formalisation</a> of his proof of the polynomial Freiman-Ruzsa conjecture (short pfr)
 						that he organised this fall. The initial effort that I was part of took roughly three weeks and was even featured in
@@ -133,6 +157,10 @@
 					</div>
 				</div>
 			</div>
+			<div class="centered-block" style="margin-top:40px;margin-bottom:20px">
+				<hr>
+				The projects below this point are from before I finished high school; I have only left them up for completeness' sake.
+			</div>
 			<div class="project">
 				<div class="project-header">
 					<div class="centered-block">
@@ -143,7 +171,7 @@
 					<div class="centered-block">
 						<img class="project-image" src="./images/snake3001.png">
 						A small game I've made with a few friends for a school project - the idea was basically to recreate the the classic game Snake, but in 3D and using raytracing.
-						The end result looks pretty cool - we have reflections, an infitively-looping space, various interesting graphic effects, and the ability to take high-resolution screenshots.<br><br>
+						The end result looks pretty cool - we have reflections, an infinitely-looping space, various interesting graphic effects, and the ability to take high-resolution screenshots.<br><br>
 						Since this was for a school project, we had to use java though - so if you want to try it,
 						you'll have to head over to the <a href="https://github.com/Alexandros444/Snake3001">Snake 3001 Github repository</a> and download the compiled jar file from there.<br>
 						Also, if you're interested, I've uploaded a small devlog showcasing the game <a href="https://www.youtube.com/watch?v=cRCN9Fq0WQM">on youtube</a>.
